@@ -45,7 +45,7 @@ module.exports = {
             type_user: {
                 type: Sequelize.ENUM("Admin", "Buyer"),
                 allowNull: false,
-                defaultValue: "Comprador",
+                defaultValue: "Buyer",
             },           
             created_at: {
                 type: Sequelize.DATE,
