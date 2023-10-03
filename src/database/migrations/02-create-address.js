@@ -18,7 +18,7 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false,
             },
-            numberStreet: {
+            number_street: {
                 type: Sequelize.STRING,
                 allowNull: false,
             },
