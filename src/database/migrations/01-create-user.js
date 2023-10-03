@@ -11,6 +11,14 @@ module.exports = {
                 primaryKey: true,
                 unique: true,
             },
+            address_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: {
+                    model: "addresses",
+                    key: "id",
+                }
+            },
             full_name: {
                 type: Sequelize.STRING,
                 allowNull: false,
@@ -43,9 +51,9 @@ module.exports = {
                 defaultValue: null,
             },
             type_user: {
-                type: Sequelize.ENUM("Administrador", "Buyer"),
+                type: Sequelize.ENUM("Administrador", "Comprador"),
                 allowNull: false,
-                defaultValue: "Buyer",
+                defaultValue: "Comprador",
             },           
             created_at: {
                 type: Sequelize.DATE,
@@ -67,4 +75,3 @@ module.exports = {
         await queryInterface.dropTable("users");
     },
 }
-
