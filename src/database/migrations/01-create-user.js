@@ -43,7 +43,7 @@ module.exports = {
                 defaultValue: null,
             },
             type_user: {
-                type: Sequelize.ENUM("Administrador", "Comprador"),
+                type: Sequelize.ENUM("Admin", "Buyer"),
                 allowNull: false,
                 defaultValue: "Comprador",
             },           
