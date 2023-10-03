@@ -1,0 +1,27 @@
+{
+  "name": "M3P-BACKEND-SQUAD1",
+  "version": "1.0.0",
+  "description": "Backend projeto avaliativo M3-Squad : bugBusters ",
+  "main": "index.js",
+  "author": "bugBusters",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.1",
+    "pg": "^8.11.1",
+    "pg-connection-string": "^2.6.1",
+    "sequelize": "^6.32.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12",
+    "sequelize-cli": "^6.6.1"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  }
+}
