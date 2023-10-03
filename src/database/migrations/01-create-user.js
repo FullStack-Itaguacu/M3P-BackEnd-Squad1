@@ -10,15 +10,7 @@ module.exports = {
                 autoIncrement: true,
                 primaryKey: true,
                 unique: true,
-            },
-            address_id: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                references: {
-                    model: "addresses",
-                    key: "id",
-                }
-            },
+            },        
             full_name: {
                 type: Sequelize.STRING,
                 allowNull: false,
