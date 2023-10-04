@@ -2,25 +2,44 @@ const connection = require("../database/connection");
 const { DataTypes } = require("sequelize");
 
 const UserAddress = connection.define("users_addresses", {
-    user_id: {
-        allowNull: false,
-        type: DataTypes.INTEGER,
-      address_id: {
-        allowNull: false,
-        type: DataTypes.INTEGER,
-      },
-      created_at: {
-        allowNull: false,
-        type: DataTypes.DATE
-      },
-      updated_at: {
-        allowNull: false,
-        type: DataTypes.DATE
-      },
-      deleted_at: {
-        type: DataTypes.DATE
-      }
-    },
+  userId: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+  },
+  addressId: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+  },
+  createdAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+  },
+  updatedAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+  },
+  deletedAt: {
+    type: DataTypes.DATE,
+  },
+
 });
+
+UserAddress.associate = (models) => {
+  UserAddress.belongsTo(models.User, {
+    foreignKey: "userId",
+    as: "users",
+  });
+  UserAddress.belongsTo(models.Address, {
+    foreignKey: "addressId",
+    as: "addresses",
+  
+  },
+  {
+    underscored: true, paranoid: true
+  }
+  );
+}
+
+
 
 module.exports = UserAddress;
