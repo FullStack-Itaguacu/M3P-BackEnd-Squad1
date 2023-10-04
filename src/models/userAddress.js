@@ -1,5 +1,5 @@
-const connection = require("../database/connection");
 const { DataTypes } = require("sequelize");
+const connection = require("../database/connection");
 const  User  = require("./user");
 const  Address  = require("./address");
 
@@ -41,4 +41,4 @@ UserAddress.associate = (models) => {
 
 
 
-module.exports = UserAddress;
+module.exports = {UserAddress};
