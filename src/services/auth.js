@@ -40,10 +40,13 @@ module.exports = {
       }
 
       if (payload.type_user === "Admin") {
-        req.payload = payload;
+        next();
+      } else {
+        return res.status(403).json({
+          msg: "User not admin",
+          status: 403,
+        });
       }
-
-      next();
     } catch (error) {
       return res.status(401).json({
         msg: error.message,
