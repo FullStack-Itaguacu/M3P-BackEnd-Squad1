@@ -1,40 +1,40 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('users_addresses', {
+    return queryInterface.createTable("users_addresses", {
       id: {
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
         unique: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       user_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: { model: 'users', key: 'id' },
+        references: { model: "users", key: "id" },
       },
       address_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: { model: 'addresses', key: 'id' },
+        references: { model: "addresses", key: "id" },
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       deleted_at: {
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('users_addresses');
-  }
+    return queryInterface.dropTable("users_addresses");
+  },
 };

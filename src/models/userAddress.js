@@ -1,5 +1,7 @@
 const connection = require("../database/connection");
 const { DataTypes } = require("sequelize");
+const  User  = require("./user");
+const  Address  = require("./address");
 
 const UserAddress = connection.define("users_addresses", {
   userId: {
@@ -32,12 +34,9 @@ UserAddress.associate = (models) => {
   UserAddress.belongsTo(models.Address, {
     foreignKey: "addressId",
     as: "addresses",
-  
-  },
-  {
-    underscored: true, paranoid: true
-  }
-  );
+    underscored: true,
+    paranoid: true,
+  });
 }
 
 
