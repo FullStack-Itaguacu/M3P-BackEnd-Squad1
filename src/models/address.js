@@ -34,15 +34,15 @@ const Address = connection.define("addresses", {
   },
   complement: {
     type: Sequelize.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   lat: {
     type: Sequelize.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   long: {
     type: Sequelize.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   created_at: {
     type: Sequelize.DATE,
