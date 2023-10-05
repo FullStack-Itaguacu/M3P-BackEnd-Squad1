@@ -44,19 +44,10 @@ const Address = connection.define("addresses", {
     type: Sequelize.STRING,
     allowNull: true,
   },
-  created_at: {
-    type: Sequelize.DATE,
-    allowNull: false,
-  },
-  updated_at: {
-    type: Sequelize.DATE,
-    allowNull: false,
-  },
-  deleted_at: {
-    type: Sequelize.DATE,
-    allowNull: true,
-    defaultValue: null,
-  },
+},{
+  timestamps: true,
+  paranoid: true,
+  underscored: true,
 });
 
 module.exports = Address;
