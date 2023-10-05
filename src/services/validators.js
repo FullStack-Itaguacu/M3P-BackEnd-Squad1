@@ -20,4 +20,13 @@ async function validaSenha(senha) {
     return regex.test(email);
   }
 
-  module.exports = { validaSenha, validaEmail };
+  async function estaNaBD(modelo, columna, valor) {
+    const achado = await modelo.findOne({
+      where: {
+        [columna]: valor,
+      },
+    });
+    return achado ? true : false;
+  }
+
+  module.exports = { validaSenha, validaEmail, estaNaBD };

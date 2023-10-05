@@ -47,25 +47,55 @@ RESPOSTAS:
 const User = require("../models/user");
 const Address = require("../models/address");
 require("../models/userAddress");
+const { filtroBodySignUp } = require("../services/user.services");
+const { estaNaBD } = require("../services/validators");
 
 module.exports = {
   async signUp(req, res) {
+    res.status(500);
     try {
+
       const user = req.body.user;
       const addresses = req.body.address;
+
+      await filtroBodySignUp(user, addresses, res);
 
       const userCreated = await User.create(user);
       const addressesCreated = await Address.bulkCreate(addresses);
 
       userCreated.setAddresses(addressesCreated);
 
-      return res
-        .status(201)
-        .json({ message: "Usuário cadastrado com sucesso!" });
+      return res.status(201).json({
+        message: `${userCreated.name} seja bem vindo a plataforma, cadastramos satisfatoriamente você e seus endereços!`,
+        cause: {
+          new_user: {
+            id: userCreated.id,
+            name: userCreated.full_name,
+            email: userCreated.email,
+          },
+          new_addresses: addressesCreated,
+        },
+        status : 201
+      });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ message: "Erro interno do servidor", error: error.message });
+      if(!error.cause){
+        /*
+        implementar logica para salvar
+        o erro e notificar o dev 
+        na versão 2.0
+        */
+        console.log(error)
+      }
+      return res.json({
+        message:
+          error.message ||
+          "Ocorreu um erro, pode contatar nosso team de desenvolvimento no email bug_busters_team@dominio.com e enviar esta response nos ficaremos muito gratos em ajudar a resolver o problema, ou verificar a seguente informação para tentar resolver por si mesmo",
+        status: error.status || 500,
+        cause:
+          error.cause ||
+          "Desta vez quem falhou foi o dev, mas não se preocupe, ele já foi notificado e está trabalhando para resolver o problema o mais rápido possível",
+        error: error.name,
+      });
     }
   },
 };
