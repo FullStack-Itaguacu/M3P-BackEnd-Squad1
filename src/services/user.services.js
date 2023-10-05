@@ -1,17 +1,20 @@
 const { estaNaBD } = require("./validators");
 const User = require("../models/user");
 
+const {
+  NotAddressesReceivedError,
+  NotFieldsAddressReceivedError,
+  NotUserReceivedError,
+  CpfUserAlredyExistError,
+  EmailUserAlredyExistError,
+  NotFieldsUserReceivedError,
+} = require("./customs.errors.services");
+
 module.exports = {
   async filtroBodySignUp(user, addresses) {
-    // Validação de campos obrigatórios do endereço
+    // Validação de endereço
     if (!addresses) {
-      const error = new Error();
-        error.name = "NotAddressesRecived",
-        error.message = "Para o bom funcionamento da API, e necessário informar pelo menos um endereço",
-        error.cause = "Não foi informado nenhum endereço na requisição";
-      error.status = 422;
-
-      throw error;
+      throw new NotAddressesReceivedError();
     }
 
     if (addresses.length > 0) {
@@ -34,45 +37,23 @@ module.exports = {
           if (city === undefined) nao_informado.push("city");
           if (state === undefined) nao_informado.push("state");
 
-          const error = new Error();
-            error.name = "NotFieldsAddressRecived",
-            error.message = "Para o bom funcionamento da API, e necessário informar todos os campos orbigatorios do endereço",
-            error.cause = `Não informado ${nao_informado} na requisição`;
-            error.status = 422;
-
-          throw error;
+          throw new NotFieldsAddressReceivedError(nao_informado);
         }
       });
     }
 
-    // Validação de campos obrigatórios do usuário
-    const { full_name, cpf, birth_date, email, phone, password } = user;
+    // Validação de  usuário
     if (!user) {
-      const error = new Error();
-        error.name = "NotUserRecived",
-        error.message = "Para o bom funcionamento da API, e necessário informar pelo menos um usuário",
-        error.cause = "Não informado usuário na requisição";
-      error.status = 422;
-
-      throw error;
+      throw new NotUserReceivedError();
     }
-    if (await estaNaBD(User, "cpf", cpf)) {
-      const error = new Error();
-        error.name = "UserAlreadyExists",
-        error.message = "O usuário já existe na base de dados",
-        error.cause = `CPF ${cpf} já cadastrado`;
-        error.status = 409;
 
-      throw error;
+    const { full_name, cpf, birth_date, email, phone, password } = user;
+
+    if (await estaNaBD(User, "cpf", cpf)) {
+      throw new CpfUserAlredyExistError();
     }
     if (await estaNaBD(User, "email", email)) {
-      const error = new Error();
-      (error.name = "UserAlreadyExists"),
-        (error.message = "O usuário já existe na base de dados"),
-        (error.cause = `EMAIL ${email} já cadastrado`);
-      error.status = 409;
-
-      throw error;
+      throw new EmailUserAlredyExistError();
     }
 
     if (
@@ -91,14 +72,8 @@ module.exports = {
       if (phone === undefined) nao_informado.push("phone");
       if (password === undefined) nao_informado.push("password");
 
-      const error = new Error();
-      error.name = "NotFieldsUserRecived",
-        error.message =
-          "Para o bom funcionamento da API, e necessário informar os seguintes campos:",
-        error.cause = `Não informado ${nao_informado} na requisição`;
-      error.status = 422;
 
-      throw error;
+      throw new NotFieldsUserReceivedError(nao_informado);
     }
   },
   async errorLauncher(error, res) {
@@ -108,7 +83,7 @@ module.exports = {
         o erro e notificar o dev 
         na versão 2.0
         */
-      console.log(error);
+      //console.log(error);
     }
     //Se o erro for de validação do sequelize ele retorna um erro 400 por se tratar de uma requisição mal formatada
     if (error.name === "SequelizeValidationError") {
