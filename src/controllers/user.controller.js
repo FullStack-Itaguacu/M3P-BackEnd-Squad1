@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt"); // Importando o bcrypt
 const User = require("../models/user");
 
 module.exports = {
@@ -8,7 +9,8 @@ module.exports = {
     try {
       const user = await User.findOne({ email });
 
-      if (!user || user.password !== password) {
+      if (!user || !(await bcrypt.compare(password, user.password))) {
+        // Comparando a senha usando bcrypt.compare
         return res.status(401).json({
           statusCode: 401,
           message: "Credenciais inválidas",
@@ -25,7 +27,7 @@ module.exports = {
           id: user._id,
         },
         process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "12h" }
       );
 
       return res.status(200).json({
