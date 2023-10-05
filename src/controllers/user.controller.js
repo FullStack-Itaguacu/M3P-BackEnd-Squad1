@@ -48,13 +48,10 @@ const User = require("../models/user");
 const Address = require("../models/address");
 require("../models/userAddress");
 const { filtroBodySignUp } = require("../services/user.services");
-const { estaNaBD } = require("../services/validators");
 
 module.exports = {
   async signUp(req, res) {
-    res.status(500);
     try {
-
       const user = req.body.user;
       const addresses = req.body.address;
 
@@ -66,7 +63,7 @@ module.exports = {
       userCreated.setAddresses(addressesCreated);
 
       return res.status(201).json({
-        message: `${userCreated.name} seja bem vindo a plataforma, cadastramos satisfatoriamente você e seus endereços!`,
+        message: `${userCreated.full_name} seja bem vindo a plataforma, cadastramos satisfatoriamente você e seus endereços!`,
         cause: {
           new_user: {
             id: userCreated.id,
@@ -75,18 +72,29 @@ module.exports = {
           },
           new_addresses: addressesCreated,
         },
-        status : 201
+        status: 201,
       });
     } catch (error) {
-      if(!error.cause){
+      if (!error.cause) {
         /*
         implementar logica para salvar
         o erro e notificar o dev 
         na versão 2.0
         */
-        console.log(error)
+        console.log(error);
       }
-      return res.json({
+      //Se o erro for de validação do sequelize ele retorna um erro 422
+      if (error.name === "SequelizeValidationError") {
+        return res.status(400).json({
+          message: error.message,
+          cause:
+            "Requisição mal formatada, verifique os campos obrigatórios e tente novamente",
+          status: 400,
+          error: "BadFormatRequest",
+        });
+      }
+      // Caso o erro não foi tratado no filtroBodySignUp ele retorna um erro 500 com mensagem generica
+      return res.status(error.status || 500).json({
         message:
           error.message ||
           "Ocorreu um erro, pode contatar nosso team de desenvolvimento no email bug_busters_team@dominio.com e enviar esta response nos ficaremos muito gratos em ajudar a resolver o problema, ou verificar a seguente informação para tentar resolver por si mesmo",

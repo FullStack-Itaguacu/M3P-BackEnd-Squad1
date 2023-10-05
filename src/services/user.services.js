@@ -1,3 +1,6 @@
+const {estaNaBD}= require('./validators')
+const User = require("../models/user");
+
 module.exports = {
   async filtroBodySignUp(user, addresses, res) {
 
@@ -55,6 +58,26 @@ module.exports = {
             error.message ="Para o bom funcionamento da API, e necessário informar pelo menos um usuário",
             error.cause = "Não informado usuário na requisição";
             error.status = 422;
+
+        throw error;
+    }
+    if(await estaNaBD(User, 'cpf', cpf)){
+        res.status(409);
+        const error = new Error();
+            error.name = "UserAlreadyExists",
+            error.message ="O usuário já existe na base de dados",
+            error.cause = `CPF ${cpf} já cadastrado`;
+            error.status = 409;
+
+        throw error;
+    }
+    if(await estaNaBD(User, 'email', email)){
+        res.status(409);
+        const error = new Error();
+            error.name = "UserAlreadyExists",
+            error.message ="O usuário já existe na base de dados",
+            error.cause = `EMAIL ${email} já cadastrado`;
+            error.status = 409;
 
         throw error;
     }

@@ -30,13 +30,25 @@ const User = connection.define(
       validate: {
         len: {
           args: [11, 11],
-          msg: "O CPF deve ter 11 caracteres",
+          msg: "O CPF deve ter exatamente 11 caracteres",
+        },
+        isNumeric: {
+          msg: "O CPF deve conter apenas números sem pontos ou traços ex: 12345678910",
         },
       },
     },
      phone: {
       type: Sequelize.STRING,
       allowNull: false,
+      validate: {
+        len: {
+          args: [10, 15],
+          msg: "O telefone deve ter entre 10 e 15 caracteres",
+        },
+        isNumeric: {
+          msg: "O telefone deve conter apenas números sem pontos ou traços ex: 12345678910",
+        },
+      },
     },
     password: {
       type: Sequelize.STRING,
