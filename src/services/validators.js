@@ -19,3 +19,5 @@ async function validaSenha(senha) {
     }
     return regex.test(email);
   }
+
+  module.exports = { validaSenha, validaEmail };
