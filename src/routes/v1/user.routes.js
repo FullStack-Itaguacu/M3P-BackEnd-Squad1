@@ -1,11 +1,12 @@
 // const { loginUser, createOneUser } = require("../controllers/user.controller"); 
 const { Router } = require("express");
-const { auth } = require("../../services/auth");
+const {signUp , login } = require("../../controllers/user.controller");
+
 
 class UserRouter {
   routesFromUser() {
     const userRoutes = Router();
-    userRoutes.post("/user/login");
+    userRoutes.post("/user/login" , login);
     userRoutes.post("/user/signup");
     userRoutes.post("/user/admin/signup");
     userRoutes.get("/buyers/admin/:offset/:limit");
