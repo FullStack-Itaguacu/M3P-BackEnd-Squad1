@@ -1,10 +1,11 @@
+const bcrypt = require("bcrypt");
+const {WeakPasswordError}= require("./customs.errors.services")
 //função para validar senha
 async function validaSenha(senha) {
     const regex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*\W)[a-zA-Z0-9\W]{8,}$/;
     if (!regex.test(senha)) {
-      throw new Error(
-        "A senha deve ter no mínimo 8 caracteres, mínimo 1 letra maiúscula, mínimo 1 número e mínimo 1 caracteres"
-      );
+      throw new WeakPasswordError()
+
     }
     return regex.test(senha);
   }
@@ -28,5 +29,13 @@ async function validaSenha(senha) {
     });
     return achado ? true : false;
   }
-
-  module.exports = { validaSenha, validaEmail, estaNaBD };
+  async function encriptarSenha(senha) {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(senha, salt);
+    return hash;
+  }
+  async function desdenciptarSenha(senha, hash) {
+    const valid = await bcrypt.compare(senha, hash);
+    return valid;
+  }
+  module.exports = { validaSenha, validaEmail, estaNaBD , encriptarSenha, desdenciptarSenha};

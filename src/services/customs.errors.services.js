@@ -69,7 +69,16 @@ class NotFieldsUserReceivedError extends CustomError {
     );
   }
 }
-
+class  WeakPasswordError extends CustomError {
+    constructor() {
+        super(
+        "WeakPasswordError",
+        "A senha deve ter no mínimo 8 caracteres, mínimo 1 letra maiúscula, mínimo 1 número e mínimo 1 caracteres",
+        "A senha informada não cumpre os requisitos de segurança",
+        400
+        );
+    }
+    }
 module.exports = {
   NotAddressesReceivedError,
   NotFieldsAddressReceivedError,
@@ -77,4 +86,5 @@ module.exports = {
   CpfUserAlredyExistError,
   EmailUserAlredyExistError,
   NotFieldsUserReceivedError,
+  WeakPasswordError
 };

@@ -53,9 +53,6 @@ const User = connection.define(
     password: {
       type: Sequelize.STRING,
       allowNull: false,
-      validate: {
-        validaSenha,
-      },
     },
     birth_date: {
       type: Sequelize.DATEONLY,
