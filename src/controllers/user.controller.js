@@ -1,62 +1,39 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt"); // Importando o bcrypt
+const bcrypt = require("bcrypt");
 const User = require("../models/user");
+
+const { errorResponse, successResponse } = require("../services/validators");
+const { generateToken } = require("../services/auth");
 
 module.exports = {
   async login(req, res) {
-    const { email, password } = req.body;
-    
-    if (!email || !password) {
-      return res.status(400).json({
-        statusCode: 400,
-        message: "Requisição mal-formatada",
-        error: "Bad Request",
-        cause: "Email e senha são obrigatórios",
-      });
-    }
     try {
-      
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return errorResponse(res, "Email e senha são obrigatórios", 401);
+      }
+
       const user = await User.findOne({ where: { email } });
       if (!user) {
-        return res.status(400).json({
-          statusCode: 400,
-          message: "Usuário não encontrado",
-          error: "Bad Request",
-        });
+        return errorResponse(res, "Usuário não encontrado", 400);
       }
-      // Compara a senha informada com a senha criptografada no banco 
+
       const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) {
-        return res.status(400).json({
-          statusCode: 400,
-          message: "Senha ou E-mail incorreta",
-          error: "Bad Request",
-        });
+        return errorResponse(res, "Senha ou E-mail incorreta", 401);
       }
 
-      const token = jwt.sign(
-        {
-          type_user: user.type_user,
-          email: user.email,
-          full_name: user.full_name,
-          id: user._id,
-        },
-        process.env.JWT_KEY,
-        { expiresIn: "12h" }
-      );
+      const tokenPayload = {
+        type_user: user.type_user,
+        email: user.email,
+        full_name: user.full_name,
+        id: user._id,
+      };
 
-      return res.status(200).json({
-        statusCode: 200,
-        message: "Autenticação bem-sucedida",
-        data: { token },
-      });
+      const token = generateToken(tokenPayload);
+      return successResponse(res, { token }, "Autenticação bem-sucedida");
     } catch (error) {
-      return res.status(500).json({
-        statusCode: 500,
-        message: "Erro interno do servidor",
-        error: "Internal Server Error",
-        cause: error.message,
-      });
+      return errorResponse(res, "Erro interno do servidor", 500, error.message);
     }
   },
 };
