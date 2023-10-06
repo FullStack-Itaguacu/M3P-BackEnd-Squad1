@@ -106,7 +106,8 @@ const Product = connection.define(
         }
     },
     typeProduct: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM,
+        values: ['controlled', 'uncontroled'],
         allowNull: false,
         validate: {
             isIn: {

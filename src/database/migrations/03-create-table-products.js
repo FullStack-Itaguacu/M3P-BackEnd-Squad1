@@ -42,7 +42,8 @@ module.exports = {
         allowNull: false
       },
       type_product: {
-        type: Sequelize.ENUM("Controled Medicine", "Uncontroled Medication"),
+        type: Sequelize.ENUM(),
+        values: ['controlled', 'uncontroled'],
         allowNull: false
       },
       description: {
