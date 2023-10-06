@@ -47,7 +47,7 @@ module.exports = {
       throw new NotUserReceivedError();
     }
 
-    const { full_name, cpf, birth_date, email, phone, password } = user;
+    const { full_name, cpf, birth_date, email, phone, password } = user;    
 
     if (await estaNaBD(User, "cpf", cpf)) {
       throw new CpfUserAlredyExistError();

@@ -25,4 +25,26 @@ module.exports = {
       errorLauncher(error, res);
     }
   },
+
+  async adminSignUp(req, res) {
+    try {
+      const user = req.body.user;
+      const addresses = req.body.address;
+
+      await filtroBodySignUp(user, addresses);
+      await validaSenha(user.password);
+      user.password = await encriptarSenha(user.password);
+      user.type_user = "Admin";
+      user.created_by = 1;
+
+      const userCreated = await User.create(user);
+      const addressesCreated = await Address.bulkCreate(addresses);
+      userCreated.setAddresses(addressesCreated)
+      
+      successMessage(res, userCreated, addressesCreated)
+      
+    } catch (error) {
+      errorLauncher(error, res);
+    }
+  }
 };
