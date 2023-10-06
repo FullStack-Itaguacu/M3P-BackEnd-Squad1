@@ -52,7 +52,7 @@ module.exports = {
         });
       }
       // Compara a senha informada com a senha criptografada no banco
-      const valid = await ddesdenciptarSenha(password, user.password);
+      const valid = await desdenciptarSenha(password, user.password);
       if (!valid) {
         return res.status(401).json({
           statusCode: 401,
