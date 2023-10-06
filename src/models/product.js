@@ -112,7 +112,7 @@ const Product = connection.define(
       allowNull: false,
       validate: {
         isIn: {
-          args: [["controlled", "uncontrolled"]],
+          values: ["controlled", "uncontrolled"],
           msg: {
             status: "400",
             cause:
@@ -132,7 +132,6 @@ const Product = connection.define(
       allowNull: true,
       defaultValue: null,
     },
-   
   },
   {
     paranoid: true,
