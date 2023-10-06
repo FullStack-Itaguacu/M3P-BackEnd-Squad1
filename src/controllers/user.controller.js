@@ -7,15 +7,22 @@ module.exports = {
     const { email, password } = req.body;
 
     try {
-      const user = await User.findOne({ email });
-
-      if (!user || !(await bcrypt.compare(password, user.password))) {
-        // Comparando a senha usando bcrypt.compare
-        return res.status(401).json({
-          statusCode: 401,
-          message: "Credenciais inválidas",
-          error: "Unauthorized",
-          cause: "Invalid email or password",
+      
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        return res.status(400).json({
+          statusCode: 400,
+          message: "Usuário não encontrado",
+          error: "Bad Request",
+        });
+      }
+      // Compara a senha informada com a senha criptografada no banco 
+      const validPassword = await bcrypt.compare(password, user.password);
+      if (!validPassword) {
+        return res.status(400).json({
+          statusCode: 400,
+          message: "Senha ou E-mail incorreta",
+          error: "Bad Request",
         });
       }
 
