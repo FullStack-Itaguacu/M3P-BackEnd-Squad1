@@ -43,7 +43,7 @@ module.exports = {
       },
       type_product: {
         type: Sequelize.ENUM(),
-        values: ['controlled', 'uncontroled'],
+        values: ['controlled', 'uncontrolled'],
         allowNull: false
       },
       description: {
