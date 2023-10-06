@@ -32,33 +32,48 @@ module.exports = {
     }
   },
   async login(req, res) {
-    try {
-      const { email, password } = req.body;
-      if (!email || !password) {
-        return errorResponse(res, "Email e senha são obrigatórios", 401);
-      }
+    const { email, password } = req.body;
 
+    if (!email || !password) {
+      return res.status(401).json({
+        statusCode: 401,
+        message: "Requisição mal-formatada",
+        error: "Bad Request",
+        cause: "Email e senha são obrigatórios",
+      });
+    }
+    try {
       const user = await User.findOne({ where: { email } });
       if (!user) {
-        return errorResponse(res, "Usuário não encontrado", 400);
+        return res.status(401).json({
+          statusCode: 401,
+          message: "Usuário não encontrado",
+          error: "Bad Request",
+        });
+      }
+      // Compara a senha informada com a senha criptografada no banco
+      const valid = await decryptPassword(password, user.password);
+      if (!valid) {
+        return res.status(401).json({
+          statusCode: 401,
+          message: "Senha ou E-mail incorreta",
+          error: "Bad Request",
+        });
       }
 
-      const validPassword = await bcrypt.compare(password, user.password);
-      if (!validPassword) {
-        return errorResponse(res, "Senha ou E-mail incorreta", 401);
-      }
-
-      const tokenPayload = {
-        type_user: user.type_user,
-        email: user.email,
-        full_name: user.full_name,
-        id: user._id,
-      };
-
-      const token = generateToken(tokenPayload);
-      return successResponse(res, { token }, "Autenticação bem-sucedida");
+      const token = await tokenGenerator(user); // Aguarde a Promise ser resolvida
+      return res.status(200).json({
+        statusCode: 200,
+        message: "Autenticação bem-sucedida",
+        data: { token },
+      });
     } catch (error) {
-      return errorResponse(res, "Erro interno do servidor", 500, error.message);
+      return res.status(500).json({
+        statusCode: 500,
+        message: "Erro interno do servidor",
+        error: "Internal Server Error",
+        cause: error.message,
+      });
     }
   },
 };
