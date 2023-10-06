@@ -5,7 +5,15 @@ const User = require("../models/user");
 module.exports = {
   async login(req, res) {
     const { email, password } = req.body;
-
+    
+    if (!email || !password) {
+      return res.status(400).json({
+        statusCode: 400,
+        message: "Requisição mal-formatada",
+        error: "Bad Request",
+        cause: "Email e senha são obrigatórios",
+      });
+    }
     try {
       
       const user = await User.findOne({ where: { email } });
