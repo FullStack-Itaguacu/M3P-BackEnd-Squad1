@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const { errorResponse, successResponse } = require("../services/validators");
-const { generateToken } = require("../services/auth");
+const { tokenGenerator } = require("../services/auth");
 const User = require("../models/user");
 const Address = require("../models/address");
 require("../models/userAddress");
@@ -10,7 +10,7 @@ const {
   errorLauncher,
   successMessage,
 } = require("../services/user.services");
-const { validaSenha, encriptarSenha } = require("../services/validators");
+const { validaSenha, encriptarSenha,desdenciptarSenha } = require("../services/validators");
 
 module.exports = {
   async signUp(req, res) {
@@ -52,7 +52,7 @@ module.exports = {
         });
       }
       // Compara a senha informada com a senha criptografada no banco
-      const valid = await decryptPassword(password, user.password);
+      const valid = await ddesdenciptarSenha(password, user.password);
       if (!valid) {
         return res.status(401).json({
           statusCode: 401,
