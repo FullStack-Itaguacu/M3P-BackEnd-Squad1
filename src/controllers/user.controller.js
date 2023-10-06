@@ -26,7 +26,7 @@ module.exports = {
           full_name: user.full_name,
           id: user._id,
         },
-        process.env.JWT_SECRET,
+        process.env.JWT_KEY,
         { expiresIn: "12h" }
       );
 
