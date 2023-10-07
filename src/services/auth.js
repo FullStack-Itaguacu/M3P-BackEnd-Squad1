@@ -55,11 +55,15 @@ module.exports = {
     }
   },
   // funçao para gerar o token do usuario
-  async tokenGenerator(payload, expiresIn = "1d") {
+  async tokenGenerator(user) {
+    const payload = {
+      id: user.id,
+      email: user.email,
+      type_user: user.type_user,
+    };
     const token = sign(payload, process.env.JWT_KEY, {
-      expiresIn: expiresIn,
+      expiresIn: "1d",
     });
-
     return token;
   },
 };

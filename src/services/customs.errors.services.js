@@ -69,16 +69,56 @@ class NotFieldsUserReceivedError extends CustomError {
     );
   }
 }
-class  WeakPasswordError extends CustomError {
-    constructor() {
-        super(
-        "WeakPasswordError",
-        "A senha deve ter no mínimo 8 caracteres, mínimo 1 letra maiúscula, mínimo 1 número e mínimo 1 caracteres",
-        "A senha informada não cumpre os requisitos de segurança",
-        400
-        );
-    }
-    }
+class WeakPasswordError extends CustomError {
+  constructor() {
+    super(
+      "WeakPasswordError",
+      "A senha deve ter no mínimo 8 caracteres, mínimo 1 letra maiúscula, mínimo 1 número e mínimo 1 caracteres",
+      "A senha informada não cumpre os requisitos de segurança",
+      400
+    );
+  }
+}
+class FieldEmailNotReceived extends CustomError {
+  constructor() {
+    super(
+      "FieldEmailNotReceived",
+      "O campo email é obrigatório",
+      "O campo email não foi enviado",
+      401
+    );
+  }
+}
+class FieldPasswordNotReceived extends CustomError {
+  constructor() {
+    super(
+      "FieldPasswordNotReceived",
+      "O campo password é obrigatório",
+      "O campo password não foi enviado",
+      401
+    );
+  }
+}
+class IncorrectFields extends CustomError {
+  constructor() {
+    super(
+      "EmailOrPasswordIncorrects",
+      "Email ou senha incorretos",
+      "Email ou senha incorretos",
+      401
+    );
+  }
+}
+class BuyerNotAllowed extends CustomError {
+  constructor() {
+    super(
+      "BuyerNotAllowed",
+      "Somente administradores pode efetuar o login",
+      "Este usuário não pode efetuar login nesta página",
+      403
+    );
+  }
+}
 module.exports = {
   NotAddressesReceivedError,
   NotFieldsAddressReceivedError,
@@ -86,5 +126,9 @@ module.exports = {
   CpfUserAlredyExistError,
   EmailUserAlredyExistError,
   NotFieldsUserReceivedError,
-  WeakPasswordError
+  WeakPasswordError,
+  FieldEmailNotReceived,
+  FieldPasswordNotReceived,
+  IncorrectFields,
+  BuyerNotAllowed
 };
