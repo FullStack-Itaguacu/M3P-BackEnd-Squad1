@@ -8,6 +8,10 @@ const {
   CpfUserAlredyExistError,
   EmailUserAlredyExistError,
   NotFieldsUserReceivedError,
+  FieldEmailNotReceived,
+  FieldPasswordNotReceived,
+  IncorrectFields,
+  BuyerNotAllowed
 } = require("./customs.errors.services");
 
 module.exports = {
@@ -49,12 +53,6 @@ module.exports = {
 
     const { full_name, cpf, birth_date, email, phone, password } = user;
 
-    if (await estaNaBD(User, "cpf", cpf)) {
-      throw new CpfUserAlredyExistError();
-    }
-    if (await estaNaBD(User, "email", email)) {
-      throw new EmailUserAlredyExistError();
-    }
 
     if (
       full_name === undefined ||
@@ -72,8 +70,14 @@ module.exports = {
       if (phone === undefined) nao_informado.push("phone");
       if (password === undefined) nao_informado.push("password");
 
-
       throw new NotFieldsUserReceivedError(nao_informado);
+    }
+
+    if (await estaNaBD(User, "cpf", cpf)) {
+      throw new CpfUserAlredyExistError();
+    }
+    if (await estaNaBD(User, "email", email)) {
+      throw new EmailUserAlredyExistError();
     }
   },
   async errorLauncher(error, res) {
@@ -106,6 +110,30 @@ module.exports = {
         "Desta vez quem falhou foi o dev :(, mas não se preocupe, ele já foi notificado e está trabalhando para resolver o problema o mais rápido possível",
       error: error.name,
     });
+  },
+  async filtroBodyLoginAdmin(email, password) {
+
+    if (!email) {
+      throw new FieldEmailNotReceived();
+    }
+
+    if (!password) {
+      throw new FieldPasswordNotReceived();
+    }
+
+    if (!await estaNaBD(User, "email", email)) {
+      throw new IncorrectFields();
+    }
+  },
+  async verifyTypeUser(type_user) {
+    if (type_user !== "Admin") {
+      throw new BuyerNotAllowed();
+    }
+  },
+  async verifyPassword(userPassword) {
+    if (!userPassword) {
+      throw new IncorrectFields();
+    }
   },
   async successMessage(res, userCreated, addressesCreated) {
     const addressInfo = addressesCreated.reduce((acc, address) => {

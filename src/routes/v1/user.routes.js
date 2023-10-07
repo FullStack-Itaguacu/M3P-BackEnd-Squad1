@@ -1,6 +1,6 @@
 // const { loginUser, createOneUser } = require("../controllers/user.controller"); 
 const { Router } = require("express");
-const {signUp , login } = require("../../controllers/user.controller");
+const { signUp, login, loginAdmin } = require("../../controllers/user.controller");
 
 class UserRouter {
   routesFromUser() {
@@ -10,7 +10,9 @@ class UserRouter {
     userRoutes.post("/user/admin/signup");
     userRoutes.get("/buyers/admin/:offset/:limit");
     userRoutes.get("/buyers/admin/:userId");
-    userRoutes.patch("/buyers/admin/:userId");    
+    userRoutes.patch("/buyers/admin/:userId");
+    userRoutes.post("/user/admin/login", loginAdmin);
+
     return userRoutes;
   }
 }
