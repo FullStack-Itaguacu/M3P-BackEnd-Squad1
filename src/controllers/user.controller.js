@@ -1,9 +1,13 @@
+const bcrypt = require("bcrypt");
+const { errorResponse, successResponse } = require("../services/validators");
+const { tokenGenerator } = require("../services/auth");
 const User = require("../models/user");
 const Address = require("../models/address");
 require("../models/userAddress");
 const { sign } = require('jsonwebtoken');
 
-const { filtroBodySignUp,
+const { 
+  filtroBodySignUp,
   errorLauncher,
   successMessage,
   filtroBodyLoginAdmin,
@@ -11,6 +15,7 @@ const { filtroBodySignUp,
   verifyPassword
 } = require("../services/user.services");
 const { validaSenha, encriptarSenha, desdenciptarSenha } = require("../services/validators")
+
 
 module.exports = {
   async signUp(req, res) {
@@ -24,9 +29,10 @@ module.exports = {
 
       const userCreated = await User.create(user);
       const addressesCreated = await Address.bulkCreate(addresses);
-      userCreated.setAddresses(addressesCreated)
 
-      successMessage(res, userCreated, addressesCreated)
+      userCreated.setAddresses(addressesCreated);
+
+      successMessage(res, userCreated, addressesCreated);
 
     } catch (error) {
       errorLauncher(error, res);
@@ -63,4 +69,51 @@ module.exports = {
       errorLauncher(error, res)
     }
   }
+
+  async login(req, res) {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(401).json({
+        statusCode: 401,
+        message: "Requisição mal-formatada",
+        error: "Bad Request",
+        cause: "Email e senha são obrigatórios",
+      });
+    }
+    try {
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        return res.status(401).json({
+          statusCode: 401,
+          message: "Usuário não encontrado",
+          error: "Bad Request",
+        });
+      }
+      // Compara a senha informada com a senha criptografada no banco
+      const valid = await desdenciptarSenha(password, user.password);
+      if (!valid) {
+        return res.status(401).json({
+          statusCode: 401,
+          message: "Senha ou E-mail incorreta",
+          error: "Bad Request",
+        });
+      }
+
+      const token = await tokenGenerator(user); // Aguarde a Promise ser resolvida
+      return res.status(200).json({
+        statusCode: 200,
+        message: "Autenticação bem-sucedida",
+        data: { token },
+      });
+    } catch (error) {
+      return res.status(500).json({
+        statusCode: 500,
+        message: "Erro interno do servidor",
+        error: "Internal Server Error",
+        cause: error.message,
+      });
+    }
+  },
 };
+
