@@ -139,6 +139,26 @@ class LimitIsNan extends CustomError{
     )
   }
 }
+class NotNameReceivedError extends CustomError{
+  constructor(){
+    super(
+      "NotNameReceived",
+      "O nome do produto é obrigatório",
+      "O nome do produto não foi informado na requisição",
+      400
+    )
+  }
+}
+class NotTypeProductReceivedError extends CustomError{
+  constructor(){
+    super(
+      "NotTypeProductReceived",
+      "O tipo do produto é obrigatório",
+      "O tipo do produto não foi informado na requisição",
+      400
+    )
+  }
+}
 async function errorLauncher(error, res) {
   if (!error.cause) {
     /*
@@ -173,5 +193,7 @@ module.exports = {
   IncorrectFields,
   BuyerNotAllowed,
   OffsetIsNan, 
-  LimitIsNan
+  LimitIsNan,
+  NotNameReceivedError,
+  NotTypeProductReceivedError
 };
