@@ -7,7 +7,7 @@ const UserAddress = require("./userAddress");
 const Sales = connection.define(
   "sales",
   {
-    buyerId: {
+    buyer_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
@@ -21,7 +21,7 @@ const Sales = connection.define(
         },
       }
     },
-    sellerId: {
+    seller_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
@@ -35,7 +35,7 @@ const Sales = connection.define(
         },
       }
     },
-    productId: {
+    product_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
@@ -49,7 +49,7 @@ const Sales = connection.define(
         },
       }
     },
-    usersAddressesId: {
+    users_addresses_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
@@ -63,7 +63,7 @@ const Sales = connection.define(
         },
       }
     },
-    amountBuy: {
+    amount_buy: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
@@ -85,7 +85,7 @@ const Sales = connection.define(
         notNull: true
       }
     },
-    typePayment: {
+    type_payment: {
       type: DataTypes.ENUM(
         "credit_card",
         "debit_card",
@@ -98,34 +98,11 @@ const Sales = connection.define(
         notNull: true
       }
     },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      validate: {
-        notNull: true,
-        isDate: true
-      }
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      validate: {
-        notNull: true,
-        isDate: true
-      }
-    },
-    deletedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      validate: {
-        isDate: true
-      }
-    }
   });
 
-Sales.belongsTo(User, { foreignKey: 'buyerId', as: 'buyer' });
-Sales.belongsTo(User, { foreignKey: 'sellerId', as: 'seller' });
-Sales.belongsTo(Product, { foreignKey: 'productId', as: 'product' });
-Sales.belongsTo(UserAddress, { foreignKey: 'usersAddressesId', as: 'userAddress' });
+Sales.belongsTo(User, { foreignKey: 'buyer_id', as: 'buyer' });
+Sales.belongsTo(User, { foreignKey: 'seller_id', as: 'seller' });
+Sales.belongsTo(Product, { foreignKey: 'product_id', as: 'product' });
+Sales.belongsTo(UserAddress, { foreignKey: 'users_addresses_id', as: 'user_address' });
 
 module.exports = {Sales};
