@@ -119,7 +119,48 @@ class BuyerNotAllowed extends CustomError {
     );
   }
 }
+class OffsetIsNan extends CustomError{
+  constructor(){
+    super(
+      "OffsetIsNan",
+      "O valor do offset deve ser um número",
+      "O valor do offset informado na path params não é um número",
+      400
+    )
+  }
+}
+class LimitIsNan extends CustomError{
+  constructor(){
+    super(
+      "LimitIsNan",
+      "O valor do limit deve ser um número",
+      "O valor do limit informado na path params não é um número",
+      400
+    )
+  }
+}
+async function errorLauncher(error, res) {
+  if (!error.cause) {
+    /*
+      implementar logica para salvar
+      o erro e notificar o dev 
+      na versão 2.0
+      */
+    //console.log(error);
+  }
+  //Se o erro for de validação do sequelize ele retorna um erro 400 por se tratar de uma requisição mal formatada
+  if (error.name === "SequelizeValidationError") {
+    return res.status(400).json({
+      message: error.message,
+      cause:
+        "Requisição mal formatada, verifique os campos obrigatórios e tente novamente",
+      status: 400,
+      error: "BadFormatRequest",
+    });
+  }
+}
 module.exports = {
+  errorLauncher,
   NotAddressesReceivedError,
   NotFieldsAddressReceivedError,
   NotUserReceivedError,
@@ -130,5 +171,7 @@ module.exports = {
   FieldEmailNotReceived,
   FieldPasswordNotReceived,
   IncorrectFields,
-  BuyerNotAllowed
+  BuyerNotAllowed,
+  OffsetIsNan, 
+  LimitIsNan
 };

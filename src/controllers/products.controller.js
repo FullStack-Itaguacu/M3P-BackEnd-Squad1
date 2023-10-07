@@ -1,4 +1,6 @@
 const Products = require("../models/product");
+const { errorLauncher } = require("../services/user.services");
+const {OffsetIsNan, LimitIsNan}= require("../services/customs.errors.services")
 
 module.exports = {
   async listProducts(req, res) {
@@ -6,6 +8,12 @@ module.exports = {
       const user_id = req.payload.id;
       const { name, type_product } = req.query;
       var { offset, limit } = req.params;
+      if(isNaN(offset) ){
+        throw new OffsetIsNan();
+      }
+      if(isNaN(limit) ){
+        throw new LimitIsNan();
+      }
       /* limitando a quantidade de itens por página a 20,
        * caso o usuário tente passar um valor maior que 20
        * valor será setado em 20 para nao quebrar a paginação .
@@ -40,7 +48,7 @@ module.exports = {
           const total_pages = Math.ceil(total_items / items_for_page);
           var next_page = actual_page < total_pages ? actual_page + 1 : 0;
           var prev_page = actual_page > 1 ? actual_page - 1 : 0;
-          
+
           if (actual_page > 1) {
             prev_page = actual_page - 1;
           }
@@ -64,15 +72,10 @@ module.exports = {
           });
         })
         .catch((error) => {
-          return res.status(500).json({
-            status: "500",
-            error: error,
-            message: error.message,
-            cause: "Foi erro do desenvolvedor :(",
-          });
+          errorLauncher(error, res);
         });
     } catch (error) {
-      return res.send(error);
+      errorLauncher(error, res);
     }
   },
 };
