@@ -1,10 +1,13 @@
 const Products = require("../models/product");
-const { errorLauncher } = require("../services/user.services");
+// const { errorLauncher } = require("../services/user.services");
+const {errorLauncher} = require("../services/customs.errors.services.js");
 const {
   filtroBodyOffsetLimitSearch,
   searchOffsetLimit,
+  filtroUpdateProductById,
+  updateProductById,
 } = require("../services/product.services");
-
+const {InvalidKeysReceivedError}= require("../services/customs.errors.services");
 module.exports = {
   async listProductsOffsetLimit(req, res) {
     try {
@@ -43,59 +46,35 @@ module.exports = {
     }
   },
   async updateProductById(req, res) {
-    const { name, image_link, dosage, total_stock } = req.body;
-    const { product_id } = req.params;
-    const user_id = req.payload.id;
-    const product = await Products.findByPk(product_id);
-    if (!product) {
-      return res.status(404).json({
-        status: "404",
-        message: "Produto não encontrado",
-        cause : "Produto não encontrado no banco de dados com o id informado",
-        error : "ProductNotFound"
-      });
+    try {
+      const { name, image_link, dosage, total_stock } = req.body;
+      const { product_id } = req.params;
+      const user_id = req.payload.id;
+      const product = await Products.findByPk(product_id);
+      const body_keys = Object.keys(req.body);
+      //verificar que so vem no body name, image_link , dosage e total_stock
+      const allowedUpdates = ["name", "image_link", "dosage", "total_stock"];
+      const isValidOperation = body_keys.every((update) =>
+        allowedUpdates.includes(update)
+      );
+      if (!isValidOperation) {
+        throw new InvalidKeysReceivedError();
+      }
+   
+      await filtroUpdateProductById(
+        name,
+        image_link,
+        dosage,
+        total_stock,
+        user_id,
+        product,
+        res,
+        body_keys
+      );
+
+      await updateProductById(product, res);
+    } catch (error) {
+       errorLauncher(error, res);
     }
-    if (product.user_id != user_id) {
-      return res.status(401).json({
-        status: "401",
-        message: "Você não tem permissão para atualizar este produto",
-        cause : "Esta tentando atualizar um produto que não é seu",
-        error : "NotOwnerProduct"
-      });
-    }
-    if(!name && !image_link && !dosage && !total_stock){
-      return res.status(400).json({
-        status: "400",
-        message: "Nenhum dado para atualizar",
-        cause : "Nenhum dado para atualizar",
-        error : "NoDataToUpdate"
-      });
-    }
-    if(!total_stock){
-      return res.status(400).json({
-        status: "400",
-        message: "O campo total_stock é obrigatório",
-        cause : "Não informou o campo total_stock no body é ele obrigatório",
-        error : "TotalStockRequired"
-      });
-    }
-    if (name) {
-      product.name = name;
-    }
-    if (image_link) {
-      product.image_link = image_link;
-    }
-    if (dosage) {
-      product.dosage = dosage;
-    }
-    if (total_stock) {
-      product.total_stock = total_stock;
-    }
-    await product.save();
-    return res.status(200).json({
-      status: "200",
-      message: "Produto atualizado com sucesso",
-      product,
-    });
   },
 };
