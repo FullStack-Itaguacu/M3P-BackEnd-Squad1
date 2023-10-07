@@ -11,7 +11,7 @@ class ProductsRouter {
     productsRoutes.get("/products/:productId");
     productsRoutes.post("/products/admin");
     productsRoutes.patch("/products/admin/:productId");
-    productsRoutes.get("/products/:offset/:limit", listAllProducts)
+    productsRoutes.get("/products/:offset/:limit", tokenValidate, listAllProducts)
     return productsRoutes;
   }
 }
