@@ -87,7 +87,7 @@ module.exports = {
         type_product,
         total_stock,
       } = req.body;
-
+     
       if (!req.payload || !req.payload.id) {
         return res
           .status(400)
@@ -95,13 +95,12 @@ module.exports = {
       }
 
       const { id: user_id } = req.payload;
-      console.log(user_id);
       const user = await User.findByPk(user_id);
 
       if (!user) {
         return res.status(400).json({ error: "Usuário não encontrado" });
       }
-
+      console.log("Antes de criar produto", req.body);
       const newProduct = await Products.create({
         user_id, // Corrigido para usar user_id
         name,
@@ -112,13 +111,17 @@ module.exports = {
         type_product,
         total_stock,
       });
+      console.log("depois de criar" , newProduct);
       return res
         .status(201)
         .json({ message: "Produto criado com sucesso", produto: newProduct });
-    } catch (err) {
+    } catch (error) {
       return res.status(400).json({
         error: "Erro ao criar produto",
-        message: err.message,
+        message: error.message,
+        cause: "Foi erro do desenvolvedor :(",
+        
+        
       });
     }
   },
