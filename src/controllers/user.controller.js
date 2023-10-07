@@ -6,23 +6,16 @@ const Address = require("../models/address");
 require("../models/userAddress");
 const { sign } = require('jsonwebtoken');
 
-const { 
+const {
   filtroBodySignUp,
   errorLauncher,
   successMessage,
   filtroBodyLoginAdmin,
   verifyTypeUser,
-  verifyPassword
-} = require("../services/user.services");
-const { validaSenha, encriptarSenha, desdenciptarSenha } = require("../services/validators")
-
-const {
-  filtroBodySignUp,
-  errorLauncher,
-  successMessage,
+  verifyPassword,
   validateUserType,
 } = require("../services/user.services");
-const { validaSenha, encriptarSenha } = require("../services/validators");
+const { validaSenha, encriptarSenha, desdenciptarSenha } = require("../services/validators")
 
 module.exports = {
   async signUp(req, res) {
@@ -37,7 +30,7 @@ module.exports = {
       const userCreated = await User.create(user);
       const addressesCreated = await Address.bulkCreate(addresses);
       userCreated.setAddresses(addressesCreated);
-      
+
     } catch (error) {
       errorLauncher(error, res);
     }
