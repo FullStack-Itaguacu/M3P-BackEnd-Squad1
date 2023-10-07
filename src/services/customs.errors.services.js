@@ -137,9 +137,68 @@ class OnlyNumbers extends CustomError {
       "Foi recebido um caractere diferente de um número.",
       400
     );
+class OffsetIsNan extends CustomError{
+  constructor(){
+    super(
+      "OffsetIsNan",
+      "O valor do offset deve ser um número",
+      "O valor do offset informado na path params não é um número",
+      400
+    )
+  }
+}
+class LimitIsNan extends CustomError{
+  constructor(){
+    super(
+      "LimitIsNan",
+      "O valor do limit deve ser um número",
+      "O valor do limit informado na path params não é um número",
+      400
+    )
+  }
+}
+class NotNameReceivedError extends CustomError{
+  constructor(){
+    super(
+      "NotNameReceived",
+      "O nome do produto é obrigatório",
+      "O nome do produto não foi informado na requisição",
+      400
+    )
+  }
+}
+class NotTypeProductReceivedError extends CustomError{
+  constructor(){
+    super(
+      "NotTypeProductReceived",
+      "O tipo do produto é obrigatório",
+      "O tipo do produto não foi informado na requisição",
+      400
+    )
+  }
+}
+async function errorLauncher(error, res) {
+  if (!error.cause) {
+    /*
+      implementar logica para salvar
+      o erro e notificar o dev 
+      na versão 2.0
+      */
+    //console.log(error);
+  }
+  //Se o erro for de validação do sequelize ele retorna um erro 400 por se tratar de uma requisição mal formatada
+  if (error.name === "SequelizeValidationError") {
+    return res.status(400).json({
+      message: error.message,
+      cause:
+        "Requisição mal formatada, verifique os campos obrigatórios e tente novamente",
+      status: 400,
+      error: "BadFormatRequest",
+    });
   }
 }
 module.exports = {
+  errorLauncher,
   NotAddressesReceivedError,
   NotFieldsAddressReceivedError,
   NotUserReceivedError,
@@ -153,4 +212,8 @@ module.exports = {
   BuyerNotAllowed,
   NumberNotPositive,
   OnlyNumbers
+  OffsetIsNan, 
+  LimitIsNan,
+  NotNameReceivedError,
+  NotTypeProductReceivedError
 };

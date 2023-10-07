@@ -7,9 +7,11 @@ module.exports = {
       const token = req.headers.authorization;
 
       if (!token) {
-        return res.status(403).json({
-          msg: "Not token provided",
-          status: 403,
+        return res.status(401).json({
+          message: "Not token provided",
+          status: 401,
+          cause : "Token não fornecido",
+          error : "NotTokenProvidedError"
         });
       }
 
@@ -22,8 +24,10 @@ module.exports = {
       next();
     } catch (error) {
       return res.status(401).json({
-        msg: error.message,
+        message: "Não foi possivel validar o token, faça login novamente",
         status: 401,
+        cause : error.message,
+        error : "TokenInvalidError"
       });
     }
   },
@@ -33,9 +37,11 @@ module.exports = {
       const payload = req.payload;
 
       if (!payload) {
-        return res.status(403).json({
-          msg: "Payload not found",
-          status: 403,
+        return res.status(401).json({
+          message: "Payload not found",
+          status: 401,
+          cause : "Payload não encontrado , faça login novamente",
+          error : "PayloadNotFoundError"
         });
       }
 
@@ -43,14 +49,18 @@ module.exports = {
         next();
       } else {
         return res.status(403).json({
-          msg: "User not admin",
+          message: "User not admin",
           status: 403,
+          cause : "Usuario sem permissão para acessar essa rota",
+          error : "UserNotAdminError"
         });
       }
     } catch (error) {
-      return res.status(401).json({
-        msg: error.message,
-        status: 401,
+      return res.status(500).json({
+        message: "Internal server error",
+        status: 500,
+        cause : error.message,
+        error : "InternalServerError"
       });
     }
   },
