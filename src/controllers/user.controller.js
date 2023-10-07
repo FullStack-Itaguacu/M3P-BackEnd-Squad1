@@ -3,7 +3,13 @@ const Address = require("../models/address");
 require("../models/userAddress");
 const { sign } = require('jsonwebtoken');
 
-const { filtroBodySignUp, errorLauncher, successMessage, filtroBodyLoginAdmin, verifyTypeUser, verifyPassword } = require("../services/user.services");
+const { filtroBodySignUp,
+  errorLauncher,
+  successMessage,
+  filtroBodyLoginAdmin,
+  verifyTypeUser,
+  verifyPassword
+} = require("../services/user.services");
 const { validaSenha, encriptarSenha, desdenciptarSenha } = require("../services/validators")
 
 module.exports = {
@@ -36,16 +42,10 @@ module.exports = {
       const userExist = await User.findOne({ where: { email } })
 
       const userPassword = await desdenciptarSenha(password, userExist.password)
-      if (!userPassword) {
-        return res.status(401).send({
-          status: 401,
-          message: "Não foi possível cadastrar novo usuário.",
-          cause: "Email ou senha incorretos."
-        })
-      }
-      await verifyPassword(userPassword);
 
-      await verifyTypeUser(userExist.type_user);
+      await verifyPassword(userPassword)
+      await verifyTypeUser(userExist.type_user)
+
       const payload = {
         id: userExist.id,
         type_user: userExist.type_user,

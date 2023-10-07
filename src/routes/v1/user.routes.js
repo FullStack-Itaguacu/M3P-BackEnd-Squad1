@@ -11,7 +11,7 @@ class UserRouter {
     userRoutes.get("/buyers/admin/:offset/:limit");
     userRoutes.get("/buyers/admin/:userId");
     userRoutes.patch("/buyers/admin/:userId");
-    userRoutes.post("/user/admin/login", loginAdmin)
+    userRoutes.post("/user/admin/login", loginAdmin);
 
     return userRoutes;
   }
