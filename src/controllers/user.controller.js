@@ -26,10 +26,14 @@ module.exports = {
       await filtroBodySignUp(user, addresses);
       await validaSenha(user.password);
       user.password = await encriptarSenha(user.password);
+      // fixando o tipo de usuário como Buyer para evitar que o usuário se cadastre como Admin
+      user.type_user = "Buyer";
+
 
       const userCreated = await User.create(user);
       const addressesCreated = await Address.bulkCreate(addresses);
       userCreated.setAddresses(addressesCreated);
+      successMessage(res, userCreated, addressesCreated);
 
     } catch (error) {
       errorLauncher(error, res);
