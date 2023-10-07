@@ -16,7 +16,10 @@ module.exports = {
 
       const items_for_page = parseInt(limit);
       const actual_page = parseInt(offset);
-      const start = parseInt((actual_page - 1) * items_for_page);
+      //calculo para saber o inicio da paginação no banco de dados
+      var start = parseInt((actual_page - 1) * items_for_page);
+      //se o start for menor que 0, será setado em 0 para não quebrar a paginação
+      start < 0 ? (start = 0) : (start = start);
 
       //para garantir a busca, o nome do produto será buscado em 3 variações (lowercase, uppercase e capitalize)
       const name_variation = [
