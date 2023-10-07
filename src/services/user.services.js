@@ -47,7 +47,7 @@ module.exports = {
       throw new NotUserReceivedError();
     }
 
-    const { full_name, cpf, birth_date, email, phone, password } = user;    
+    const { full_name, cpf, birth_date, email, phone, password } = user;
 
     if (await estaNaBD(User, "cpf", cpf)) {
       throw new CpfUserAlredyExistError();
@@ -71,7 +71,6 @@ module.exports = {
       if (email === undefined) nao_informado.push("email");
       if (phone === undefined) nao_informado.push("phone");
       if (password === undefined) nao_informado.push("password");
-
 
       throw new NotFieldsUserReceivedError(nao_informado);
     }
@@ -134,10 +133,9 @@ module.exports = {
     });
   },
 
-  async validateUserType(req, res, next) {
-    if (req.body.user.type_user !== 'Admin' && req.body.user.type_user !== 'Buyer') {
-      return res.status(400).json({ message: 'Tipo de usuário inválido' });
+  async validateUserType(type_user, res) {
+    if (type_user !== "Admin" && type_user !== "Buyer") {
+      return res.status(400).json({ message: "Tipo de usuário inválido" });
     }
-    next();
-  }  
+  },
 };
