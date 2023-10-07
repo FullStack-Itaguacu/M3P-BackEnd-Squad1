@@ -161,4 +161,10 @@ module.exports = {
       status: 201,
     });
   },
+
+  async validateUserType(type_user, res) {
+    if (type_user !== "Admin" && type_user !== "Buyer") {
+      return res.status(400).json({ message: "Tipo de usuário inválido" });
+    }
+  },
 };
