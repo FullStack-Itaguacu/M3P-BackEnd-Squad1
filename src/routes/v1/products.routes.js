@@ -7,12 +7,7 @@ class ProductsRouter {
   routesFromProducts() {
     const productsRoutes = Router();
     productsRoutes.get("/products/admin");
-    productsRoutes.get(
-      "/products/admin/:offset/:limit",
-      tokenValidate,
-      adminValidate,
-      listProducts
-    );
+    productsRoutes.get( "/products/admin/:offset/:limit",tokenValidate,adminValidate,listProducts);
     productsRoutes.get("/products/:productId");
     productsRoutes.post("/products/admin");
     productsRoutes.patch("/products/admin/:productId");
