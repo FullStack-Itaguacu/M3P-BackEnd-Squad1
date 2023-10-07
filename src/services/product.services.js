@@ -33,6 +33,9 @@ module.exports = {
         },
         offset: start,
         limit: items_for_page,
+        order : [
+            ['total_stock', 'DESC']
+        ]
       })
         .then((result) => {
           const total_items = result.count;
