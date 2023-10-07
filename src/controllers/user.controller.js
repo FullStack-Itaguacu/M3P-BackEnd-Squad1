@@ -68,7 +68,7 @@ module.exports = {
     } catch (error) {
       errorLauncher(error, res)
     }
-  }
+  },
 
   async login(req, res) {
     const { email, password } = req.body;
