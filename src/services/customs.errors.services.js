@@ -119,6 +119,26 @@ class BuyerNotAllowed extends CustomError {
     );
   }
 }
+class NumberNotPositive extends CustomError {
+  constructor(fieldName) {
+    super(
+      "NumberNotPositive",
+      `O campo ${fieldName} deve possuir valor igual ou maior que zero.`,
+      "Foi informado um valor abaixo de 0",
+      400
+    );
+  }
+}
+class OnlyNumbers extends CustomError {
+  constructor(fieldName) {
+    super(
+      "OnlyNumbers",
+      `O campo ${fieldName} deve ser um número.`,
+      "Foi recebido um caractere diferente de um número.",
+      400
+    );
+  }
+}
 module.exports = {
   NotAddressesReceivedError,
   NotFieldsAddressReceivedError,
@@ -130,5 +150,7 @@ module.exports = {
   FieldEmailNotReceived,
   FieldPasswordNotReceived,
   IncorrectFields,
-  BuyerNotAllowed
+  BuyerNotAllowed,
+  NumberNotPositive,
+  OnlyNumbers
 };
