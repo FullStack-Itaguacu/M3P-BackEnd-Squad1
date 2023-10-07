@@ -1,4 +1,5 @@
 const Products = require("../models/product");
+const User = require("../models/user");
 
 module.exports = {
   async listProducts(req, res) {
@@ -40,7 +41,7 @@ module.exports = {
           const total_pages = Math.ceil(total_items / items_for_page);
           var next_page = actual_page < total_pages ? actual_page + 1 : 0;
           var prev_page = actual_page > 1 ? actual_page - 1 : 0;
-          
+
           if (actual_page > 1) {
             prev_page = actual_page - 1;
           }
@@ -73,6 +74,52 @@ module.exports = {
         });
     } catch (error) {
       return res.send(error);
+    }
+  },
+  async createProduct(req, res) {
+    try {
+      const {
+        name,
+        lab_name,
+        image_link,
+        dosage,
+        unit_price,
+        type_product,
+        total_stock,
+      } = req.body;
+
+      if (!req.payload || !req.payload.id) {
+        return res
+          .status(400)
+          .json({ error: "ID do usuário não fornecido no token" });
+      }
+
+      const { id: user_id } = req.payload;
+      console.log(user_id);
+      const user = await User.findByPk(user_id);
+
+      if (!user) {
+        return res.status(400).json({ error: "Usuário não encontrado" });
+      }
+
+      const newProduct = await Products.create({
+        user_id, // Corrigido para usar user_id
+        name,
+        lab_name,
+        image_link,
+        dosage,
+        unit_price,
+        type_product,
+        total_stock,
+      });
+      return res
+        .status(201)
+        .json({ message: "Produto criado com sucesso", produto: newProduct });
+    } catch (err) {
+      return res.status(400).json({
+        error: "Erro ao criar produto",
+        message: err.message,
+      });
     }
   },
 };
