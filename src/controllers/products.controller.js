@@ -1,7 +1,7 @@
 const Products = require("../models/product");
 const User = require("../models/user");
 const { validateFields } = require("../services/product.service");
-const {errorLauncher} = require("../services/customs.errors.services.js");
+const { errorLauncher } = require("../services/customs.errors.services.js");
 const { verificaNumeroPositivo, verificaSomenteNumeros } = require("../services/validators")
 const {
   filtroBodyOffsetLimitSearch,
@@ -9,7 +9,8 @@ const {
   filtroUpdateProductById,
   updateProductById,
 } = require("../services/product.services");
-const {InvalidKeysReceivedError}= require("../services/customs.errors.services");
+const { InvalidKeysReceivedError } = require("../services/customs.errors.services");
+const { tokenValidate } = require("../services/auth");
 module.exports = {
   async listProductsOffsetLimit(req, res) {
     try {
@@ -112,7 +113,7 @@ module.exports = {
         total_stock,
         description,
       } = req.body;
-     
+
       const user_id = req.payload.id;
       const existMedicine = await Products.findOne({
         where: {
@@ -120,7 +121,7 @@ module.exports = {
           lab_name: lab_name,
         },
       });
-  
+
       if (existMedicine) {
         return res.status(422).json({
           status: "422",
@@ -144,11 +145,7 @@ module.exports = {
         .status(201)
         .json({ message: "Produto criado com sucesso", produto: newProduct });
     } catch (error) {
-      return res.status(500).json({
-        status: "500",
-        error: "Erro ao criar produto",
-        cause: error.message,
-      });
+      errorLauncher(error, res);
     }
   },
   async updateProductById(req, res) {
@@ -166,7 +163,7 @@ module.exports = {
       if (!isValidOperation) {
         throw new InvalidKeysReceivedError();
       }
-   
+
       await filtroUpdateProductById(
         name,
         image_link,
@@ -180,7 +177,7 @@ module.exports = {
 
       await updateProductById(product, res);
     } catch (error) {
-       errorLauncher(error, res);
+      errorLauncher(error, res);
     }
   },
   async listAllProducts(req, res) {
@@ -249,6 +246,30 @@ module.exports = {
             cause: "Foi erro do desenvolvedor :(",
           });
         });
+    } catch (error) {
+      errorLauncher(error, res)
+    }
+  },
+
+  async listProductById(req, res) {
+
+    try {
+      const { product_id } = req.params;
+
+      await verificaSomenteNumeros(product_id, "productId")
+
+      const product = await Products.findByPk(product_id);
+
+      if (!product) {
+        return res.status(404).json({
+          message: "Produto não encontrado.",
+          status: 404,
+          cause: "Produto não encontrado na base de dados.",
+          error: "ProductNotFoundError"
+        });
+      }
+
+      return res.status(200).json(product);
     } catch (error) {
       errorLauncher(error, res)
     }
