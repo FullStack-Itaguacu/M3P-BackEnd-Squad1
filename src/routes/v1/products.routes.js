@@ -4,6 +4,7 @@ const { tokenValidate, adminValidate } = require("../../services/auth");
 const {
   listProducts,
   createProduct,
+  listProductsOffsetLimit
 } = require("../../controllers/products.controller");
 
 class ProductsRouter {
@@ -16,6 +17,7 @@ class ProductsRouter {
       adminValidate,
       listProducts
     );
+    productsRoutes.get( "/products/admin/:offset/:limit",tokenValidate,adminValidate,listProductsOffsetLimit);
     productsRoutes.get("/products/:productId");
     productsRoutes.post(
       "/products/admin",
