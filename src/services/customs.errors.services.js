@@ -36,7 +36,6 @@ class NotUserReceivedError extends CustomError {
     );
   }
 }
-
 class UserAlredyExistError extends CustomError {
   constructor() {
     super(
@@ -119,8 +118,28 @@ class BuyerNotAllowed extends CustomError {
     );
   }
 }
-class OffsetIsNan extends CustomError {
-  constructor() {
+class NumberNotPositive extends CustomError {
+  constructor(fieldName) {
+    super(
+      "NumberNotPositive",
+      `O campo ${fieldName} deve possuir valor igual ou maior que zero.`,
+      "Foi informado um valor abaixo de 0",
+      400
+    );
+  }
+}
+class OnlyNumbers extends CustomError {
+  constructor(fieldName) {
+    super(
+      "OnlyNumbers",
+      `O campo ${fieldName} deve ser um número.`,
+      "Foi recebido um caractere diferente de um número.",
+      400
+    );
+  }
+}
+class OffsetIsNan extends CustomError{
+  constructor(){
     super(
       "OffsetIsNan",
       "O valor do offset deve ser um número",
@@ -306,7 +325,9 @@ module.exports = {
   FieldPasswordNotReceived,
   IncorrectFields,
   BuyerNotAllowed,
-  OffsetIsNan,
+  NumberNotPositive,
+  OnlyNumbers,
+  OffsetIsNan, 
   LimitIsNan,
   NotNameReceivedError,
   NotTypeProductReceivedError,

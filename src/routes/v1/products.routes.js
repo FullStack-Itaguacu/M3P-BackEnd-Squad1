@@ -1,7 +1,6 @@
-// const {  } = require("../controllers/product.controller");
 const { Router } = require("express");
 const { tokenValidate, adminValidate } = require("../../services/auth");
-const { listProductsOffsetLimit, updateProductById } = require("../../controllers/products.controller");
+const { listProductsOffsetLimit, updateProductById, listAllProducts } = require("../../controllers/products.controller");
 
 
 class ProductsRouter {
@@ -12,6 +11,7 @@ class ProductsRouter {
     productsRoutes.get("/products/:productId");
     productsRoutes.post("/products/admin");
     productsRoutes.patch("/products/admin/:product_id", tokenValidate, adminValidate, updateProductById);
+    productsRoutes.get("/products/:offset/:limit", tokenValidate, listAllProducts)
     return productsRoutes;
   }
 }
