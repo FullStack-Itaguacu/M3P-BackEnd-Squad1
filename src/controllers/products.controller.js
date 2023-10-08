@@ -10,6 +10,7 @@ const {
   updateProductById,
 } = require("../services/product.services");
 const {InvalidKeysReceivedError}= require("../services/customs.errors.services");
+const { tokenValidate } = require("../services/auth");
 module.exports = {
   async listProductsOffsetLimit(req, res) {
     try {
@@ -251,6 +252,32 @@ module.exports = {
         });
     } catch (error) {
       errorLauncher(error, res)
+    }
+  },
+
+  async listProductById(req, res) {    
+    const { productId } = req.params;
+
+    try {      
+      const product = await Products.findByPk(productId);
+
+      if(!product) {
+        return res.status(404).json({ 
+          message: "Product not found",
+          status: 404,
+          cause : "Produto não encontrado",
+          error : "ProductNotFoundError"        
+        });
+      }
+
+      return res.status(200).json(product);
+    } catch (error) {
+      return res.status(500).json({ 
+        message: "Erro interno do servidor",
+        status: 500,
+        cause: "Erro interno do servidor",
+        error: error.message      
+      }); 
     }
   }
 };
