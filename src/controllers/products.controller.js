@@ -110,6 +110,7 @@ module.exports = {
         unit_price,
         type_product,
         total_stock,
+        description,
       } = req.body;
      
       const user_id = req.payload.id;
@@ -136,6 +137,7 @@ module.exports = {
         unit_price,
         type_product,
         total_stock,
+        description
       });
 
       return res
