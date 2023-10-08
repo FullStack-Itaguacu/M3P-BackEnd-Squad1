@@ -11,6 +11,7 @@ const {
   EmptyImageLinkReceivedError,
   EmptyDosageReceivedError,
   NegativeTotalStockValueReceivedError,
+  TotalStockIsNanError
 } = require("../services/customs.errors.services");
 module.exports = {
   async filtroBodyOffsetLimitSearch(offset, limit, name, type_product) {
@@ -123,6 +124,10 @@ module.exports = {
     if(total_stock < 0){
       throw new NegativeTotalStockValueReceivedError();
     }
+    if(isNaN(total_stock)){
+      throw new TotalStockIsNanError();
+    }
+
     //se cumprir todas as validações, será atualizado o produto
     if (name) {
       product.name = name;

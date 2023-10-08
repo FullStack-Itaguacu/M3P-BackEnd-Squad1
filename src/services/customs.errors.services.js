@@ -251,6 +251,16 @@ class InvalidKeysReceivedError extends CustomError {
     );
   }
 }
+class TotalStockIsNanError extends CustomError {
+  constructor() {
+    super(
+      "TotalStockIsNan",
+      "O valor de total_stock deve ser um número",
+      "O valor da total_stock informado no body não é um número",
+      422
+    );
+  }
+}
 async function errorLauncher(error, res) {
   if (!error.cause) {
     /*
@@ -309,4 +319,5 @@ module.exports = {
   EmptyDosageReceivedError,
   NegativeTotalStockValueReceivedError,
   InvalidKeysReceivedError,
+  TotalStockIsNanError
 };
