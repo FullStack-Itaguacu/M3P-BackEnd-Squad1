@@ -139,8 +139,8 @@ class OnlyNumbers extends CustomError {
     );
   }
 }
-class OffsetIsNan extends CustomError{
-  constructor(){
+class OffsetIsNan extends CustomError {
+  constructor() {
     super(
       "OffsetIsNan",
       "O valor do offset deve ser um número",
@@ -149,8 +149,8 @@ class OffsetIsNan extends CustomError{
     )
   }
 }
-class LimitIsNan extends CustomError{
-  constructor(){
+class LimitIsNan extends CustomError {
+  constructor() {
     super(
       "LimitIsNan",
       "O valor do limit deve ser um número",
@@ -159,8 +159,8 @@ class LimitIsNan extends CustomError{
     )
   }
 }
-class NotNameReceivedError extends CustomError{
-  constructor(){
+class NotNameReceivedError extends CustomError {
+  constructor() {
     super(
       "NotNameReceived",
       "O nome do produto é obrigatório",
@@ -169,12 +169,22 @@ class NotNameReceivedError extends CustomError{
     )
   }
 }
-class NotTypeProductReceivedError extends CustomError{
-  constructor(){
+class NotTypeProductReceivedError extends CustomError {
+  constructor() {
     super(
       "NotTypeProductReceived",
       "O tipo do produto é obrigatório",
       "O tipo do produto não foi informado na requisição",
+      400
+    )
+  }
+}
+class NotAcceptValuesTypeProduct extends CustomError {
+  constructor() {
+    super(
+      "NotAcceptValuesTypeProduct",
+      "O campo tipo do produto recebeu um valor diferente dos possíveis.",
+      "O tipo do produto somente aceita os valores: controlled e uncontrolled",
       400
     )
   }
@@ -214,8 +224,9 @@ module.exports = {
   BuyerNotAllowed,
   NumberNotPositive,
   OnlyNumbers,
-  OffsetIsNan, 
+  OffsetIsNan,
   LimitIsNan,
   NotNameReceivedError,
-  NotTypeProductReceivedError
+  NotTypeProductReceivedError,
+  NotAcceptValuesTypeProduct
 };

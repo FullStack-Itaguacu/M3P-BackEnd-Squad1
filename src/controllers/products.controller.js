@@ -1,5 +1,4 @@
 const Products = require("../models/product");
-const { verificaNumeroPositivo, verificaSomenteNumeros } = require("../services/validators")
 const { errorLauncher } = require("../services/user.services");
 const {
   filtroBodyOffsetLimitSearch,
@@ -47,12 +46,7 @@ module.exports = {
       var { offset, limit } = req.params
       const { name, type_product } = req.query
 
-      await verificaNumeroPositivo(offset, "offset")
-      await verificaNumeroPositivo(limit, "limit")
-
-      await verificaSomenteNumeros(offset, "offset")
-      await verificaSomenteNumeros(limit, "limit")
-      console.log(req.query)
+      await filtroBodyOffsetLimitSearch(offset, limit, name, type_product);
 
       limit > 20 ? (limit = 20) : limit
       offset < 0 ? (offset - 1) : (offset = offset)
