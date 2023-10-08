@@ -287,7 +287,37 @@ class NotAcceptValuesTypeProduct extends CustomError {
       "O campo tipo do produto recebeu um valor diferente dos possíveis.",
       "O tipo do produto somente aceita os valores: controlled e uncontrolled",
       400
-    )
+    );
+  }
+}
+class FullNameNotReceived extends CustomError {
+  constructor() {
+    super(
+      "FullNameNotReceived",
+      "O campo full_name é obrigatório, por favor informar na query params em formato string",
+      "O nome completo não foi informado na requisição",
+      400
+    );
+  }
+}
+class CreatedAtFieldNotReceived extends CustomError {
+  constructor() {
+    super(
+      "CreatedAtFieldNotReceived",
+      "O campo created_at é obrigatório, , informe ASC ou DESC para ordenar os resultados ascendentemente ou descendentemente respectivamente",
+      "O campo created_at não foi informado na requisição",
+      400
+    );
+  }
+}
+class CreatedAtBadValueReceived extends CustomError {
+  constructor() {
+    super(
+      "CreatedAtBadValueReceived",
+      "O campo created_at somente aceita os valores: ASC e DESC, verifique se o valor informado esta escrito corretamente",
+      "O campo created_at recebeu um valor diferente dos possíveis.",
+      400
+    );
   }
 }
 async function errorLauncher(error, res) {
@@ -351,5 +381,8 @@ module.exports = {
   EmptyDosageReceivedError,
   NegativeTotalStockValueReceivedError,
   InvalidKeysReceivedError,
-  TotalStockIsNanError
+  TotalStockIsNanError,
+  FullNameNotReceived,
+  CreatedAtFieldNotReceived,
+  CreatedAtBadValueReceived,
 };
