@@ -1,12 +1,13 @@
 const { Router } = require("express");
-const {tokenValidate, adminValidate} = require("../../services/auth");
-const{getBuyersOffsetLimit}=require("../../controllers/buyers.controller")
+const { tokenValidate, adminValidate } = require("../../services/auth");
+const { listOneBuyer, getBuyersOffsetLimit } = require("../../controllers/user.controller");
+
 class BuyersRouter {
   routesFromBuyers() {
     const buyersRoutes = Router();
-    buyersRoutes.get("/buyers/admin/:offset/:limit",tokenValidate,adminValidate, getBuyersOffsetLimit);
-    buyersRoutes.get("/buyers/admin/:userId");
-    buyersRoutes.patch("/buyers/admin/:userId");
+    buyersRoutes.get("/buyers/admin/:offset/:limit", tokenValidate, adminValidate, getBuyersOffsetLimit);
+    buyersRoutes.get("/buyers/admin/:user_id", tokenValidate, adminValidate, listOneBuyer);
+    buyersRoutes.patch("/buyers/admin/:user_id");
 
     return buyersRoutes;
   }

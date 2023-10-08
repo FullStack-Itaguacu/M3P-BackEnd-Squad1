@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { errorResponse, successResponse } = require("../services/validators");
+const { errorResponse, successResponse, verificaNumeroPositivo, verificaSomenteNumeros } = require("../services/validators");
 const { tokenGenerator } = require("../services/auth");
 const User = require("../models/user");
 const Address = require("../models/address");
@@ -14,6 +14,7 @@ const {
   verifyTypeUser,
   verifyPassword,
   validateUserType,
+  verifyUserId,
 } = require("../services/user.services");
 const { validaSenha, encriptarSenha, desdenciptarSenha } = require("../services/validators")
 
@@ -136,5 +137,25 @@ module.exports = {
       });
     }
   },
+
+  async listOneBuyer(req, res) {
+    try {
+
+      const { user_id } = req.params
+
+      await verificaNumeroPositivo(user_id, "user_id")
+      await verificaSomenteNumeros(user_id, "user_id")
+
+      const data = await verifyUserId(user_id)
+
+      return res.status(200).send({
+        status: 200,
+        message: "Sucesso",
+        data
+      })
+    } catch (error) {
+      errorLauncher(error, res)
+    }
+  }
 };
 

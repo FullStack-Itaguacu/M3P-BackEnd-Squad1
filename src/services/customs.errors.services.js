@@ -320,6 +320,16 @@ class CreatedAtBadValueReceived extends CustomError {
     );
   }
 }
+class UserNotFound extends CustomError {
+  constructor() {
+    super(
+      "UserNotFound",
+      "Usuário não existe.",
+      "Usuário não consta no banco de dados.",
+      404
+    )
+  }
+}
 async function errorLauncher(error, res) {
   if (!error.cause) {
     /*
@@ -385,4 +395,5 @@ module.exports = {
   FullNameNotReceived,
   CreatedAtFieldNotReceived,
   CreatedAtBadValueReceived,
+  UserNotFound
 };
