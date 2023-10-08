@@ -1,5 +1,7 @@
+const e = require("cors");
 const Products = require("../models/product");
 const User = require("../models/user");
+const { validateFields } = require("../services/product.service");
 
 module.exports = {
   async listProducts(req, res) {
@@ -78,6 +80,11 @@ module.exports = {
   },
   async createProduct(req, res) {
     try {
+
+      const validationError = validateFields(req.body);
+      if (validationError) {
+        return res.status(validationError.status).json({ error: validationError });
+      }
       const {
         name,
         lab_name,
@@ -88,21 +95,23 @@ module.exports = {
         total_stock,
       } = req.body;
      
-      if (!req.payload || !req.payload.id) {
-        return res
-          .status(400)
-          .json({ error: "ID do usuário não fornecido no token" });
+      const user_id = req.payload.id;
+      const existMedicine = await Products.findOne({
+        where: {
+          name: name,
+          lab_name: lab_name,
+        },
+      });
+  
+      if (existMedicine) {
+        return res.status(422).json({
+          status: "422",
+          error: "Erro, Não foi possível criar o produto",
+          cause: "O produto já existe.",
+        });
       }
-
-      const { id: user_id } = req.payload;
-      const user = await User.findByPk(user_id);
-
-      if (!user) {
-        return res.status(400).json({ error: "Usuário não encontrado" });
-      }
-      console.log("Antes de criar produto", req.body);
       const newProduct = await Products.create({
-        user_id, // Corrigido para usar user_id
+        user_id,
         name,
         lab_name,
         image_link,
@@ -111,17 +120,15 @@ module.exports = {
         type_product,
         total_stock,
       });
-      console.log("depois de criar" , newProduct);
+
       return res
         .status(201)
         .json({ message: "Produto criado com sucesso", produto: newProduct });
     } catch (error) {
-      return res.status(400).json({
+      return res.status(500).json({
+        status: "500",
         error: "Erro ao criar produto",
-        message: error.message,
-        cause: "Foi erro do desenvolvedor :(",
-        
-        
+        cause: error.message,
       });
     }
   },
