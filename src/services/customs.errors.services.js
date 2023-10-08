@@ -137,6 +137,8 @@ class OnlyNumbers extends CustomError {
       "Foi recebido um caractere diferente de um número.",
       400
     );
+  }
+}
 class OffsetIsNan extends CustomError{
   constructor(){
     super(
@@ -211,7 +213,7 @@ module.exports = {
   IncorrectFields,
   BuyerNotAllowed,
   NumberNotPositive,
-  OnlyNumbers
+  OnlyNumbers,
   OffsetIsNan, 
   LimitIsNan,
   NotNameReceivedError,
