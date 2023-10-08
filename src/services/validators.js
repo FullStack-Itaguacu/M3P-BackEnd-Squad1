@@ -45,7 +45,6 @@ async function verificaNumeroPositivo(value, fieldName) {
 }
 async function verificaSomenteNumeros(value, fieldName) {
   const regex = /^[\d]+$/
-  console.log(regex.test(value))
   if (!regex.test(value)) {
     throw new OnlyNumbers(fieldName);
   }
