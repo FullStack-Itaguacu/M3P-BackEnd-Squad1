@@ -1,11 +1,15 @@
 const Products = require("../models/product");
+// const { errorLauncher } = require("../services/user.services");
+const {errorLauncher} = require("../services/customs.errors.services.js");
 const { verificaNumeroPositivo, verificaSomenteNumeros } = require("../services/validators")
-const { errorLauncher } = require("../services/user.services");
+
 const {
   filtroBodyOffsetLimitSearch,
   searchOffsetLimit,
+  filtroUpdateProductById,
+  updateProductById,
 } = require("../services/product.services");
-
+const {InvalidKeysReceivedError}= require("../services/customs.errors.services");
 module.exports = {
   async listProductsOffsetLimit(req, res) {
     try {
@@ -28,6 +32,7 @@ module.exports = {
         name.toUpperCase(),
         (nameCapitalize = name[0].toUpperCase() + name.slice(1)),
       ];
+
       await searchOffsetLimit(
         start,
         items_for_page,
@@ -40,6 +45,38 @@ module.exports = {
       );
     } catch (error) {
       errorLauncher(error, res);
+    }
+  },
+  async updateProductById(req, res) {
+    try {
+      const { name, image_link, dosage, total_stock } = req.body;
+      const { product_id } = req.params;
+      const user_id = req.payload.id;
+      const product = await Products.findByPk(product_id);
+      const body_keys = Object.keys(req.body);
+      //verificar que so vem no body name, image_link , dosage e total_stock
+      const allowedUpdates = ["name", "image_link", "dosage", "total_stock"];
+      const isValidOperation = body_keys.every((update) =>
+        allowedUpdates.includes(update)
+      );
+      if (!isValidOperation) {
+        throw new InvalidKeysReceivedError();
+      }
+   
+      await filtroUpdateProductById(
+        name,
+        image_link,
+        dosage,
+        total_stock,
+        user_id,
+        product,
+        res,
+        body_keys
+      );
+
+      await updateProductById(product, res);
+    } catch (error) {
+       errorLauncher(error, res);
     }
   },
   async listAllProducts(req, res) {
