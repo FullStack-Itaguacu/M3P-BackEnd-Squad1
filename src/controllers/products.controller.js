@@ -1,7 +1,6 @@
 const Products = require("../models/product");
 const User = require("../models/user");
 const { validateFields } = require("../services/product.service");
-// const { errorLauncher } = require("../services/user.services");
 const {errorLauncher} = require("../services/customs.errors.services.js");
 const { verificaNumeroPositivo, verificaSomenteNumeros } = require("../services/validators")
 const {
@@ -11,7 +10,6 @@ const {
   updateProductById,
 } = require("../services/product.services");
 const {InvalidKeysReceivedError}= require("../services/customs.errors.services");
-
 module.exports = {
   async listProductsOffsetLimit(req, res) {
     try {
@@ -80,7 +78,7 @@ module.exports = {
             cause: "Foi erro do desenvolvedor :(",
           });
         });
-      
+
       await searchOffsetLimit(
         start,
         items_for_page,
@@ -151,7 +149,6 @@ module.exports = {
       });
     }
   },
-  
   async updateProductById(req, res) {
     try {
       const { name, image_link, dosage, total_stock } = req.body;
@@ -184,7 +181,6 @@ module.exports = {
        errorLauncher(error, res);
     }
   },
-
   async listAllProducts(req, res) {
     try {
       var { offset, limit } = req.params

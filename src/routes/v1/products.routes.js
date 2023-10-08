@@ -5,21 +5,9 @@ const { createProduct, listProductsOffsetLimit, updateProductById, listAllProduc
 class ProductsRouter {
   routesFromProducts() {
     const productsRoutes = Router();
-    productsRoutes.get("/products/admin");
-    productsRoutes.get(
-      "/products/admin/:offset/:limit",
-      tokenValidate,
-      adminValidate,
-      listProducts
-    );
     productsRoutes.get( "/products/admin/:offset/:limit",tokenValidate,adminValidate,listProductsOffsetLimit);
     productsRoutes.get("/products/:productId");
-    productsRoutes.post(
-      "/products/admin",
-      tokenValidate,
-      adminValidate,
-      createProduct
-    );
+    productsRoutes.post("/products/admin",tokenValidate,adminValidate,createProduct);
     productsRoutes.patch("/products/admin/:productId");
     productsRoutes.post("/products/admin");
     productsRoutes.patch("/products/admin/:product_id", tokenValidate, adminValidate, updateProductById);
