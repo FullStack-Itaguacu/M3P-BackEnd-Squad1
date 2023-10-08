@@ -54,9 +54,9 @@ module.exports = {
       });
       if (user.addresses.length == 0) {
         return res.status(404).json({ 
-          message: "Não há endereços cadastrados para este usuário",
+          message: "Não há endereços cadastrados para este usuário e isto nao deveria acontecer, por favor contate o suporte caso ache que se trata de um erro ,ou cadastre um endereço para este usuário.",
           status : 404,
-          cause : "Not Found",
+          cause : "Não ha endereços cadastrados para este usuário",
           error : "NotFoundAdress"
         });
       }
