@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { tokenValidate, adminValidate } = require("../../services/auth");
-const {  createProduct,listProductsOffsetLimit, listProducts, listAllProducts } = require("../../controllers/products.controller");
+const { createProduct, listProductsOffsetLimit, updateProductById, listAllProducts } = require("../../controllers/products.controller");
 
 class ProductsRouter {
   routesFromProducts() {
@@ -21,6 +21,8 @@ class ProductsRouter {
       createProduct
     );
     productsRoutes.patch("/products/admin/:productId");
+    productsRoutes.post("/products/admin");
+    productsRoutes.patch("/products/admin/:product_id", tokenValidate, adminValidate, updateProductById);
     productsRoutes.get("/products/:offset/:limit", tokenValidate, listAllProducts)
     return productsRoutes;
   }
