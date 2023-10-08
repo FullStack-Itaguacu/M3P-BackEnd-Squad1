@@ -4,8 +4,17 @@ const {
   NotNameReceivedError,
   NotTypeProductReceivedError,
   NotAcceptValuesTypeProduct,
-  NumberNotPositive
-} = require("../services/customs.errors.services")
+  NumberNotPositive,
+  TotalStockRequired,
+  NotDataToUpdate,
+  NotOwnerProduct,
+  ProductNotFound,
+  EmptyNameReceivedError,
+  EmptyImageLinkReceivedError,
+  EmptyDosageReceivedError,
+  NegativeTotalStockValueReceivedError,
+  TotalStockIsNanError,
+} = require("../services/customs.errors.services");
 module.exports = {
   async filtroBodyOffsetLimitSearch(offset, limit, name, type_product) {
     if (isNaN(offset)) {
@@ -15,10 +24,10 @@ module.exports = {
       throw new LimitIsNan();
     }
     if (offset < 0) {
-      throw new NumberNotPositive("offset")
+      throw new NumberNotPositive("offset");
     }
     if (limit < 0) {
-      throw new NumberNotPositive("limit")
+      throw new NumberNotPositive("limit");
     }
     /* limitando a quantidade de itens por página a 20,
      * caso o usuário tente passar um valor maior que 20
@@ -31,16 +40,25 @@ module.exports = {
      */
     offset < 1 ? (offset = 1) : (offset = offset);
     if (!name) {
-      throw new NotNameReceivedError()
+      throw new NotNameReceivedError();
     }
     if (!type_product || (type_product && type_product.length === 0)) {
-      throw new NotTypeProductReceivedError()
+      throw new NotTypeProductReceivedError();
     }
     if (type_product !== "controlled" && type_product !== "uncontrolled") {
       throw new NotAcceptValuesTypeProduct();
     }
   },
-  async searchOffsetLimit(start, items_for_page, actual_page, name_variation, type_product, user_id, res, Products) {
+  async searchOffsetLimit(
+    start,
+    items_for_page,
+    actual_page,
+    name_variation,
+    type_product,
+    user_id,
+    res,
+    Products
+  ) {
     Products.findAndCountAll({
       where: {
         name: name_variation,
@@ -49,6 +67,7 @@ module.exports = {
       },
       offset: start,
       limit: items_for_page,
+      order: [["total_stock", "DESC"]],
     })
       .then((result) => {
         const total_items = result.count;
@@ -79,7 +98,61 @@ module.exports = {
         });
       })
       .catch((error) => {
-        return error
+        return error;
       });
-  }
+  },
+  async filtroUpdateProductById(
+    name,
+    image_link,
+    dosage,
+    total_stock,
+    user_id,
+    product
+  ) {
+    if (!product) {
+      throw new ProductNotFound();
+    }
+    if (product.user_id != user_id) {
+      throw new NotOwnerProduct();
+    }
+    if (!name && !image_link && !dosage && !total_stock) {
+      throw new NotDataToUpdate();
+    }
+    if (!total_stock) {
+      throw new TotalStockRequired();
+    }
+    if (name && name.length == 0) {
+      throw new EmptyNameReceivedError();
+    }
+    if (image_link && image_link.length == 0) {
+      throw new EmptyImageLinkReceivedError();
+    }
+    if (dosage && dosage.length == 0) {
+      throw new EmptyDosageReceivedError();
+    }
+    if (total_stock < 0) {
+      throw new NegativeTotalStockValueReceivedError();
+    }
+    if (isNaN(total_stock)) {
+      throw new TotalStockIsNanError();
+    }
+
+    //se cumprir todas as validações, será atualizado o produto
+    if (name) {
+      product.name = name;
+    }
+    if (image_link) {
+      product.image_link = image_link;
+    }
+    if (dosage) {
+      product.dosage = dosage;
+    }
+    if (total_stock) {
+      product.total_stock = total_stock;
+    }
+  },
+  async updateProductById(product, res) {
+    await product.save();
+    return res.sendStatus(204);
+  },
 };

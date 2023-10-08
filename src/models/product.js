@@ -107,26 +107,17 @@ const Product = connection.define(
       },
     },
     type_product: {
-      type: Sequelize.ENUM,
-      values: ["controlled", "uncontrolled"],
+      type: Sequelize.ENUM("controlled", "uncontrolled"),
       allowNull: false,
       validate: {
         isIn: {
-          values: ["controlled", "uncontrolled"],
-          msg: {
-            status: "400",
-            cause:
-              "Somente são aceitos os valores: 'uncontrolled' e 'controlled' no campo type_product.",
-          },
-          notNull: {
-            msg: {
-              status: "422",
-              cause: "O campo type_product é obrigatório.",
-            },
-          },
+          statuscode: 400,
+          args: [["controlled", "uncontrolled"]],
+          msg: 'Somente são aceitos os valores: ( uncontrolled ) e ( controlled ) no campo type_product.',
         },
       },
     },
+
     description: {
       type: Sequelize.STRING,
       allowNull: true,
