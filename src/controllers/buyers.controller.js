@@ -1,6 +1,9 @@
 const User = require("../models/user");
 const { errorLauncher } = require("../services/customs.errors.services.js");
-const{filtroBodyOffsetLimitSearch, searchOffsetLimit}=require("../services/buyeres.services.js")
+const {
+  filtroBodyOffsetLimitSearch,
+  searchOffsetLimit,
+} = require("../services/buyeres.services.js");
 
 module.exports = {
   async getBuyersOffsetLimit(req, res) {
@@ -33,6 +36,32 @@ module.exports = {
         res,
         User
       );
+    } catch (error) {
+      errorLauncher(error, res);
+    }
+  },
+  async getBuyersAdresses(req, res) {
+    try {
+      const payload = req.payload;
+      const user_id = payload.id;
+
+      const user = await User.findByPk(user_id, {
+  
+        include: {
+          association: "addresses",
+        },
+  
+      });
+      if (user.addresses.length == 0) {
+        return res.status(404).json({ 
+          message: "Não há endereços cadastrados para este usuário",
+          status : 404,
+          cause : "Not Found",
+          error : "NotFoundAdress"
+        });
+      }
+  
+      return res.status(200).json(user.addresses);
     } catch (error) {
       errorLauncher(error, res);
     }
