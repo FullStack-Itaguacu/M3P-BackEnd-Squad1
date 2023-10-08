@@ -3,6 +3,8 @@ const {
   LimitIsNan,
   NotNameReceivedError,
   NotTypeProductReceivedError,
+  NotAcceptValuesTypeProduct,
+  NumberNotPositive,
   TotalStockRequired,
   NotDataToUpdate,
   NotOwnerProduct,
@@ -11,7 +13,7 @@ const {
   EmptyImageLinkReceivedError,
   EmptyDosageReceivedError,
   NegativeTotalStockValueReceivedError,
-  TotalStockIsNanError
+  TotalStockIsNanError,
 } = require("../services/customs.errors.services");
 module.exports = {
   async filtroBodyOffsetLimitSearch(offset, limit, name, type_product) {
@@ -20,6 +22,12 @@ module.exports = {
     }
     if (isNaN(limit)) {
       throw new LimitIsNan();
+    }
+    if (offset < 0) {
+      throw new NumberNotPositive("offset");
+    }
+    if (limit < 0) {
+      throw new NumberNotPositive("limit");
     }
     /* limitando a quantidade de itens por página a 20,
      * caso o usuário tente passar um valor maior que 20
@@ -34,8 +42,11 @@ module.exports = {
     if (!name) {
       throw new NotNameReceivedError();
     }
-    if (!type_product) {
+    if (!type_product || (type_product && type_product.length === 0)) {
       throw new NotTypeProductReceivedError();
+    }
+    if (type_product !== "controlled" && type_product !== "uncontrolled") {
+      throw new NotAcceptValuesTypeProduct();
     }
   },
   async searchOffsetLimit(
@@ -96,10 +107,8 @@ module.exports = {
     dosage,
     total_stock,
     user_id,
-    product,
+    product
   ) {
-    
- 
     if (!product) {
       throw new ProductNotFound();
     }
@@ -112,19 +121,19 @@ module.exports = {
     if (!total_stock) {
       throw new TotalStockRequired();
     }
-    if(name && name.length == 0){
+    if (name && name.length == 0) {
       throw new EmptyNameReceivedError();
     }
-    if(image_link && image_link.length == 0){
+    if (image_link && image_link.length == 0) {
       throw new EmptyImageLinkReceivedError();
     }
-    if(dosage && dosage.length == 0){
+    if (dosage && dosage.length == 0) {
       throw new EmptyDosageReceivedError();
     }
-    if(total_stock < 0){
+    if (total_stock < 0) {
       throw new NegativeTotalStockValueReceivedError();
     }
-    if(isNaN(total_stock)){
+    if (isNaN(total_stock)) {
       throw new TotalStockIsNanError();
     }
 
@@ -144,6 +153,6 @@ module.exports = {
   },
   async updateProductById(product, res) {
     await product.save();
-    return res.sendStatus(204)
+    return res.sendStatus(204);
   },
 };

@@ -138,8 +138,8 @@ class OnlyNumbers extends CustomError {
     );
   }
 }
-class OffsetIsNan extends CustomError{
-  constructor(){
+class OffsetIsNan extends CustomError {
+  constructor() {
     super(
       "OffsetIsNan",
       "O valor do offset deve ser um número",
@@ -280,6 +280,16 @@ class TotalStockIsNanError extends CustomError {
     );
   }
 }
+class NotAcceptValuesTypeProduct extends CustomError {
+  constructor() {
+    super(
+      "NotAcceptValuesTypeProduct",
+      "O campo tipo do produto recebeu um valor diferente dos possíveis.",
+      "O tipo do produto somente aceita os valores: controlled e uncontrolled",
+      400
+    )
+  }
+}
 async function errorLauncher(error, res) {
   if (!error.cause) {
     /*
@@ -327,10 +337,11 @@ module.exports = {
   BuyerNotAllowed,
   NumberNotPositive,
   OnlyNumbers,
-  OffsetIsNan, 
+  OffsetIsNan,
   LimitIsNan,
   NotNameReceivedError,
   NotTypeProductReceivedError,
+  NotAcceptValuesTypeProduct,
   TotalStockRequired,
   NotDataToUpdate,
   NotOwnerProduct,
