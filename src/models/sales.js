@@ -14,7 +14,7 @@ const Sales = connection.define(
         isInt: true,
         notNull: true,
         async isExistingUser(value) {
-          const user = await sequelize.models.User.findByPk(value);
+          const user = await User.findByPk(value);
           if (!user) {
             throw new Error('O comprador não existe na tabela users.');
           }
@@ -28,7 +28,7 @@ const Sales = connection.define(
         isInt: true,
         notNull: true,
         async isExistingUser(value) {
-          const user = await sequelize.models.User.findByPk(value);
+          const user = await User.findByPk(value);
           if (!user) {
             throw new Error('O vendedor não existe na tabela users.');
           }
@@ -42,7 +42,7 @@ const Sales = connection.define(
         isInt: true,
         notNull: true,
         async isExistingProduct(value) {
-          const product = await sequelize.models.Product.findByPk(value);
+          const product = await Product.findByPk(value);
           if (!product) {
             throw new Error('O produto não existe na tabela products.');
           }
@@ -56,7 +56,7 @@ const Sales = connection.define(
         isInt: true,
         notNull: true,
         async isExistingUserAddress(value) {
-          const address = await sequelize.models.UserAddress.findByPk(value);
+          const address = await UserAddress.findByPk(value);
           if (!address) {
             throw new Error('O endereço do usuário não existe na tabela users_addresses.');
           }
@@ -70,7 +70,7 @@ const Sales = connection.define(
         isInt: true,
         notNull: true,
         async isLessThanTotalStock(value) {
-          const product = await sequelize.models.Product.findByPk(this.productId);
+          const product = await Product.findByPk(this.productId);
           if (product && value > product.total_stock) {
             throw new Error('A quantidade comprada é maior do que o estoque disponível.');
           }
@@ -78,10 +78,10 @@ const Sales = connection.define(
       }
     },
     total: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: false,
       validate: {
-        isInt: true,
+        isNumeric: true,
         notNull: true
       }
     },
@@ -98,6 +98,14 @@ const Sales = connection.define(
         notNull: true
       }
     },
+  },{
+    underscored: true,
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    deletedAt: 'deleted_at',
+    paranoid: true,
+    tableName: 'sales'
   });
 
 Sales.belongsTo(User, { foreignKey: 'buyer_id', as: 'buyer' });
