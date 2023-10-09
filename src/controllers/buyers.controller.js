@@ -101,7 +101,15 @@ module.exports = {
 
       await verificaNumeroPositivo(user_id, "user_id");
       await verificaSomenteNumeros(user_id, "user_id");
-
+      const userToUpdate = await User.findByPk(user_id);
+      if (!userToUpdate || userToUpdate.type_user !== "Buyer") {
+        return res.status(404).json({
+          status: 404,
+          error: "UserNotFound",
+          message: "Usuário não encontrado ou não é um 'Buyer'.",
+          cause: "O usuário a ser atualizado deve ser do tipo 'Buyer'.",
+        });
+      }
       const currentUser = await User.findByPk(user_id);
 
       if (currentUser.type_user === "Admin" && type_user === "Buyer") {
