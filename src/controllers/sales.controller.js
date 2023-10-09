@@ -1,4 +1,4 @@
-const  {Sales}  = require("../models/sales");
+const { Sales } = require("../models/sales");
 const Product = require("../models/product");
 
 const { errorLauncher } = require("../services/customs.errors.services");
@@ -12,9 +12,13 @@ module.exports = {
 
       const product = await Product.findByPk(product_id);
 
+      if (!product)
+        return res.status(404).json({ message: "Produto não encontrado" });
+
       const seller_id = product.user_id;
 
-      const total = Number.parseFloat(amount_buy )*  Number.parseFloat(product.unit_price);
+      const total =
+        Number.parseFloat(amount_buy) * Number.parseFloat(product.unit_price);
 
       const sale = await Sales.create({
         seller_id,
@@ -27,7 +31,6 @@ module.exports = {
       });
       return res.status(201).json(sale);
     } catch (error) {
-        console.log(error)
       errorLauncher(error, res);
     }
   },
