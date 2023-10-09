@@ -96,11 +96,12 @@ module.exports = {
 
       const { user_id } = req.params;
 
+      await verificaNumeroPositivo(user_id, "user_id");
+      await verificaSomenteNumeros(user_id, "user_id");
+
       const { full_name, email, phone, cpf, type_user } = req.body;
       const data = await verifyUserId(user_id);
 
-      await verificaNumeroPositivo(user_id, "user_id");
-      await verificaSomenteNumeros(user_id, "user_id");
       const userToUpdate = await User.findByPk(user_id);
       if (!userToUpdate || userToUpdate.type_user !== "Buyer") {
         return res.status(404).json({
@@ -117,7 +118,7 @@ module.exports = {
           error: "BadFormatRequest",
           status: 422,
           message:
-            "Não é possível trocar de ADMIN para BUYER. A única troca possível é de Buyer para Admin",
+            "Não é possível trocar de Admin para Buyer. A única troca possível é de Buyer para Admin",
           cause: "Requisição mal formatada",
         });
       }
@@ -175,4 +176,3 @@ module.exports = {
     }
   },
 };
-
