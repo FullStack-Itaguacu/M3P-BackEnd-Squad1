@@ -14,7 +14,9 @@ const {
 const {
   filtroBodyOffsetLimitSearch,
   searchOffsetLimit,
+  verificaUserId,
 } = require("../services/buyeres.services.js");
+const { verificaNumeroPositivo, verificaSomenteNumeros } = require("../services/validators");
 
 module.exports = {
   async getBuyersOffsetLimit(req, res) {
@@ -74,6 +76,25 @@ module.exports = {
       return res.status(200).json(user.addresses);
     } catch (error) {
       errorLauncher(error, res);
+    }
+  },
+  async listOneBuyer(req, res) {
+    try {
+
+      const { user_id } = req.params
+
+      await verificaNumeroPositivo(user_id, "user_id")
+      await verificaSomenteNumeros(user_id, "user_id")
+
+      const data = await verificaUserId(user_id)
+
+      return res.status(200).send({
+        status: 200,
+        message: "Sucesso",
+        data
+      })
+    } catch (error) {
+      errorLauncher(error, res)
     }
   },
   async updateOneBuyer(req, res) {
