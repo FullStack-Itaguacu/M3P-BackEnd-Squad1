@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { signUp, login, loginAdmin, adminSignUp ,updateOneBuyer} = require("../../controllers/user.controller");
+const { signUp, login, loginAdmin, adminSignUp } = require("../../controllers/user.controller");
 const { tokenValidate, adminValidate } = require("../../services/auth");
 
 class UserRouter {
@@ -10,7 +10,6 @@ class UserRouter {
     userRoutes.post("/user/admin/signup", tokenValidate, adminValidate, adminSignUp);
     userRoutes.get("/buyers/admin/:offset/:limit");
     userRoutes.get("/buyers/admin/:userId");
-    userRoutes.patch("/buyers/admin/:user_id",tokenValidate, adminValidate, updateOneBuyer);
     userRoutes.post("/user/admin/login", loginAdmin);
 
     return userRoutes;

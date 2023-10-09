@@ -9,17 +9,18 @@ const { tokenGenerator } = require("../services/auth");
 const User = require("../models/user");
 const Address = require("../models/address");
 require("../models/userAddress");
-const { sign } = require("jsonwebtoken");
+const { sign, verify } = require("jsonwebtoken");
 
 const {
   filtroBodySignUp,
   errorLauncher,
   successMessage,
   filtroBodyLoginAdmin,
-  verifyTypeUser,
   verifyPassword,
   validateUserType,
   verifyUserId,
+  verifyCpfExist,
+  verifyTypeUser,
 } = require("../services/user.services");
 const {
   validaSenha,
@@ -160,72 +161,6 @@ module.exports = {
       return res.status(200).send({
         status: 200,
         message: "Sucesso",
-        data,
-      });
-    } catch (error) {
-      errorLauncher(error, res);
-    }
-  },
-  async updateOneBuyer(req, res) {
-    try {
-      const allowedFields = ["full_name", "email", "cpf", "phone", "type_user"];
-
-      const receivedFields = Object.keys(req.body);
-
-      // Verifica se apenas os campos permitidos estão presentes na requisição
-      const isValidOperation = receivedFields.every((field) =>
-        allowedFields.includes(field)
-      );
-      
-      if (!isValidOperation) {
-        return res.status(400).send({
-          status: 400,
-          message:
-            "A requisição contém campos não permitidos para atualização.",
-        });
-      }
-
-      const { user_id } = req.params;
-      
-      const { full_name, email, phone, cpf, type_user } = req.body;
-
-      await verificaNumeroPositivo(user_id, "user_id");
-      await verificaSomenteNumeros(user_id, "user_id");
-
-      if (type_user !== undefined) {
-        if (type_user !== "Admin" && type_user !== "Buyer") {
-          return res.status(422).json({ 
-            error: "BadFormatRequest",
-            status: 422,
-            message: "O campo type_user deve ser Buyer ou Admin",
-            cause: "Requisição mal formatada,",
-          });
-        }
-      }
-      const data = await verifyUserId(user_id);
-
-      // Atualiza os campos permitidos
-      if (full_name !== undefined) {
-        data.full_name = full_name;
-      }
-      if (email !== undefined) {
-        data.email = email;
-      }
-      if (phone !== undefined) {
-        data.phone = phone;
-      }
-      if (cpf !== undefined) {
-        data.cpf = cpf;
-      }
-      if (type_user) {
-        data.type_user = type_user;
-      }
-
-      await data.save();
-
-      return res.status(204).send({
-        status: 204,
-        message: "Dados atualizados com sucesso",
         data,
       });
     } catch (error) {

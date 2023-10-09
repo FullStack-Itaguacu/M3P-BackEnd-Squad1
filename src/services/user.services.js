@@ -12,7 +12,7 @@ const {
   FieldPasswordNotReceived,
   IncorrectFields,
   BuyerNotAllowed,
-  UserNotFound
+  UserNotFound,
 } = require("./customs.errors.services");
 
 module.exports = {
@@ -53,7 +53,6 @@ module.exports = {
     }
 
     const { full_name, cpf, birth_date, email, phone, password } = user;
-
 
     if (
       full_name === undefined ||
@@ -113,7 +112,6 @@ module.exports = {
     });
   },
   async filtroBodyLoginAdmin(email, password) {
-
     if (!email) {
       throw new FieldEmailNotReceived();
     }
@@ -122,7 +120,7 @@ module.exports = {
       throw new FieldPasswordNotReceived();
     }
 
-    if (!await estaNaBD(User, "email", email)) {
+    if (!(await estaNaBD(User, "email", email))) {
       throw new IncorrectFields();
     }
   },
@@ -172,14 +170,29 @@ module.exports = {
   async verifyUserId(user_id) {
     const data = await User.findOne({
       where: {
-        id: user_id
-      }
-    })
+        id: user_id,
+      },
+    });
 
     if (data === null) {
-      throw new UserNotFound()
+      throw new UserNotFound();
     }
 
-    return data
-  }
+    return data;
+  },
+  async verifyCpfExist(cpf) {
+    if (await estaNaBD(User, "cpf", cpf)) {
+      throw new CpfUserAlredyExistError();
+    }
+  },
+  async verifyEmailExist(email) {
+    if (await estaNaBD(User, "email", email)) {
+      throw new EmailUserAlredyExistError();
+    }
+  },
+  async verifyTypeUser(type_user) {
+    if (type_user !== "Admin" && type_user !== "Buyer") {
+      throw new BuyerNotAllowed();
+    }
+  },
 };
