@@ -88,7 +88,7 @@ module.exports = {
       if (!isValidOperation) {
         return res.status(422).send({
           status: 422,
-          error: "ForbidenFields",
+          error: "BadFormatRequest",
           message:
             "A requisição contém campos não permitidos para atualização.",
         });
