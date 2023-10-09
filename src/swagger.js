@@ -22,7 +22,7 @@ const doc = {
       type: "apiKey",
       in: "header",       // can be "header", "query" or "cookie"
       name: "Authorization",  // name of the header, query parameter or cookie
-      description: "any description..."
+      description: "token"
     }
   },
   security: [{
@@ -33,7 +33,7 @@ const doc = {
   }
 }
 const outputFile = 'src/utils/swagger-output.json'
-const endpointsFiles = ['../src/routes/*.js']
+const endpointsFiles = ['src/routes/*.js']
 
 swaggerAutogen(outputFile, endpointsFiles, doc)
 
