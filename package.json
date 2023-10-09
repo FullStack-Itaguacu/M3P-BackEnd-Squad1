@@ -26,6 +26,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "jest --coverage --silent --watchAll"
+    "test": "jest --coverage --silent --watchAll",
+    "start-gendoc": "node src/swagger.js"
+
   }
 }
