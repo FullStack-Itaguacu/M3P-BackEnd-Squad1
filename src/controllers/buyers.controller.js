@@ -1,9 +1,5 @@
 const User = require("../models/user");
 const { errorLauncher } = require("../services/customs.errors.services.js");
-const {
-  verificaNumeroPositivo,
-  verificaSomenteNumeros,
-} = require("../services/validators");
 const Address = require("../models/address");
 require("../models/userAddress");
 const {
