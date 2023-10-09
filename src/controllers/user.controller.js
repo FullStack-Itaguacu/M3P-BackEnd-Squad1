@@ -1,22 +1,32 @@
 const bcrypt = require("bcrypt");
-const { errorResponse, successResponse, verificaNumeroPositivo, verificaSomenteNumeros } = require("../services/validators");
+const {
+  errorResponse,
+  successResponse,
+  verificaNumeroPositivo,
+  verificaSomenteNumeros,
+} = require("../services/validators");
 const { tokenGenerator } = require("../services/auth");
 const User = require("../models/user");
 const Address = require("../models/address");
 require("../models/userAddress");
-const { sign } = require('jsonwebtoken');
+const { sign, verify } = require("jsonwebtoken");
 
 const {
   filtroBodySignUp,
   errorLauncher,
   successMessage,
   filtroBodyLoginAdmin,
-  verifyTypeUser,
   verifyPassword,
   validateUserType,
   verifyUserId,
+  verifyCpfExist,
+  verifyTypeUser,
 } = require("../services/user.services");
-const { validaSenha, encriptarSenha, desdenciptarSenha } = require("../services/validators")
+const {
+  validaSenha,
+  encriptarSenha,
+  desdenciptarSenha,
+} = require("../services/validators");
 
 module.exports = {
   async signUp(req, res) {
@@ -30,12 +40,10 @@ module.exports = {
       // fixando o tipo de usuário como Buyer para evitar que o usuário se cadastre como Admin
       user.type_user = "Buyer";
 
-
       const userCreated = await User.create(user);
       const addressesCreated = await Address.bulkCreate(addresses);
       userCreated.setAddresses(addressesCreated);
       successMessage(res, userCreated, addressesCreated);
-
     } catch (error) {
       errorLauncher(error, res);
     }
@@ -63,32 +71,35 @@ module.exports = {
 
   async loginAdmin(req, res) {
     try {
-      const { email, password } = req.body
+      const { email, password } = req.body;
 
-      await filtroBodyLoginAdmin(email, password)
+      await filtroBodyLoginAdmin(email, password);
 
-      const userExist = await User.findOne({ where: { email } })
+      const userExist = await User.findOne({ where: { email } });
 
-      const userPassword = await desdenciptarSenha(password, userExist.password)
+      const userPassword = await desdenciptarSenha(
+        password,
+        userExist.password
+      );
 
-      await verifyPassword(userPassword)
-      await verifyTypeUser(userExist.type_user)
+      await verifyPassword(userPassword);
+      await verifyTypeUser(userExist.type_user);
 
       const payload = {
         id: userExist.id,
         type_user: userExist.type_user,
         email: userExist.email,
-        full_name: userExist.full_name
-      }
-      const token = sign(payload, process.env.JWT_KEY)
+        full_name: userExist.full_name,
+      };
+      const token = sign(payload, process.env.JWT_KEY);
 
       return res.status(200).send({
         Status: 200,
         Message: "Login efetuado com sucesso",
-        data: token
-      })
+        data: token,
+      });
     } catch (error) {
-      errorLauncher(error, res)
+      errorLauncher(error, res);
     }
   },
 
@@ -140,22 +151,20 @@ module.exports = {
 
   async listOneBuyer(req, res) {
     try {
+      const { user_id } = req.params;
 
-      const { user_id } = req.params
+      await verificaNumeroPositivo(user_id, "user_id");
+      await verificaSomenteNumeros(user_id, "user_id");
 
-      await verificaNumeroPositivo(user_id, "user_id")
-      await verificaSomenteNumeros(user_id, "user_id")
-
-      const data = await verifyUserId(user_id)
+      const data = await verifyUserId(user_id);
 
       return res.status(200).send({
         status: 200,
         message: "Sucesso",
-        data
-      })
+        data,
+      });
     } catch (error) {
-      errorLauncher(error, res)
+      errorLauncher(error, res);
     }
-  }
+  },
 };
-
