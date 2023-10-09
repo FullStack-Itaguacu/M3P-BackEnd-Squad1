@@ -1,7 +1,6 @@
 const { Router } = require("express");
 const { tokenValidate, adminValidate } = require("../../services/auth");
-const { listOneBuyer } = require("../../controllers/user.controller");
-const { getBuyersOffsetLimit, getBuyersAdresses } = require("../../controllers/buyers.controller")
+const { getBuyersOffsetLimit, getBuyersAdresses, listOneBuyer } = require("../../controllers/buyers.controller")
 
 class BuyersRouter {
   routesFromBuyers() {

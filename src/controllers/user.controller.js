@@ -137,25 +137,5 @@ module.exports = {
       });
     }
   },
-
-  async listOneBuyer(req, res) {
-    try {
-
-      const { user_id } = req.params
-
-      await verificaNumeroPositivo(user_id, "user_id")
-      await verificaSomenteNumeros(user_id, "user_id")
-
-      const data = await verifyUserId(user_id)
-
-      return res.status(200).send({
-        status: 200,
-        message: "Sucesso",
-        data
-      })
-    } catch (error) {
-      errorLauncher(error, res)
-    }
-  }
 };
 

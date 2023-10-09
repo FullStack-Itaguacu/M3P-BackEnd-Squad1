@@ -3,7 +3,9 @@ const { errorLauncher } = require("../services/customs.errors.services.js");
 const {
   filtroBodyOffsetLimitSearch,
   searchOffsetLimit,
+  verificaUserId,
 } = require("../services/buyeres.services.js");
+const { verificaNumeroPositivo, verificaSomenteNumeros } = require("../services/validators");
 
 module.exports = {
   async getBuyersOffsetLimit(req, res) {
@@ -46,24 +48,43 @@ module.exports = {
       const user_id = payload.id;
 
       const user = await User.findByPk(user_id, {
-  
+
         include: {
           association: "addresses",
         },
-  
+
       });
       if (user.addresses.length == 0) {
-        return res.status(404).json({ 
+        return res.status(404).json({
           message: "Não há endereços cadastrados para este usuário e isto nao deveria acontecer, por favor contate o suporte caso ache que se trata de um erro ,ou cadastre um endereço para este usuário.",
-          status : 404,
-          cause : "Não ha endereços cadastrados para este usuário",
-          error : "NotFoundAdress"
+          status: 404,
+          cause: "Não ha endereços cadastrados para este usuário",
+          error: "NotFoundAdress"
         });
       }
-  
+
       return res.status(200).json(user.addresses);
     } catch (error) {
       errorLauncher(error, res);
     }
   },
+  async listOneBuyer(req, res) {
+    try {
+
+      const { user_id } = req.params
+
+      await verificaNumeroPositivo(user_id, "user_id")
+      await verificaSomenteNumeros(user_id, "user_id")
+
+      const data = await verificaUserId(user_id)
+
+      return res.status(200).send({
+        status: 200,
+        message: "Sucesso",
+        data
+      })
+    } catch (error) {
+      errorLauncher(error, res)
+    }
+  }
 };

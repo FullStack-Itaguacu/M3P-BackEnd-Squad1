@@ -1,10 +1,12 @@
+const User = require("../models/user.js");
 const {
   OffsetIsNan,
   LimitIsNan,
   NumberNotPositive,
   FullNameNotReceived,
   CreatedAtFieldNotReceived,
-  CreatedAtBadValueReceived
+  CreatedAtBadValueReceived,
+  UserNotFound
 } = require("../services/customs.errors.services.js");
 module.exports = {
   async filtroBodyOffsetLimitSearch(offset, limit, full_name, created_at) {
@@ -92,4 +94,17 @@ module.exports = {
         return error;
       });
   },
+  async verificaUserId(user_id) {
+    const data = await User.findOne({
+      where: {
+        id: user_id
+      }
+    })
+
+    if (data === null) {
+      throw new UserNotFound();
+    }
+
+    return data
+  }
 };

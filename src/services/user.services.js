@@ -168,18 +168,4 @@ module.exports = {
       return res.status(400).json({ message: "Tipo de usuário inválido" });
     }
   },
-
-  async verifyUserId(user_id) {
-    const data = await User.findOne({
-      where: {
-        id: user_id
-      }
-    })
-
-    if (data === null) {
-      throw new UserNotFound()
-    }
-
-    return data
-  }
 };
