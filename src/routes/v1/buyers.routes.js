@@ -6,9 +6,10 @@ const { getBuyersOffsetLimit, getBuyersAdresses,updateOneBuyer } = require("../.
 class BuyersRouter {
   routesFromBuyers() {
     const buyersRoutes = Router();
-    buyersRoutes.get("/buyers/admin/:offset/:limit");
+    buyersRoutes.get("/buyers/admin/:offset/:limit", tokenValidate, adminValidate, getBuyersOffsetLimit);
     buyersRoutes.get("/buyers/admin/:user_id", tokenValidate, adminValidate, listOneBuyer);
     buyersRoutes.patch("/buyers/admin/:user_id", tokenValidate, adminValidate, updateOneBuyer);
+    buyersRoutes.get("/buyers/address", tokenValidate, getBuyersAdresses);
 
     return buyersRoutes;
   }
