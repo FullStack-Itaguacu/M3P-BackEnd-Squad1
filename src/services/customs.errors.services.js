@@ -341,11 +341,11 @@ async function errorLauncher(error, res) {
   }
   //Se o erro for de validação do sequelize ele retorna um erro 400 por se tratar de uma requisição mal formatada
   if (error.name === "SequelizeValidationError") {
-    return res.status(400).json({
+    return res.status(422).json({
       message: error.message,
       cause:
         "Requisição mal formatada, verifique os campos obrigatórios e tente novamente",
-      status: 400,
+      status: 422,
       error: "BadFormatRequest",
     });
   }
