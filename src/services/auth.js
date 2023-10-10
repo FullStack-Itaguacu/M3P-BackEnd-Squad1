@@ -8,10 +8,10 @@ module.exports = {
 
       if (!token) {
         return res.status(401).json({
-          message: "Not token provided",
           status: 401,
-          cause: "Token não fornecido",
+          message: "Not token provided",
           error: "NotTokenProvidedError",
+          cause: "Token não fornecido",
         });
       }
 
@@ -26,18 +26,18 @@ module.exports = {
         next();
       } else {
         return res.status(401).json({
-          message: "Invalid token",
           status: 401,
-          cause: "Token invalido, faça login novamente",
+          message: "Invalid token",
           error: "TokenInvalidError",
+          cause: "Token invalido, faça login novamente",
         });
       }
     } catch (error) {
       return res.status(401).json({
-        message: "Não foi possivel validar o token, faça login novamente",
         status: 401,
-        cause: error.message,
+        message: "Não foi possivel validar o token, faça login novamente",
         error: "TokenInvalidError",
+        cause: error.message,
       });
     }
   },
@@ -48,10 +48,10 @@ module.exports = {
 
       if (!payload) {
         return res.status(401).json({
-          message: "Payload not found",
           status: 401,
-          cause: "Payload não encontrado , faça login novamente",
+          message: "Payload not found",
           error: "PayloadNotFoundError",
+          cause: "Payload não encontrado , faça login novamente",
         });
       }
 
@@ -60,10 +60,10 @@ module.exports = {
       } 
     } catch (error) {
       return res.status(500).json({
-        message: "Internal server error",
         status: 500,
-        cause: error.message,
+        message: "Internal server error",
         error: "InternalServerError",
+        cause: error.message,
       });
     }
   },
@@ -73,7 +73,6 @@ module.exports = {
       id: user.id,
       email: user.email,
       type_user: user.type_user,
-      seller_id: user.seller_id // Certifique-se de que seller_id é incluído no payload
     };
     const token = sign(payload, process.env.JWT_KEY, {
       expiresIn: "1d",
