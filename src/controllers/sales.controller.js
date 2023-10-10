@@ -1,35 +1,84 @@
 const { Sales } = require("../models/sales");
 const Product = require("../models/product");
+const UserAddress = require("../models/userAddress");
 
 const { errorLauncher } = require("../services/customs.errors.services");
 
 module.exports = {
   async storeSale(req, res) {
     try {
-      const { product_id, amount_buy, users_addresses_id, type_payment } =
-        req.body;
+      const array_of_sales = req.body;
       const buyer_id = req.payload.id;
+      var sales_saved = [];
+      var all_sales_pass = false;
 
-      const product = await Product.findByPk(product_id);
+      array_of_sales.forEach(async (sale) => {
+        all_sales_pass = true;
 
-      if (!product)
-        return res.status(404).json({ message: "Produto não encontrado" });
-
-      const seller_id = product.user_id;
-
-      const total =
-        Number.parseFloat(amount_buy) * Number.parseFloat(product.unit_price);
-
-      const sale = await Sales.create({
-        seller_id,
-        buyer_id,
-        product_id,
-        amount_buy,
-        users_addresses_id,
-        type_payment,
-        total,
+        const { product_id, amount_buy, users_addresses_id, type_payment } =
+          sale;
+        const acepted_type_payment = [
+          "credit_card",
+          "debit_card",
+          "payment_slip",
+          "pix",
+          "transfer",
+        ];
+        if (!acepted_type_payment.includes(type_payment)) {
+          console.log("tipo de pagamento nao aceito");
+          all_sales_pass = false;
+        }
+        const product = await Product.findByPk(product_id);
+        if (!product) {
+          console.log("produto nao encontrado");
+          all_sales_pass = false;
+        }
+        if (product.total_stock < amount_buy) {
+          console.log("quantidade comprada maior que o estoque");
+          all_sales_pass = false;
+        }
+        const user_address = await UserAddress.findByPk(users_addresses_id);
+        if (!user_address) {
+          console.log("endereco nao encontrado");
+          all_sales_pass = false;
+        }
       });
-      return res.status(201).json(sale);
+
+      console.log(all_sales_pass);
+
+      if (all_sales_pass) {
+        array_of_sales.forEach(async (sale) => {
+          const { product_id, amount_buy, users_addresses_id, type_payment } =
+            sale;
+
+          const product = await Product.findByPk(product_id);
+          const total = product.unit_price * amount_buy;
+          const seller_id = product.user_id;
+
+          const success_sale = await Sales.create({
+            buyer_id,
+            seller_id,
+            product_id,
+            users_addresses_id,
+            amount_buy,
+            type_payment,
+            total,
+          });
+          if(success_sale){
+            product.total_stock = product.total_stock - amount_buy;
+            product.save();
+          }
+
+          sales_saved.push(success_sale)
+        
+        });
+      } else {
+        return res
+          .status(400)
+          .json({ error: "Nao e possivel realizar a venda." });
+      }
+
+      return res.status(201).json(sales_saved);
     } catch (error) {
       errorLauncher(error, res);
     }
