@@ -92,8 +92,8 @@ module.exports = {
       await verifyPassword(userPassword);
       await verifyTypeUser(userExist.type_user);
       if(userExist.type_user !== "Admin"){ 
-        return res.status(401).send({
-          status: 401,
+        return res.status(403).send({
+          status: 403,
           message: "Não autorizado",
           error: "UnauthorizedError",
           cause: "Somente administradores podem acessar este recurso",

@@ -57,9 +57,9 @@ module.exports = {
       }
 
       if (!payload.type_user || payload.type_user !== "Admin") {
-        return res.status(401).json({
-          status: 401,
-          message: "Unauthorized",
+        return res.status(403).json({
+          status: 403,
+          message: "Não autorizado",
           error: "UnauthorizedError",
           cause: "Somente administradores podem acessar este recurso",
         });
