@@ -9,6 +9,7 @@ const { tokenGenerator } = require("../services/auth");
 const User = require("../models/user");
 const Address = require("../models/address");
 require("../models/userAddress");
+const { Sales } = require("../models/sales");
 const { sign, verify } = require("jsonwebtoken");
 
 const {
@@ -77,6 +78,12 @@ module.exports = {
 
       const userExist = await User.findOne({ where: { email } });
 
+      // Consulte o banco de dados para obter o seller_id
+      const seller = await Sales.findOne({
+        where: { seller_id: userExist.id },
+        as: "seller",
+      });
+
       const userPassword = await desdenciptarSenha(
         password,
         userExist.password
@@ -85,13 +92,15 @@ module.exports = {
       await verifyPassword(userPassword);
       await verifyTypeUser(userExist.type_user);
 
+      // Inclua o seller_id no payload do token se estiver presente
       const payload = {
         id: userExist.id,
         type_user: userExist.type_user,
         email: userExist.email,
         full_name: userExist.full_name,
-        seller_id: userExist.seller_id,
+        seller_id: seller ? seller.seller_id : null,
       };
+
       const token = sign(payload, process.env.JWT_KEY);
 
       return res.status(200).send({
