@@ -6,8 +6,8 @@ require("../models/userAddress");
 const {
   CustomizableError,
   ProductNotFound,
+  errorLauncher,
 } = require("../services/customs.errors.services");
-const { errorLauncher } = require("../services/customs.errors.services");
 const { isAllMandatoryFields } = require("../services/sales.services");
 
 module.exports = {
@@ -23,7 +23,7 @@ module.exports = {
       for (const sale of array_of_sales) {
         const { product_id, amount_buy, users_addresses_id, type_payment } =
           sale;
-          await isAllMandatoryFields(sale);
+        await isAllMandatoryFields(sale);
         const acepted_type_payment = [
           "credit_card",
           "debit_card",
@@ -105,13 +105,13 @@ module.exports = {
     }
   },
 
-  async listSales (req, res) {
+  async listSales(req, res) {
     const user_id = req.payload.id;
 
     try {
       const sales = await Sales.findAll({
-        where: { buyer_id: user_id},
-      })
+        where: { buyer_id: user_id },
+      });
 
       if (sales.length === 0) {
         return res.status(204).end();
@@ -120,7 +120,44 @@ module.exports = {
       res.status(200).json(sales);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Erro interno do servidor" })
+      res.status(500).json({ message: "Erro interno do servidor" });
+    }
+  },
+
+  async getSalesDashboardAdmin(req, res) {
+    try {
+      const payload = req.payload;
+
+      if (payload && payload.type_user === "Admin") {
+        const sellerId = payload.id;
+
+        const totalSales = await Sales.sum("total", {
+          where: { seller_id: sellerId },
+        });
+
+        const totalAmount = await Sales.sum("amount_buy", {
+          where: { seller_id: sellerId },
+        });
+
+        return res.status(200).json({
+          statusCode: 200,
+          message: "Dashboard de vendas obtido com sucesso",
+          dados: {
+            totalSales: totalSales || 0,
+            totalAmount: totalAmount || 0,
+          },
+        });
+      }
+
+      return res.status(401).json({
+        statusCode: 401,
+        message: "Não autorizado",
+        erro: "UnauthorizedError",
+        cause: "Somente administradores podem acessar este recurso",
+      });
+    } catch (error) {
+      console.error(error);
+      errorLauncher(error, res);
     }
   },
 };
