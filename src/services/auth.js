@@ -1,3 +1,4 @@
+const e = require("cors");
 const { verify, sign } = require("jsonwebtoken");
 
 module.exports = {
@@ -55,9 +56,16 @@ module.exports = {
         });
       }
 
-      if (payload.type_user === "Admin") {
-        next();
-      } 
+      if (!payload.type_user || payload.type_user !== "Admin") {
+        return res.status(401).json({
+          status: 401,
+          message: "Unauthorized",
+          error: "UnauthorizedError",
+          cause: "Somente administradores podem acessar este recurso",
+        });
+      }else{
+        next();}
+
     } catch (error) {
       return res.status(500).json({
         status: 500,
