@@ -1,52 +1,39 @@
-const Sale = require('../models/sales');
-const { errorLauncher } = require("../services/customs.errors.services.js");
+const { Sales } = require("../models/sales");
+const Product = require("../models/product");
+const UserAddress = require("../models/userAddress");
+
+const { errorLauncher } = require("../services/customs.errors.services");
 
 module.exports = {
-    async getSalesDashboardAdmin(req, res){
-        try{
-            if(req.user.type_user !== 'Admin'){
-                return res.status(403).send({message: 'Acesso negado'});
-            }
-
-            const totalSales = await Sale.aggregate([
-                {$match: {seller_id: req.user.user_id}},
-                {$group: {_id: null, total: {$sum: "$value"}}}
-            ]);
-
-            const totalAmount = await Sale.countDocuments({seller_id: req.user.user_id});
-
-            res.status(200).json({
-                totalSales: totalSales.length > 0 ? totalSales[0].total : 0,
-                totalAmount: totalAmount
-            });
-        } catch (error) {
-            console.log(error);
-            errorLauncher(error, res);
-        }
+  async getSalesDashboardAdmin(req, res) {
+    try {
+     
+      if (req.user && req.user.type_user === 'Admin') {
+       
+        const totalSales = await Sales.sum('total');
+  
+        const totalAmount = await Sales.sum('amount_buy');
+  
+        return res.status(200).json({
+          statusCode: 200,
+          message: 'Dashboard de vendas obtido com sucesso',
+          dados: {
+            totalSales: totalSales || 0,
+            totalAmount: totalAmount || 0,
+          },
+         
+        });
+      }
+  
+      // Se req.user não é um administrador, retorne um erro 401
+      return res.status(401).json({
+        statusCode: 401,
+        error: 'Unauthorized',
+        message: 'Você não tem permissão para acessar este recurso. Apenas administradores são autorizados.',
+      });
+    } catch (error) {
+      console.error(error);
+      errorLauncher(error, res);
     }
-}
-
-
-
-// module.exports={
-
-//     async getSalesDashboardAdmin (req, res) {
-
-//         if (req.user.TYPE_USER !== 'ADMIN') {
-//             return res.status(403).send({ message: 'Acesso negado' });
-//         }
-
-//         const totalSales = await Sale.aggregate([
-//             { $match: { seller_id: req.user.user_id } },
-//             { $group: { _id: null, total: { $sum: "$value" } } }
-//         ]);
-
-//         const totalAmount = await Sale.countDocuments({ seller_id: req.user.user_id });
-
-//         res.status(200).json({
-//             totalSales: totalSales.length > 0 ? totalSales[0].total : 0,
-//             totalAmount: totalAmount
-//         });
-//     }
-// }
-
+  },
+}  

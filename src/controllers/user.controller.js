@@ -90,6 +90,7 @@ module.exports = {
         type_user: userExist.type_user,
         email: userExist.email,
         full_name: userExist.full_name,
+        seller_id: userExist.seller_id,
       };
       const token = sign(payload, process.env.JWT_KEY);
 

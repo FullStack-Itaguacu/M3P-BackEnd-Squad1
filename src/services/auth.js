@@ -10,8 +10,8 @@ module.exports = {
         return res.status(401).json({
           message: "Not token provided",
           status: 401,
-          cause : "Token não fornecido",
-          error : "NotTokenProvidedError"
+          cause: "Token não fornecido",
+          error: "NotTokenProvidedError",
         });
       }
 
@@ -21,13 +21,23 @@ module.exports = {
         req.payload = payload;
       }
 
-      next();
+      if (payload) {
+        req.user = payload;
+        next();
+      } else {
+        return res.status(401).json({
+          message: "Invalid token",
+          status: 401,
+          cause: "Token invalido, faça login novamente",
+          error: "TokenInvalidError",
+        });
+      }
     } catch (error) {
       return res.status(401).json({
         message: "Não foi possivel validar o token, faça login novamente",
         status: 401,
-        cause : error.message,
-        error : "TokenInvalidError"
+        cause: error.message,
+        error: "TokenInvalidError",
       });
     }
   },
@@ -40,27 +50,20 @@ module.exports = {
         return res.status(401).json({
           message: "Payload not found",
           status: 401,
-          cause : "Payload não encontrado , faça login novamente",
-          error : "PayloadNotFoundError"
+          cause: "Payload não encontrado , faça login novamente",
+          error: "PayloadNotFoundError",
         });
       }
 
       if (payload.type_user === "Admin") {
         next();
-      } else {
-        return res.status(403).json({
-          message: "User not admin",
-          status: 403,
-          cause : "Usuario sem permissão para acessar essa rota",
-          error : "UserNotAdminError"
-        });
-      }
+      } 
     } catch (error) {
       return res.status(500).json({
         message: "Internal server error",
         status: 500,
-        cause : error.message,
-        error : "InternalServerError"
+        cause: error.message,
+        error: "InternalServerError",
       });
     }
   },
@@ -70,6 +73,7 @@ module.exports = {
       id: user.id,
       email: user.email,
       type_user: user.type_user,
+      seller_id: user.seller_id // Certifique-se de que seller_id é incluído no payload
     };
     const token = sign(payload, process.env.JWT_KEY, {
       expiresIn: "1d",
