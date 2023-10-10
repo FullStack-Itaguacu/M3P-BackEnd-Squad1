@@ -104,4 +104,19 @@ module.exports = {
       errorLauncher(error, res);
     }
   },
+
+  async listSales (req, res) {
+    const user_id = req.payload.id;
+
+    try {
+      const sales = await Sales.findAll({
+        where: { buyer_id: user_id},
+      })
+
+      res.status(200).json(sales);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Erro interno do servidor" })
+    }
+  },
 };
