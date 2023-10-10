@@ -106,8 +106,10 @@ module.exports = {
   },
   async getSalesDashboardAdmin(req, res) {
     try {
-      if (req.user && req.user.type_user === "Admin") {
-        const sellerId = req.user.seller_id;
+      const payload = req.payload;
+
+      if (payload && payload.type_user === "Admin") {
+        const sellerId = payload.id;
 
         const totalSales = await Sales.sum("total", {
           where: { seller_id: sellerId },

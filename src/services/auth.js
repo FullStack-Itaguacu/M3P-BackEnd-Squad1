@@ -1,4 +1,3 @@
-const e = require("cors");
 const { verify, sign } = require("jsonwebtoken");
 
 module.exports = {
@@ -7,6 +6,7 @@ module.exports = {
     try {
       const token = req.headers.authorization;
 
+      
       if (!token) {
         return res.status(401).json({
           status: 401,
@@ -22,17 +22,7 @@ module.exports = {
         req.payload = payload;
       }
 
-      if (payload) {
-        req.user = payload;
-        next();
-      } else {
-        return res.status(401).json({
-          status: 401,
-          message: "Invalid token",
-          error: "TokenInvalidError",
-          cause: "Token invalido, faça login novamente",
-        });
-      }
+      next();
     } catch (error) {
       return res.status(401).json({
         status: 401,
