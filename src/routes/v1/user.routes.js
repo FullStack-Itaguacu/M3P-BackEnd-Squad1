@@ -10,7 +10,6 @@ class UserRouter {
     userRoutes.post("/user/admin/signup", tokenValidate, adminValidate, adminSignUp);
     userRoutes.get("/buyers/admin/:offset/:limit");
     userRoutes.get("/buyers/admin/:userId");
-    userRoutes.patch("/buyers/admin/:userId");
     userRoutes.post("/user/admin/login", loginAdmin);
 
     return userRoutes;
