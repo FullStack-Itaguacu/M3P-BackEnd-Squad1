@@ -1,13 +1,13 @@
 const { Sales } = require("../models/sales");
 const Product = require("../models/product");
-const UserAddress = require("../models/userAddress");
+const UserAddress = require("../models/userAddress");   
 const Address = require("../models/address");
 require("../models/userAddress");
 const {
   CustomizableError,
   ProductNotFound,
+  errorLauncher
 } = require("../services/customs.errors.services");
-const { errorLauncher } = require("../services/customs.errors.services");
 const { isAllMandatoryFields } = require("../services/sales.services");
 
 module.exports = {
@@ -101,6 +101,42 @@ module.exports = {
         usser_adress: address,
       });
     } catch (error) {
+      errorLauncher(error, res);
+    }
+  },
+  async getSalesDashboardAdmin(req, res) {
+    try {
+      const payload = req.payload;
+
+      if (payload && payload.type_user === "Admin") {
+        const sellerId = payload.id;
+
+        const totalSales = await Sales.sum("total", {
+          where: { seller_id: sellerId },
+        });
+
+        const totalAmount = await Sales.sum("amount_buy", {
+          where: { seller_id: sellerId },
+        });
+
+        return res.status(200).json({
+          statusCode: 200,
+          message: "Dashboard de vendas obtido com sucesso",
+          dados: {
+            totalSales: totalSales || 0,
+            totalAmount: totalAmount || 0,
+          },
+        });
+      }
+
+      return res.status(401).json({
+        statusCode: 401,
+        message: "Não autorizado",
+        erro: "UnauthorizedError",
+        cause: "Somente administradores podem acessar este recurso",
+      });
+    } catch (error) {
+      console.error(error);
       errorLauncher(error, res);
     }
   },
