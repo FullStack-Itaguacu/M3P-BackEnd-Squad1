@@ -12,9 +12,7 @@ module.exports = {
       var sales_saved = [];
       var all_sales_pass = false;
 
-      array_of_sales.forEach(async (sale) => {
-        all_sales_pass = true;
-
+      for (const sale of array_of_sales) {
         const { product_id, amount_buy, users_addresses_id, type_payment } =
           sale;
         const acepted_type_payment = [
@@ -42,12 +40,13 @@ module.exports = {
           console.log("endereco nao encontrado");
           all_sales_pass = false;
         }
-      });
+        all_sales_pass = true;
+      }
 
       console.log(all_sales_pass);
 
       if (all_sales_pass) {
-        array_of_sales.forEach(async (sale) => {
+        for (const sale of array_of_sales) {
           const { product_id, amount_buy, users_addresses_id, type_payment } =
             sale;
 
@@ -64,14 +63,13 @@ module.exports = {
             type_payment,
             total,
           });
-          if(success_sale){
+          if (success_sale) {
             product.total_stock = product.total_stock - amount_buy;
             product.save();
           }
 
-          sales_saved.push(success_sale)
-        
-        });
+          sales_saved.push(success_sale);
+        }
       } else {
         return res
           .status(400)
