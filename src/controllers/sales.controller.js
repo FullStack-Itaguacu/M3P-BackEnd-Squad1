@@ -7,13 +7,19 @@ const { errorLauncher } = require("../services/customs.errors.services");
 module.exports = {
   async getSalesDashboardAdmin(req, res) {
     try {
-     
+      console.log("req.user:", req.user); 
       if (req.user && req.user.type_user === 'Admin') {
-       
-        const totalSales = await Sales.sum('total');
-  
-        const totalAmount = await Sales.sum('amount_buy');
-  
+        const sellerId = req.user.seller_id;
+        console.log("sellerId:", sellerId); // Adicione esta linha para verificar o valor de sellerId
+
+        const totalSales = await Sales.sum('total', {
+          where: { seller_id: sellerId },
+        });
+
+        const totalAmount = await Sales.sum('amount_buy', {
+          where: { seller_id: sellerId },
+        });
+
         return res.status(200).json({
           statusCode: 200,
           message: 'Dashboard de vendas obtido com sucesso',
@@ -21,19 +27,20 @@ module.exports = {
             totalSales: totalSales || 0,
             totalAmount: totalAmount || 0,
           },
-         
         });
       }
-  
-      // Se req.user não é um administrador, retorne um erro 401
+
       return res.status(401).json({
         statusCode: 401,
-        error: 'Unauthorized',
-        message: 'Você não tem permissão para acessar este recurso. Apenas administradores são autorizados.',
+        message: 'Não autorizado',
+        erro: 'UnauthorizedError',
+        cause: 'Somente administradores podem acessar este recurso',
       });
     } catch (error) {
       console.error(error);
       errorLauncher(error, res);
     }
-  },
+  }
+
+
 }  
