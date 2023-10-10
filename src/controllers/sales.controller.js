@@ -113,6 +113,10 @@ module.exports = {
         where: { buyer_id: user_id},
       })
 
+      if (sales.length === 0) {
+        return res.status(204).end();
+      }
+
       res.status(200).json(sales);
     } catch (error) {
       console.error(error);
