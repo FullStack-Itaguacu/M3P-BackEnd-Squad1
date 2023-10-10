@@ -98,7 +98,13 @@ const Sales = connection.define(
         notNull: true
       }
     },
-  });
+  },
+  {
+    paranoid: true,
+    timestamps: true,
+    underscored: true,
+  }
+  );
 
 Sales.belongsTo(User, { foreignKey: 'buyer_id', as: 'buyer' });
 Sales.belongsTo(User, { foreignKey: 'seller_id', as: 'seller' });
