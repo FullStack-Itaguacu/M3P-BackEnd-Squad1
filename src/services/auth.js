@@ -6,12 +6,13 @@ module.exports = {
     try {
       const token = req.headers.authorization;
 
+      
       if (!token) {
         return res.status(401).json({
-          message: "Not token provided",
           status: 401,
-          cause : "Token não fornecido",
-          error : "NotTokenProvidedError"
+          message: "Not token provided",
+          error: "NotTokenProvidedError",
+          cause: "Token não fornecido",
         });
       }
 
@@ -24,10 +25,10 @@ module.exports = {
       next();
     } catch (error) {
       return res.status(401).json({
-        message: "Não foi possivel validar o token, faça login novamente",
         status: 401,
-        cause : error.message,
-        error : "TokenInvalidError"
+        message: "Não foi possivel validar o token, faça login novamente",
+        error: "TokenInvalidError",
+        cause: error.message,
       });
     }
   },
@@ -38,29 +39,29 @@ module.exports = {
 
       if (!payload) {
         return res.status(401).json({
-          message: "Payload not found",
           status: 401,
-          cause : "Payload não encontrado , faça login novamente",
-          error : "PayloadNotFoundError"
+          message: "Payload not found",
+          error: "PayloadNotFoundError",
+          cause: "Payload não encontrado , faça login novamente",
         });
       }
 
-      if (payload.type_user === "Admin") {
-        next();
-      } else {
+      if (!payload.type_user || payload.type_user !== "Admin") {
         return res.status(403).json({
-          message: "User not admin",
           status: 403,
-          cause : "Usuario sem permissão para acessar essa rota",
-          error : "UserNotAdminError"
+          message: "Não autorizado",
+          error: "UnauthorizedError",
+          cause: "Somente administradores podem acessar este recurso",
         });
-      }
+      }else{
+        next();}
+
     } catch (error) {
       return res.status(500).json({
-        message: "Internal server error",
         status: 500,
-        cause : error.message,
-        error : "InternalServerError"
+        message: "Internal server error",
+        error: "InternalServerError",
+        cause: error.message,
       });
     }
   },
