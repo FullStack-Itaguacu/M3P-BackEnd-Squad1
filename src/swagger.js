@@ -35,5 +35,50 @@ const doc = {
 const outputFile = 'src/utils/swagger-output.json'
 const endpointsFiles = ['src/routes/*.js']
 
+//Ususarios
+swaggerSpec.paths['/users'] = {
+  "get": {
+    "tags": [
+      "User"
+    ],
+    "summary": "Listar todos os usuarios",
+    "description": "Listar todos os usuarios",
+    "produces": [
+      "application/json"
+    ],
+    "responses": {
+      "200": {
+        "description": "OK"
+      }
+    }
+  },
+  "post": {
+    "tags": [
+      "User"
+    ],
+    "summary": "Cadastrar um usuario",
+    "description": "Cadastrar um usuario",
+    "produces": [
+      "application/json"
+    ],
+    "parameters": [
+      {
+        "in": "body",
+        "name": "body",
+        "description": "Dados do usuario",
+        "required": true,
+        "schema": {
+          "$ref": "#/definitions/User"
+        }
+      }
+    ],
+    "responses": {
+      "201": {
+        "description": "Created"
+      }
+    }
+  }
+}
+
 swaggerAutogen(outputFile, endpointsFiles, doc)
 
