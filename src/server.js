@@ -3,7 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const {config} = require("dotenv");
 const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./swaggerConfig');config();
+const swaggerSpec = require('./utils/swagger-output.json');
+config();
 
 // classe server
 class Server {
