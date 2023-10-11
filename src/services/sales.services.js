@@ -1,3 +1,4 @@
+const { Sales } = require("../models/sales");
 const { CustomizableError } = require("../services/customs.errors.services");
 module.exports = {
   async isAllMandatoryFields(sale) {
@@ -25,4 +26,8 @@ module.exports = {
       );
     }
   },
+  async findAdminSales(value) {
+    const data = Sales.findAll({ where: { seller_id: value }, order: [['created_at', 'ASC']] })
+    return data
+  }
 };

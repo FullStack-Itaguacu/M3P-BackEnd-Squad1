@@ -1,7 +1,4 @@
-const bcrypt = require("bcrypt");
 const {
-  errorResponse,
-  successResponse,
   verificaNumeroPositivo,
   verificaSomenteNumeros,
 } = require("../services/validators");
@@ -10,7 +7,7 @@ const User = require("../models/user");
 const Address = require("../models/address");
 require("../models/userAddress");
 const { Sales } = require("../models/sales");
-const { sign, verify } = require("jsonwebtoken");
+const { sign } = require("jsonwebtoken");
 
 const {
   filtroBodySignUp,
@@ -20,7 +17,6 @@ const {
   verifyPassword,
   validateUserType,
   verifyUserId,
-  verifyCpfExist,
   verifyTypeUser,
 } = require("../services/user.services");
 const {
@@ -91,8 +87,8 @@ module.exports = {
 
       await verifyPassword(userPassword);
       await verifyTypeUser(userExist.type_user);
-      if(userExist.type_user !== "Admin"){ 
-        return res.status(403).send({
+      if (userExist.type_user !== "Admin") {
+        return res.status(403).json({
           status: 403,
           message: "Não autorizado",
           error: "UnauthorizedError",
@@ -110,7 +106,7 @@ module.exports = {
 
       const token = sign(payload, process.env.JWT_KEY);
 
-      return res.status(200).send({
+      return res.status(200).json({
         Status: 200,
         Message: "Login efetuado com sucesso",
         data: token,
@@ -175,7 +171,7 @@ module.exports = {
 
       const data = await verifyUserId(user_id);
 
-      return res.status(200).send({
+      return res.status(200).json({
         status: 200,
         message: "Sucesso",
         data,

@@ -1,16 +1,14 @@
 const Products = require("../models/product");
-const User = require("../models/user");
-const { validateFields } = require("../services/product.service");
 const { errorLauncher } = require("../services/customs.errors.services.js");
-const { verificaNumeroPositivo, verificaSomenteNumeros } = require("../services/validators")
+const { verificaSomenteNumeros } = require("../services/validators")
 const {
   filtroBodyOffsetLimitSearch,
   searchOffsetLimit,
   filtroUpdateProductById,
   updateProductById,
+  validateFields
 } = require("../services/product.services");
 const { InvalidKeysReceivedError } = require("../services/customs.errors.services");
-const { tokenValidate } = require("../services/auth");
 module.exports = {
   async listProductsOffsetLimit(req, res) {
     try {
@@ -53,10 +51,14 @@ module.exports = {
   async createProduct(req, res) {
     try {
 
-      const validationError = validateFields(req.body);
+      const validationError = await validateFields(req.body);
+      console.log("chegou aqui1")
       if (validationError) {
+        console.log(validationError)
         return res.status(validationError.status).json({ error: validationError });
       }
+      console.log("chegou aqui3")
+
       const {
         name,
         lab_name,
