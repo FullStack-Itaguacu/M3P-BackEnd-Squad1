@@ -42,9 +42,9 @@ class Server {
   }
   // start server
   async initializeServer(app) {
-    const PORT = process.env.PORT_NODE || 3000;
-    const HOST = process.env.HOST_NODE || "localhost";
-    app.listen(PORT, () => console.log(`Servidor executando http://${HOST}:${PORT}`));
+    const PORT = process.env.PORT 
+    const HOST = process.env.HOST 
+    app.listen(PORT, () => console.log(`Servidor executando https://${HOST}:${PORT}`));
   }
 
 }
