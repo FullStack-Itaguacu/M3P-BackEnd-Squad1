@@ -84,7 +84,7 @@ module.exports = {
 
       const data = await verificaUserId(user_id)
 
-      return res.status(200).send({
+      return res.status(200).json({
         status: 200,
         message: "Sucesso",
         data
@@ -103,7 +103,7 @@ module.exports = {
       );
 
       if (!isValidOperation) {
-        return res.status(422).send({
+        return res.status(422).json({
           status: 422,
           error: "BadFormatRequest",
           message:
@@ -131,7 +131,7 @@ module.exports = {
       const currentUser = await User.findByPk(user_id);
 
       if (currentUser.type_user === "Admin" && type_user === "Buyer") {
-        return res.status(422).send({
+        return res.status(422).json({
           error: "BadFormatRequest",
           status: 422,
           message:
@@ -183,7 +183,7 @@ module.exports = {
 
       await data.save();
 
-      return res.status(204).send({
+      return res.status(204).json({
         status: 204,
         message: "Dados atualizados com sucesso",
         data,

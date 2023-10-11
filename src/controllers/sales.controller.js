@@ -1,6 +1,6 @@
 const { Sales } = require("../models/sales");
 const Product = require("../models/product");
-const UserAddress = require("../models/userAddress");   
+const UserAddress = require("../models/userAddress");
 const Address = require("../models/address");
 require("../models/userAddress");
 const {
@@ -8,7 +8,7 @@ const {
   ProductNotFound,
   errorLauncher
 } = require("../services/customs.errors.services");
-const { isAllMandatoryFields } = require("../services/sales.services");
+const { isAllMandatoryFields, findAdminSales } = require("../services/sales.services");
 
 module.exports = {
   async storeSale(req, res) {
@@ -160,4 +160,21 @@ module.exports = {
       errorLauncher(error, res);
     }
   },
+  async listSalesAdmin(req, res) {
+    try {
+      const { id } = req.payload
+
+      const data = await findAdminSales(id)
+
+      if (data.length === 0) {
+        return res.status(204).json()
+      }
+      return res.status(200).json({
+        data
+      })
+    } catch (error) {
+      errorLauncher(error, res);
+    }
+  }
+
 };
