@@ -110,7 +110,14 @@
                       "type": "string"
                     }
                   },
-                  "required": ["full_name", "cpf", "birth_date", "email", "phone", "password"]
+                  "required": [
+                    "full_name",
+                    "cpf",
+                    "birth_date",
+                    "email",
+                    "phone",
+                    "password"
+                  ]
                 },
                 "address": {
                   "type": "array",
@@ -118,7 +125,7 @@
                     "type": "object",
                     "properties": {
                       "zip": {
-                        "type": "string"    
+                        "type": "string"
                       },
                       "street": {
                         "type": "string"
@@ -145,15 +152,24 @@
                         "type": "string"
                       }
                     },
-                    "required": ["zip", "street", "number_street", "neighborhood", "city", "state"]
+                    "required": [
+                      "zip",
+                      "street",
+                      "number_street",
+                      "neighborhood",
+                      "city",
+                      "state"
+                    ]
                   }
                 }
               },
-              "required": ["user", "address"]
+              "required": [
+                "user",
+                "address"
+              ]
             }
           }
-        ]
-        ,
+        ],
         "responses": {
           "200": {
             "description": "Usuario cadastrado com sucesso"
@@ -161,7 +177,7 @@
           "401": {
             "description": "Unauthorized"
           },
-          "422":{
+          "422": {
             "description": "Unprocessable Entity"
           },
           "500": {
@@ -194,36 +210,86 @@
                 "user": {
                   "type": "object",
                   "properties": {
-                    "full_name": { "type": "string" },
-                    "cpf": { "type": "string" },
-                    "birth_date": { "type": "string" },
-                    "email": { "type": "string" },
-                    "phone": { "type": "string" },
-                    "password": { "type": "string" },
-                    "type-user": { "type": "string" }
+                    "full_name": {
+                      "type": "string"
+                    },
+                    "cpf": {
+                      "type": "string"
+                    },
+                    "birth_date": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "type-user": {
+                      "type": "string"
+                    }
                   },
-                  "required": ["full_name", "cpf", "birth_date", "email", "phone", "password", "type_user"]
+                  "required": [
+                    "full_name",
+                    "cpf",
+                    "birth_date",
+                    "email",
+                    "phone",
+                    "password",
+                    "type_user"
+                  ]
                 },
                 "address": {
                   "type": "array",
                   "items": {
                     "type": "object",
                     "properties": {
-                      "zip": { "type": "string" },
-                      "street": { "type": "string" },
-                      "number_street": { "type": "string" },
-                      "neighborhood": { "type": "string" },
-                      "city": { "type": "string" },
-                      "state": { "type": "string" },
-                      "complement": { "type": "string" },
-                      "lat": { "type": "string" },
-                      "long": { "type": "string" }
+                      "zip": {
+                        "type": "string"
+                      },
+                      "street": {
+                        "type": "string"
+                      },
+                      "number_street": {
+                        "type": "string"
+                      },
+                      "neighborhood": {
+                        "type": "string"
+                      },
+                      "city": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "complement": {
+                        "type": "string"
+                      },
+                      "lat": {
+                        "type": "string"
+                      },
+                      "long": {
+                        "type": "string"
+                      }
                     },
-                    "required": ["zip", "street", "numberStreet", "neighborhood", "city", "state"]
+                    "required": [
+                      "zip",
+                      "street",
+                      "numberStreet",
+                      "neighborhood",
+                      "city",
+                      "state"
+                    ]
                   }
                 }
               },
-              "required": ["user", "address"]
+              "required": [
+                "user",
+                "address"
+              ]
             }
           }
         ],
@@ -252,7 +318,6 @@
         }
       }
     },
-    
     "/api/user/admin/login": {
       "post": {
         "description": "Login do administrador com email e senha",
@@ -294,8 +359,6 @@
         }
       }
     },
-
-
     "/api/products/admin/{offset}/{limit}": {
       "get": {
         "description": "Este endpoint deve listar todos os produtos cadastrados do usuário administrador.",
@@ -311,7 +374,7 @@
             "in": "path",
             "required": true,
             "type": "integer"
-          },              
+          },
           {
             "name": "name",
             "in": "query",
@@ -327,7 +390,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"                       
+            "description": "OK"
           },
           "204": {
             "description": "No Content"
@@ -353,7 +416,7 @@
             "in": "path",
             "required": true,
             "type": "integer"
-          }          
+          }
         ],
         "responses": {
           "200": {
@@ -371,7 +434,7 @@
     "/api/products/admin": {
       "post": {
         "description": "Este endpoint deve cadastrar um produto na aplicação.",
-        "parameters": [          
+        "parameters": [
           {
             "name": "body",
             "in": "body",
@@ -437,7 +500,7 @@
             "in": "path",
             "required": true,
             "type": "integer"
-          },          
+          },
           {
             "name": "body",
             "in": "body",
@@ -497,7 +560,7 @@
             "in": "path",
             "required": true,
             "type": "integer"
-          },          
+          },
           {
             "name": "name",
             "in": "query",
@@ -545,7 +608,7 @@
             "in": "path",
             "required": true,
             "type": "integer"
-          },          
+          },
           {
             "name": "full_name",
             "in": "query",
@@ -585,7 +648,7 @@
             "in": "path",
             "required": true,
             "type": "integer"
-          }                    
+          }
         ],
         "responses": {
           "200": {
@@ -601,7 +664,7 @@
             "description": "Internal Server Error"
           }
         }
-      },      
+      },
       "patch": {
         "description": "",
         "parameters": [
@@ -610,7 +673,7 @@
             "in": "path",
             "required": true,
             "type": "integer"
-          },          
+          },
           {
             "name": "body",
             "in": "body",
@@ -631,7 +694,7 @@
                 },
                 "type_user": {
                   "example": "Admin ou Buyer"
-                }                
+                }
               }
             }
           }
@@ -654,25 +717,233 @@
     },
     "/api/buyers/address": {
       "get": {
-        "description": "Este endpoint deve listar todos os endereços cadastrados do usuário.",               
+        "description": "Este endpoint deve listar todos os endereços cadastrados do usuário.",
         "responses": {
           "200": {
             "description": "OK"
           },
           "401": {
             "description": "Unauthorized"
-          },          
+          },
           "500": {
             "description": "Internal Server Error"
           }
         }
       }
-    }      
+    },
+    "/api/sales": {
+      "post": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Cadastro de venda.",
+        "description": "Rota responsável pelo cadastro de nova venda.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "venda",
+            "description": "Array de produtos da venda.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SalesPost"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Fields Not Formated"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "409": {
+            "description": "Conflict. Quantity purchased greater than quantity of products in stock"
+          },
+          "422": {
+            "description": "Unprocessable Content"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Lista as compras do usuário.",
+        "description": "Rota responsável pela listagem de compras efetuadas pelo usuário logado.",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SalesList"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/sales/admin": {
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Fornece as vendas realizadas pelo administrador logado.",
+        "description": "Vendas realizadas pelo administrador logado.",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SalesList"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/dashboard/admin": {
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Devolve informações de vendas do administrador logado.",
+        "description": "Retorna valor das vendas e quantidade de produtos vendidos.",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SalesDashboard"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Forbidden"
+            }
+          }
+        }
+      }
+    }
   },
   "security": [
     {
       "apiKeyAuth": []
     }
-  ]
+  ],
+  "definitions": {
+    "SalesPost": {
+      "type": "object",
+      "required": [
+        "product_id",
+        "amount_buy",
+        "users_addresses_id",
+        "type_payment"
+      ],
+      "properties": {
+        "product_id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "amount_buy": {
+          "type": "integer",
+          "example": "10"
+        },
+        "users_addresses_id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "type_payment": {
+          "type": "string",
+          "enum": [
+            "credit_card",
+            "debit_card",
+            "payment_slip",
+            "pix",
+            "trasnfer"
+          ]
+        }
+      }
+    },
+    "SalesList": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "buyer_id": {
+          "type": "integer",
+          "example": "2"
+        },
+        "seller_id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "product_id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "users_addresses_id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "amount_buy": {
+          "type": "integer",
+          "example": "12"
+        },
+        "total": {
+          "type": "float",
+          "example": "22.50"
+        },
+        "type_payment": {
+          "type": "enum",
+          "example": "pix"
+        },
+        "created_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        },
+        "updated_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        }
+      }
+    },
+    "SalesDashboard": {
+      "type": "object",
+      "properties": {
+        "totalSales": {
+          "type": "integer",
+          "example": "150"
+        },
+        "totalAmount": {
+          "type": "integer",
+          "example": "35"
+        }
+      }
+    }
+  }
 }
- 
