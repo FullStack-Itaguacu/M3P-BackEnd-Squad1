@@ -313,6 +313,21 @@
             "required": true,
             "description": "O número máximo de compradores a serem retornados",
             "type": "integer"
+          },
+          {
+            "name": "full_name",
+            "in": "query",
+            "description": "O nome completo do comprador",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Ordenação dos resultados por data de criação",
+            "required": true,
+            "type": "string",
+            "enum": ["ASC", "DESC"]
           }
         ],
         "responses": {
