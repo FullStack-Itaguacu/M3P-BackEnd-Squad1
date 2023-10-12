@@ -424,13 +424,13 @@
             "name": "offset",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "limit",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "authorization",
@@ -449,6 +449,12 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -469,7 +475,7 @@
             "name": "user_id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "authorization",
@@ -491,8 +497,78 @@
             "description": "Internal Server Error"
           }
         }
+      },      
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "full_name": {
+                  "example": "Alexandre Barbosa"
+                },
+                "email": {
+                  "example": "alexandre@email.com"
+                },
+                "cpf": {
+                  "example": "12345678912"
+                },
+                "phone": {
+                  "example": "48999229922"
+                },
+                "type_user": {
+                  "example": "Admin ou Buyer"
+                }                
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
       }
-    }
+    },
+    "/api/buyers/address": {
+      "get": {
+        "description": "Este endpoint deve listar todos os endereços cadastrados do usuário.",               
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },          
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }      
   },
   "security": [
     {
