@@ -172,12 +172,7 @@
             "in": "path",
             "required": true,
             "type": "integer"
-          },  
-          {
-            "name": "authorization",
-            "in": "header",                                   
-            "type": "string"
-          },        
+          },              
           {
             "name": "name",
             "in": "query",
@@ -219,12 +214,7 @@
             "in": "path",
             "required": true,
             "type": "integer"
-          },
-          {
-            "name": "authorization",
-            "in": "header",           
-            "type": "string"
-          }
+          }          
         ],
         "responses": {
           "200": {
@@ -242,12 +232,7 @@
     "/api/products/admin": {
       "post": {
         "description": "Este endpoint deve cadastrar um produto na aplicação.",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",            
-            "type": "string"
-          },
+        "parameters": [          
           {
             "name": "body",
             "in": "body",
@@ -313,12 +298,7 @@
             "in": "path",
             "required": true,
             "type": "integer"
-          },
-          {
-            "name": "authorization",
-            "in": "header",            
-            "type": "string"
-          },
+          },          
           {
             "name": "body",
             "in": "body",
@@ -378,12 +358,7 @@
             "in": "path",
             "required": true,
             "type": "integer"
-          },
-          {
-            "name": "authorization",
-            "in": "header",            
-            "type": "string"
-          },
+          },          
           {
             "name": "name",
             "in": "query",
@@ -431,12 +406,7 @@
             "in": "path",
             "required": true,
             "type": "integer"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
+          },          
           {
             "name": "full_name",
             "in": "query",
@@ -476,12 +446,7 @@
             "in": "path",
             "required": true,
             "type": "integer"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
+          }                    
         ],
         "responses": {
           "200": {
@@ -506,12 +471,7 @@
             "in": "path",
             "required": true,
             "type": "integer"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
+          },          
           {
             "name": "body",
             "in": "body",
