@@ -293,89 +293,14 @@
           }
         }
       }
-    },
-    "/api/buyers/admin/{offset}/{limit}": {
-      "get": {
-        "description": "Obtém uma lista paginada de compradores",
-        "summary": "Obtém uma lista paginada de compradores",
-        "tags": ["Admin"],
-        "parameters": [
-          {
-            "name": "offset",
-            "in": "path",
-            "required": true,
-            "description": "O número inicial de registros a serem pulados na lista de compradores",
-            "type": "integer"
-          },
-          {
-            "name": "limit",
-            "in": "path",
-            "required": true,
-            "description": "O número máximo de compradores a serem retornados",
-            "type": "integer"
-          },
-          {
-            "name": "full_name",
-            "in": "query",
-            "description": "O nome completo do comprador",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "created_at",
-            "in": "query",
-            "description": "Ordenação dos resultados por data de criação",
-            "required": true,
-            "type": "string",
-            "enum": ["ASC", "DESC"]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Operação bem-sucedida",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/User"
-              }
-            }
-          },
-          "204": {
-            "description": "Nenhum comprador encontrado"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "400": {
-            "description": "Requisição inválida"
-          },
-          "500": {
-            "description": "Erro interno do servidor"
-          }
-        }
-      }
     }
-    
-  },
-  "definitions": {
-    "User": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "description": "O ID do usuário"
-        },
-        "name": {
-          "type": "string",
-          "description": "O nome do usuário"
-        }
-      }
-    }
-  },
 
+  },
+   
   "security": [
     {
-      "apiKeyAuth": []
+      "apiKeyAuth": {}
     }
   ]
+  
 }
