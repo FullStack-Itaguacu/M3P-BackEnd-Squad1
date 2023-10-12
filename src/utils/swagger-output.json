@@ -293,14 +293,386 @@
           }
         }
       }
-    }
+    },
 
+
+    "/api/products/admin/{offset}/{limit}": {
+      "get": {
+        "description": "Este endpoint deve listar todos os produtos cadastrados do usuário administrador.",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "limit",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },              
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type_product",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"                       
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/{product_id}": {
+      "get": {
+        "description": "Este endpoint de listar uma especificação do produto selecionado pelo id",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }          
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/products/admin": {
+      "post": {
+        "description": "Este endpoint deve cadastrar um produto na aplicação.",
+        "parameters": [          
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "Paracetamol"
+                },
+                "lab_name": {
+                  "example": "Cimed"
+                },
+                "image_link": {
+                  "example": "url string"
+                },
+                "dosage": {
+                  "example": "10mg"
+                },
+                "unit_price": {
+                  "example": "20"
+                },
+                "type_product": {
+                  "example": "controlled or uncontrolled"
+                },
+                "total_stock": {
+                  "example": "100"
+                },
+                "description": {
+                  "example": "Medicamento para dor de cabeça e febre"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/admin/{product_id}": {
+      "patch": {
+        "description": "Este endpoint deve atualizar alguns campos do produto na aplicação.",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },          
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "Dorflex"
+                },
+                "image_link": {
+                  "example": "url string"
+                },
+                "dosage": {
+                  "example": "10mg"
+                },
+                "total_stock": {
+                  "example": "20"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/{offset}/{limit}": {
+      "get": {
+        "description": "Este endpoint deve listar todos os usuários.",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "limit",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },          
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type_product",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/buyers/admin/{offset}/{limit}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "limit",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },          
+          {
+            "name": "full_name",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/buyers/admin/{user_id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }                    
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },      
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },          
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "full_name": {
+                  "example": "Alexandre Barbosa"
+                },
+                "email": {
+                  "example": "alexandre@email.com"
+                },
+                "cpf": {
+                  "example": "12345678912"
+                },
+                "phone": {
+                  "example": "48999229922"
+                },
+                "type_user": {
+                  "example": "Admin ou Buyer"
+                }                
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/buyers/address": {
+      "get": {
+        "description": "Este endpoint deve listar todos os endereços cadastrados do usuário.",               
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },          
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }      
   },
-   
   "security": [
     {
-      "apiKeyAuth": {}
+      "apiKeyAuth": []
     }
   ]
-  
 }
+ 
