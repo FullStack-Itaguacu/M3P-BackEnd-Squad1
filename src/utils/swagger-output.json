@@ -10,11 +10,23 @@
   "tags": [
     {
       "name": "User",
-      "description": "Rotas para o usuário comprador"
+      "description": "Rotas para cadastro e login de usuário comprador."
     },
     {
       "name": "Admin",
-      "description": "Rotas para o usuário administrador"
+      "description": "Rotas cadastro e login de usuário administrador."
+    },
+    {
+      "name": "Products",
+      "description": "Rotas relacionadas aos Produtos."
+    },
+    {
+      "name": "Buyers",
+      "description": "Rotas de informações de compradores."
+    },
+    {
+      "name": "Sales",
+      "description": "Rotas relacionadas as Sales."
     }
   ],
   "schemes": [
@@ -359,81 +371,13 @@
         }
       }
     },
-    "/api/products/admin/{offset}/{limit}": {
-      "get": {
-        "description": "Este endpoint deve listar todos os produtos cadastrados do usuário administrador.",
-        "parameters": [
-          {
-            "name": "offset",
-            "in": "path",
-            "required": true,
-            "type": "integer"
-          },
-          {
-            "name": "limit",
-            "in": "path",
-            "required": true,
-            "type": "integer"
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "type_product",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/products/{product_id}": {
-      "get": {
-        "description": "Este endpoint de listar uma especificação do produto selecionado pelo id",
-        "parameters": [
-          {
-            "name": "product_id",
-            "in": "path",
-            "required": true,
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
     "/api/products/admin": {
       "post": {
         "description": "Este endpoint deve cadastrar um produto na aplicação.",
+        "tags": [
+          "Products"
+        ],
+        "summary": "Cadastra Produto.",
         "parameters": [
           {
             "name": "body",
@@ -491,9 +435,145 @@
         }
       }
     },
+    "/api/products/admin/{offset}/{limit}": {
+      "get": {
+        "description": "Este endpoint deve listar todos os produtos cadastrados do usuário administrador.",
+        "tags": [
+          "Products"
+        ],
+        "summary": "Lista produtos.",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "limit",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type_product",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/{product_id}": {
+      "get": {
+        "description": "Este endpoint de listar uma especificação do produto selecionado pelo id",
+        "tags": [
+          "Products"
+        ],
+        "summary": "Lista um produto.",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/products/{offset}/{limit}": {
+      "get": {
+        "description": "Este endpoint deve listar todos os usuários.",
+        "tags": [
+          "Products"
+        ],
+        "summary": "Lista produtos.",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "limit",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type_product",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/products/admin/{product_id}": {
       "patch": {
         "description": "Este endpoint deve atualizar alguns campos do produto na aplicação.",
+        "tags": [
+          "Products"
+        ],
+        "summary": "Atualiza dados do produto.",
         "parameters": [
           {
             "name": "product_id",
@@ -545,57 +625,13 @@
         }
       }
     },
-    "/api/products/{offset}/{limit}": {
-      "get": {
-        "description": "Este endpoint deve listar todos os usuários.",
-        "parameters": [
-          {
-            "name": "offset",
-            "in": "path",
-            "required": true,
-            "type": "integer"
-          },
-          {
-            "name": "limit",
-            "in": "path",
-            "required": true,
-            "type": "integer"
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "type_product",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
     "/api/buyers/admin/{offset}/{limit}": {
       "get": {
-        "description": "",
+        "description": "Lista os compradores cadastrados no sistema.",
+        "tags": [
+          "Buyers"
+        ],
+        "summary": "Lista usuários compradores cadastrados.",
         "parameters": [
           {
             "name": "offset",
@@ -639,9 +675,33 @@
         }
       }
     },
+    "/api/buyers/address": {
+      "get": {
+        "description": "Este endpoint deve listar todos os endereços cadastrados do usuário.",
+        "tags": [
+          "Buyers"
+        ],
+        "summary": "Lista os endereços do usuário.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/buyers/admin/{user_id}": {
       "get": {
-        "description": "",
+        "description": "Lista um comprador cadastrado no sistema.",
+        "tags": [
+          "Buyers"
+        ],
+        "summary": "Lista um usuário comprador.",
         "parameters": [
           {
             "name": "user_id",
@@ -666,7 +726,11 @@
         }
       },
       "patch": {
-        "description": "",
+        "description": "Atualiza as informações de um usuário no sistema.",
+        "tags": [
+          "Buyers"
+        ],
+        "summary": "Atualiza os dados de um usuário comprador.",
         "parameters": [
           {
             "name": "user_id",
@@ -708,22 +772,6 @@
           },
           "403": {
             "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/buyers/address": {
-      "get": {
-        "description": "Este endpoint deve listar todos os endereços cadastrados do usuário.",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"
