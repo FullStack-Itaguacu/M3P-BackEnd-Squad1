@@ -28,7 +28,7 @@
     "dev": "nodemon src/index.js",
     "test": "jest --coverage --silent --watchAll",
     "start-gendoc": "node src/swagger.js",
-    "build" : "yarn && node src/index.js"
+    "build" : "npm i"
 
   }
 }
