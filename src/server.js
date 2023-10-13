@@ -1,9 +1,9 @@
 // dependencias
 const express = require("express");
 const cors = require("cors");
-const {config} = require("dotenv");
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./utils/swagger-output.json');
+const { config } = require("dotenv");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./utils/swagger-output.json");
 config();
 
 // classe server
@@ -21,7 +21,7 @@ class Server {
     return this.app;
   }
   // middlewares
-  async middlewares(app) { 
+  async middlewares(app) {
     app.use(cors());
     app.use(express.json());
   }
@@ -32,23 +32,29 @@ class Server {
       await connection.authenticate();
       console.log("Conexão com o banco de dados estabelecida com sucesso!");
     } catch (error) {
-      console.error("Não foi possível conectar com o banco de dados:", error.message);
+      console.error(
+        "Não foi possível conectar com o banco de dados:",
+        error.message
+      );
     }
   }
   // routes
   async routes(app) {
     const appRoutes = require("./routes");
     app.use(appRoutes);
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   }
   // start server
   async initializeServer(app) {
-    const PORT = process.env.PORT 
-    const HOST = process.env.HOST 
-    app.listen(PORT, () => console.log(`Servidor executando https://${HOST}:${PORT}`));
+    const PORT = process.env.PORT;
+    const HOST = process.env.HOST;
+    console.log(
+      "Deploy : https://m3p-backend-squad1-production.up.railway.app/api-docs"
+    );
+    app.listen(PORT, () =>
+      console.log(`Local:  http://${HOST}:${PORT}/api-docs `)
+    );
   }
-
 }
 
 module.exports = { Server };
-
