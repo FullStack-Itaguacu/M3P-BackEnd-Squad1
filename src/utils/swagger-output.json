@@ -1,0 +1,997 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "M3P-BACKEND-SQUAD1",
+    "description": "Documentation Backend projeto avaliativo M3-Squad-1 : bugBusters ."
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "User",
+      "description": "Rotas para cadastro e login de usuário comprador."
+    },
+    {
+      "name": "Admin",
+      "description": "Rotas cadastro e login de usuário administrador."
+    },
+    {
+      "name": "Products",
+      "description": "Rotas relacionadas aos Produtos."
+    },
+    {
+      "name": "Buyers",
+      "description": "Rotas de informações de compradores."
+    },
+    {
+      "name": "Sales",
+      "description": "Rotas relacionadas as Sales."
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "apiKeyAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "token"
+    }
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/user/login": {
+      "post": {
+        "description": "Login do usuário com email e senha",
+        "tags": [
+          "User"
+        ],
+        "summary": "Login do usuário",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "string"
+                },
+                "password": {
+                  "example": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuario logado com sucesso"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "message": "Email ou senha incorretos"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/user/signup": {
+      "post": {
+        "description": "Rota para cadastrar um novo usuário",
+        "summary": "Cadastro de usuário",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "full_name": {
+                      "type": "string"
+                    },
+                    "cpf": {
+                      "type": "string"
+                    },
+                    "birth_date": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "full_name",
+                    "cpf",
+                    "birth_date",
+                    "email",
+                    "phone",
+                    "password"
+                  ]
+                },
+                "address": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "zip": {
+                        "type": "string"
+                      },
+                      "street": {
+                        "type": "string"
+                      },
+                      "number_street": {
+                        "type": "string"
+                      },
+                      "neighborhood": {
+                        "type": "string"
+                      },
+                      "city": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "complement": {
+                        "type": "string"
+                      },
+                      "lat": {
+                        "type": "string"
+                      },
+                      "long": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "zip",
+                      "street",
+                      "number_street",
+                      "neighborhood",
+                      "city",
+                      "state"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "user",
+                "address"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuario cadastrado com sucesso"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/user/admin/signup": {
+      "post": {
+        "description": "Rota para cadastrar um novo administrador",
+        "summary": "Cadastro de Administrador",
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "full_name": {
+                      "type": "string"
+                    },
+                    "cpf": {
+                      "type": "string"
+                    },
+                    "birth_date": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "type-user": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "full_name",
+                    "cpf",
+                    "birth_date",
+                    "email",
+                    "phone",
+                    "password",
+                    "type_user"
+                  ]
+                },
+                "address": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "zip": {
+                        "type": "string"
+                      },
+                      "street": {
+                        "type": "string"
+                      },
+                      "number_street": {
+                        "type": "string"
+                      },
+                      "neighborhood": {
+                        "type": "string"
+                      },
+                      "city": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "complement": {
+                        "type": "string"
+                      },
+                      "lat": {
+                        "type": "string"
+                      },
+                      "long": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "zip",
+                      "street",
+                      "numberStreet",
+                      "neighborhood",
+                      "city",
+                      "state"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "user",
+                "address"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Os registros foram criados com sucesso"
+          },
+          "400": {
+            "description": "Campos mal formatados"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Exceção de campos duplicados"
+          },
+          "422": {
+            "description": "Campo obrigatório não preenchido"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/user/admin/login": {
+      "post": {
+        "description": "Login do administrador com email e senha",
+        "summary": "Login do administrador",
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "string"
+                },
+                "password": {
+                  "example": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuario logado com sucesso"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "message": "Email ou senha incorretos"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/admin": {
+      "post": {
+        "description": "Este endpoint deve cadastrar um produto na aplicação.",
+        "tags": [
+          "Products"
+        ],
+        "summary": "Cadastra Produto.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "Paracetamol"
+                },
+                "lab_name": {
+                  "example": "Cimed"
+                },
+                "image_link": {
+                  "example": "url string"
+                },
+                "dosage": {
+                  "example": "10mg"
+                },
+                "unit_price": {
+                  "example": "20"
+                },
+                "type_product": {
+                  "example": "controlled or uncontrolled"
+                },
+                "total_stock": {
+                  "example": "100"
+                },
+                "description": {
+                  "example": "Medicamento para dor de cabeça e febre"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/admin/{offset}/{limit}": {
+      "get": {
+        "description": "Este endpoint deve listar todos os produtos cadastrados do usuário administrador.",
+        "tags": [
+          "Products"
+        ],
+        "summary": "Lista produtos.",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "limit",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type_product",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/{product_id}": {
+      "get": {
+        "description": "Este endpoint de listar uma especificação do produto selecionado pelo id",
+        "tags": [
+          "Products"
+        ],
+        "summary": "Lista um produto.",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/products/{offset}/{limit}": {
+      "get": {
+        "description": "Este endpoint deve listar todos os usuários.",
+        "tags": [
+          "Products"
+        ],
+        "summary": "Lista produtos.",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "limit",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type_product",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/admin/{product_id}": {
+      "patch": {
+        "description": "Este endpoint deve atualizar alguns campos do produto na aplicação.",
+        "tags": [
+          "Products"
+        ],
+        "summary": "Atualiza dados do produto.",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "Dorflex"
+                },
+                "image_link": {
+                  "example": "url string"
+                },
+                "dosage": {
+                  "example": "10mg"
+                },
+                "total_stock": {
+                  "example": "20"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/buyers/admin/{offset}/{limit}": {
+      "get": {
+        "description": "Lista os compradores cadastrados no sistema.",
+        "tags": [
+          "Buyers"
+        ],
+        "summary": "Lista usuários compradores cadastrados.",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "limit",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "full_name",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/buyers/address": {
+      "get": {
+        "description": "Este endpoint deve listar todos os endereços cadastrados do usuário.",
+        "tags": [
+          "Buyers"
+        ],
+        "summary": "Lista os endereços do usuário.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/buyers/admin/{user_id}": {
+      "get": {
+        "description": "Lista um comprador cadastrado no sistema.",
+        "tags": [
+          "Buyers"
+        ],
+        "summary": "Lista um usuário comprador.",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "description": "Atualiza as informações de um usuário no sistema.",
+        "tags": [
+          "Buyers"
+        ],
+        "summary": "Atualiza os dados de um usuário comprador.",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "full_name": {
+                  "example": "Alexandre Barbosa"
+                },
+                "email": {
+                  "example": "alexandre@email.com"
+                },
+                "cpf": {
+                  "example": "12345678912"
+                },
+                "phone": {
+                  "example": "48999229922"
+                },
+                "type_user": {
+                  "example": "Admin ou Buyer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/sales": {
+      "post": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Cadastro de venda.",
+        "description": "Rota responsável pelo cadastro de nova venda.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "venda",
+            "description": "Array de produtos da venda.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SalesPost"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Fields Not Formated"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "409": {
+            "description": "Conflict. Quantity purchased greater than quantity of products in stock"
+          },
+          "422": {
+            "description": "Unprocessable Content"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Lista as compras do usuário.",
+        "description": "Rota responsável pela listagem de compras efetuadas pelo usuário logado.",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SalesList"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/sales/admin": {
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Fornece as vendas realizadas pelo administrador logado.",
+        "description": "Vendas realizadas pelo administrador logado.",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SalesList"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/dashboard/admin": {
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Devolve informações de vendas do administrador logado.",
+        "description": "Retorna valor das vendas e quantidade de produtos vendidos.",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SalesDashboard"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Forbidden"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "apiKeyAuth": []
+    }
+  ],
+  "definitions": {
+    "SalesPost": {
+      "type": "object",
+      "required": [
+        "product_id",
+        "amount_buy",
+        "users_addresses_id",
+        "type_payment"
+      ],
+      "properties": {
+        "product_id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "amount_buy": {
+          "type": "integer",
+          "example": "10"
+        },
+        "users_addresses_id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "type_payment": {
+          "type": "string",
+          "enum": [
+            "credit_card",
+            "debit_card",
+            "payment_slip",
+            "pix",
+            "trasnfer"
+          ]
+        }
+      }
+    },
+    "SalesList": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "buyer_id": {
+          "type": "integer",
+          "example": "2"
+        },
+        "seller_id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "product_id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "users_addresses_id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "amount_buy": {
+          "type": "integer",
+          "example": "12"
+        },
+        "total": {
+          "type": "float",
+          "example": "22.50"
+        },
+        "type_payment": {
+          "type": "enum",
+          "example": "pix"
+        },
+        "created_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        },
+        "updated_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        }
+      }
+    },
+    "SalesDashboard": {
+      "type": "object",
+      "properties": {
+        "totalSales": {
+          "type": "integer",
+          "example": "150"
+        },
+        "totalAmount": {
+          "type": "integer",
+          "example": "35"
+        }
+      }
+    }
+  }
+}

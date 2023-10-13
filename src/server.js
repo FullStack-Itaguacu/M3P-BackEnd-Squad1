@@ -3,7 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const {config} = require("dotenv");
 const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./swaggerConfig');config();
+const swaggerSpec = require('./utils/swagger-output.json');
+config();
 
 // classe server
 class Server {
@@ -38,7 +39,7 @@ class Server {
   async routes(app) {
     const appRoutes = require("./routes");
     app.use(appRoutes);
-    app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   }
   // start server
   async initializeServer(app) {
