@@ -30,22 +30,6 @@ module.exports = {
     if (limit < 0) {
       throw new NumberNotPositive("limit");
     }
-    /* limitando a quantidade de itens por página a 20,
-     * caso o usuário tente passar um valor maior que 20
-     * valor será setado em 20 para nao quebrar a paginação .
-     */
-    limit > 20 ? (limit = 20) : (limit = limit);
-    /**
-     * se offset for menor que 1, será setado em 1
-     * para não quebrar a paginação.
-     */
-    offset < 1 ? (offset = 1) : (offset = offset);
-    // if (!name) {
-    //   throw new NotNameReceivedError();
-    // }
-    // if (!type_product || (type_product && type_product.length === 0)) {
-    //   throw new NotTypeProductReceivedError();
-    // }
    
   },
   async searchOffsetLimit(
@@ -58,10 +42,14 @@ module.exports = {
     res,
     Products
   ) {
-
-    if (type_product !== "controlled" && type_product !== "uncontrolled" && type_product !== "%") {
+    if (
+      type_product !== "controlled" &&
+      type_product !== "uncontrolled" &&
+      type_product !== "%"
+    ) {
       throw new NotAcceptValuesTypeProduct();
     }
+
     Products.findAndCountAll({
       where: {
         name: {
@@ -81,9 +69,10 @@ module.exports = {
           ],
         },
         user_id,
-        type_product: type_product != "%"
-          ? type_product
-          : { [Op.or]: ["controlled", "uncontrolled"] },
+        type_product:
+          type_product === "%"
+            ? { [Op.or]: ["controlled", "uncontrolled"] }
+            : type_product,
       },
       offset: start,
       limit: items_for_page,
