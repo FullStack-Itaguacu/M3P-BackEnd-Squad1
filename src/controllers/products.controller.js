@@ -13,7 +13,7 @@ module.exports = {
   async listProductsOffsetLimit(req, res) {
     try {
       const user_id = req.payload.id;
-      const { name, type_product } = req.query;
+      var { name, type_product } = req.query;
       var { offset, limit } = req.params;
 
       await filtroBodyOffsetLimitSearch(offset, limit, name, type_product);
@@ -26,22 +26,55 @@ module.exports = {
       start < 0 ? (start = 0) : (start = start);
 
       //para garantir a busca, o nome do produto será buscado em 3 variações (lowercase, uppercase e capitalize)
-      const name_variation = [
-        name.toLowerCase(),
-        name.toUpperCase(),
-        (nameCapitalize = name[0].toUpperCase() + name.slice(1)),
-      ];
+      if(name && !type_product){
+        await searchOffsetLimit(
+          start,
+          items_for_page,
+          actual_page,
+          name,
+          type_product = '%',
+          user_id,
+          res,
+          Products
+        );
+      }
+      if(!name && type_product){
+        await searchOffsetLimit(
+          start,
+          items_for_page,
+          actual_page,
+          name = '%',
+          type_product ,
+          user_id,
+          res,
+          Products
+        );
+      }
+      if(name && type_product){
 
       await searchOffsetLimit(
         start,
         items_for_page,
         actual_page,
-        name_variation,
+        name,
         type_product,
         user_id,
         res,
         Products
       );
+      }
+      if(!name && !type_product){
+        await searchOffsetLimit(
+          start,
+          items_for_page,
+          actual_page,
+          name = '%',
+          type_product = '%',
+          user_id,
+          res,
+          Products
+        );
+      }
 
     } catch (error) {
       errorLauncher(error, res);

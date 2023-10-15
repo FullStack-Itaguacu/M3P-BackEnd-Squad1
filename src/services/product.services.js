@@ -15,6 +15,7 @@ const {
   NegativeTotalStockValueReceivedError,
   TotalStockIsNanError,
 } = require("../services/customs.errors.services");
+const { Op } = require("sequelize");
 module.exports = {
   async filtroBodyOffsetLimitSearch(offset, limit, name, type_product) {
     if (isNaN(offset)) {
@@ -39,31 +40,50 @@ module.exports = {
      * para não quebrar a paginação.
      */
     offset < 1 ? (offset = 1) : (offset = offset);
-    if (!name) {
-      throw new NotNameReceivedError();
-    }
-    if (!type_product || (type_product && type_product.length === 0)) {
-      throw new NotTypeProductReceivedError();
-    }
-    if (type_product !== "controlled" && type_product !== "uncontrolled") {
-      throw new NotAcceptValuesTypeProduct();
-    }
+    // if (!name) {
+    //   throw new NotNameReceivedError();
+    // }
+    // if (!type_product || (type_product && type_product.length === 0)) {
+    //   throw new NotTypeProductReceivedError();
+    // }
+   
   },
   async searchOffsetLimit(
     start,
     items_for_page,
     actual_page,
-    name_variation,
+    name,
     type_product,
     user_id,
     res,
     Products
   ) {
+
+    if (type_product !== "controlled" && type_product !== "uncontrolled" && type_product !== "%") {
+      throw new NotAcceptValuesTypeProduct();
+    }
     Products.findAndCountAll({
       where: {
-        name: name_variation,
-        type_product: type_product,
-        user_id: user_id,
+        name: {
+          [Op.or]: [
+            {
+              [Op.like]: `${name}`,
+            },
+            {
+              [Op.like]: `${name.toUpperCase()}`,
+            },
+            {
+              [Op.like]: `%${name}%`,
+            },
+            {
+              [Op.like]: `%${name[0].toUpperCase() + name.slice(1)}%`,
+            },
+          ],
+        },
+        user_id,
+        type_product: type_product != "%"
+          ? type_product
+          : { [Op.or]: ["controlled", "uncontrolled"] },
       },
       offset: start,
       limit: items_for_page,
@@ -165,7 +185,7 @@ module.exports = {
       };
     }
 
-    const requiredFields = ['name', 'lab_name', 'image_link', 'dosage'];
+    const requiredFields = ["name", "lab_name", "image_link", "dosage"];
     for (const field of requiredFields) {
       // Verifica se o campo obrigatório está faltando
       if (!fields[field]) {
@@ -178,7 +198,7 @@ module.exports = {
     }
 
     // Verifica se unit_price é menor ou igual a zero
-    if (typeof fields.unit_price !== 'number' || fields.unit_price <= 0) {
+    if (typeof fields.unit_price !== "number" || fields.unit_price <= 0) {
       return {
         status: "422",
         error: "Erro, Não foi possível criar o produto",
@@ -187,7 +207,7 @@ module.exports = {
     }
 
     // Verifica se total_stock é menor que zero
-    if (typeof fields.total_stock !== 'number' || fields.total_stock < 0) {
+    if (typeof fields.total_stock !== "number" || fields.total_stock < 0) {
       return {
         status: "422",
         error: "Erro, Não foi possível criar o produto",
@@ -197,13 +217,13 @@ module.exports = {
 
     // Adicione mais validações conforme necessário
     // Verifica se type_product tem valor inválido
-    if (!['controlled', 'uncontrolled'].includes(fields.type_product)) {
+    if (!["controlled", "uncontrolled"].includes(fields.type_product)) {
       return {
         status: "400",
         error: "Erro, Não foi possível criar o produto",
-        cause: "Somente são aceitos os valores: 'controlled' e 'uncontrolled' no campo type_product.",
+        cause:
+          "Somente são aceitos os valores: 'controlled' e 'uncontrolled' no campo type_product.",
       };
     }
-
-  }
+  },
 };
