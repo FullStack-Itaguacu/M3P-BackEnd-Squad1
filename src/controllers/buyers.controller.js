@@ -17,7 +17,7 @@ const { verificaNumeroPositivo, verificaSomenteNumeros } = require("../services/
 module.exports = {
   async getBuyersOffsetLimit(req, res) {
     try {
-      const { full_name, created_at } = req.query;
+      var { full_name, created_at } = req.query;
       var { offset, limit } = req.params;
 
       await filtroBodyOffsetLimitSearch(offset, limit, full_name, created_at);
@@ -29,22 +29,47 @@ module.exports = {
       //se o start for menor que 0, será setado em 0 para não quebrar a paginação
       start < 0 ? (start = 0) : (start = start);
 
-      //para garantir a busca, o nome do produto será buscado em 3 variações (lowercase, uppercase e capitalize)
-      const name_variation = [
-        full_name.toLowerCase(),
-        full_name.toUpperCase(),
-        (nameCapitalize = full_name[0].toUpperCase() + full_name.slice(1)),
-      ];
 
+
+     if(full_name && !created_at ){await searchOffsetLimit(
+      start,
+      items_for_page,
+      actual_page,
+      full_name,
+      created_at = 'ASC',
+      res,
+      User
+    );} 
+    if(created_at && !full_name){await searchOffsetLimit(
+      start,
+      items_for_page,
+      actual_page,
+      full_name = '%',
+      created_at ,
+      res,
+      User)
+    }
+    if(!full_name && !created_at){
+    await searchOffsetLimit(
+      start,
+      items_for_page,
+      actual_page,
+      full_name = '%',
+      created_at = 'ASC',
+      res,
+      User)
+    }
+    if(full_name && created_at){
       await searchOffsetLimit(
         start,
         items_for_page,
         actual_page,
-        name_variation,
-        created_at,
+        full_name ,
+        created_at ,
         res,
-        User
-      );
+        User)
+      }
+
     } catch (error) {
       errorLauncher(error, res);
     }
