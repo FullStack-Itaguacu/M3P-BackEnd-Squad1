@@ -1,12 +1,11 @@
 const User = require("../models/user.js");
+const { Op } = require("sequelize");
 const {
   OffsetIsNan,
   LimitIsNan,
   NumberNotPositive,
-  FullNameNotReceived,
-  CreatedAtFieldNotReceived,
   CreatedAtBadValueReceived,
-  UserNotFound
+  UserNotFound,
 } = require("../services/customs.errors.services.js");
 module.exports = {
   async filtroBodyOffsetLimitSearch(offset, limit, full_name, created_at) {
@@ -32,31 +31,41 @@ module.exports = {
      * para não quebrar a paginação.
      */
     offset < 1 ? (offset = 1) : (offset = offset);
-    if (!full_name) {
-      throw new FullNameNotReceived();
-    }
-    if (!created_at || (created_at && created_at.length === 0)) {
-      throw new CreatedAtFieldNotReceived();
-    }
-    if (created_at !== "ASC" && created_at !== "DESC") {
-      throw new CreatedAtBadValueReceived();
-    }
   },
   async searchOffsetLimit(
     start,
     items_for_page,
     actual_page,
-    name_variation,
+    full_name,
     created_at,
     res,
     User
   ) {
+    if (created_at !== "ASC" && created_at !== "DESC") {
+      throw new CreatedAtBadValueReceived();
+    }
+    full_name = full_name.toLowerCase();
     User.findAndCountAll({
       attributes: {
         exclude: ["password"],
       },
       where: {
-        full_name: name_variation,
+        full_name: {
+          [Op.or]: [
+            {
+              [Op.like]: `${full_name}`,
+            },
+            {
+              [Op.like]: `${full_name.toUpperCase()}`,
+            },
+            {
+              [Op.like]: `%${full_name}%`,
+            },
+            {
+              [Op.like]: `%${full_name[0].toUpperCase() + full_name.slice(1)}%`,
+            },
+          ],
+        },
       },
       offset: start,
       limit: items_for_page,
@@ -97,14 +106,14 @@ module.exports = {
   async verificaUserId(user_id) {
     const data = await User.findOne({
       where: {
-        id: user_id
-      }
-    })
+        id: user_id,
+      },
+    });
 
     if (data === null) {
       throw new UserNotFound();
     }
 
-    return data
-  }
+    return data;
+  },
 };
