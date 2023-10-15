@@ -17,7 +17,7 @@ Para a construção desse projeto, utilizamos as seguintes tecnologias:
 * [dotenv](https://www.npmjs.com/package/dotenv) - Módulo que auxilia na configuração das variáveis de ambiente.
 * [express](https://expressjs.com/pt-br/) - Framework web rápido, flexível e minimalista para Node.js
 * [jest](https://jestjs.io/pt-BR/) - Framework de testes em JavaScript.
-* [jasonwebtoken](https://jwt.io/) - Utilizado para transmitir informações de forma segura em validações e login.
+* [jsonwebtoken](https://jwt.io/) - Utilizado para transmitir informações de forma segura em validações e login.
 * [postgresql](https://www.postgresql.org/) - Banco de Dados open source.
 * [sequelize](https://sequelize.org/) - Moderno ORM que dá suporte para transações e relações com o Banco de Dados.
 * [swagger](https://swagger.io/) - Simplifica os teste de API, criando uma página no navegador de fácil manuseio.
