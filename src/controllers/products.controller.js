@@ -1,22 +1,34 @@
 const Products = require("../models/product");
 const { errorLauncher } = require("../services/customs.errors.services.js");
-const { verificaSomenteNumeros } = require("../services/validators")
+const { verificaSomenteNumeros } = require("../services/validators");
 const {
   filtroBodyOffsetLimitSearch,
   searchOffsetLimit,
   filtroUpdateProductById,
   updateProductById,
-  validateFields
+  validateFields,
 } = require("../services/product.services");
-const { InvalidKeysReceivedError } = require("../services/customs.errors.services");
+const {
+  InvalidKeysReceivedError,
+} = require("../services/customs.errors.services");
 module.exports = {
   async listProductsOffsetLimit(req, res) {
     try {
       const user_id = req.payload.id;
-      const { name, type_product } = req.query;
+      var { name, type_product } = req.query;
       var { offset, limit } = req.params;
 
       await filtroBodyOffsetLimitSearch(offset, limit, name, type_product);
+      /* limitando a quantidade de itens por página a 20,
+       * caso o usuário tente passar um valor maior que 20
+       * valor será setado em 20 para nao quebrar a paginação .
+       */
+      limit > 20 ? (limit = 30) : (limit = limit);
+      /**
+       * se offset for menor que 1, será setado em 1
+       * para não quebrar a paginação.
+       */
+      offset < 1 ? (offset = 1) : (offset = offset);
 
       const items_for_page = parseInt(limit);
       const actual_page = parseInt(offset);
@@ -24,25 +36,55 @@ module.exports = {
       var start = parseInt((actual_page - 1) * items_for_page);
       //se o start for menor que 0, será setado em 0 para não quebrar a paginação
       start < 0 ? (start = 0) : (start = start);
+      if (name && type_product) {
+        await searchOffsetLimit(
+          start,
+          items_for_page,
+          actual_page,
+          name,
+          type_product,
+          user_id,
+          res,
+          Products
+        );
+      }
 
-      //para garantir a busca, o nome do produto será buscado em 3 variações (lowercase, uppercase e capitalize)
-      const name_variation = [
-        name.toLowerCase(),
-        name.toUpperCase(),
-        (nameCapitalize = name[0].toUpperCase() + name.slice(1)),
-      ];
-
-      await searchOffsetLimit(
-        start,
-        items_for_page,
-        actual_page,
-        name_variation,
-        type_product,
-        user_id,
-        res,
-        Products
-      );
-
+      if (!name && !type_product) {
+        await searchOffsetLimit(
+          start,
+          items_for_page,
+          actual_page,
+          (name = "%"),
+          (type_product = "%"),
+          user_id,
+          res,
+          Products
+        );
+      }
+      if (name && !type_product) {
+        await searchOffsetLimit(
+          start,
+          items_for_page,
+          actual_page,
+          name,
+          (type_product = "%"),
+          user_id,
+          res,
+          Products
+        );
+      }
+      if (type_product && !name) {
+        await searchOffsetLimit(
+          start,
+          items_for_page,
+          actual_page,
+          (name = "%"),
+          type_product,
+          user_id,
+          res,
+          Products
+        );
+      }
     } catch (error) {
       errorLauncher(error, res);
     }
@@ -50,14 +92,15 @@ module.exports = {
 
   async createProduct(req, res) {
     try {
-
       const validationError = await validateFields(req.body);
-      console.log("chegou aqui1")
+      console.log("chegou aqui1");
       if (validationError) {
-        console.log(validationError)
-        return res.status(validationError.status).json({ error: validationError });
+        console.log(validationError);
+        return res
+          .status(validationError.status)
+          .json({ error: validationError });
       }
-      console.log("chegou aqui3")
+      console.log("chegou aqui3");
 
       const {
         name,
@@ -94,7 +137,7 @@ module.exports = {
         unit_price,
         type_product,
         total_stock,
-        description
+        description,
       });
 
       return res
@@ -138,33 +181,31 @@ module.exports = {
   },
   async listAllProducts(req, res) {
     try {
-      var { offset, limit } = req.params
-      const { name, type_product } = req.query
+      var { offset, limit } = req.params;
+      const { name, type_product } = req.query;
 
       await filtroBodyOffsetLimitSearch(offset, limit, name, type_product);
 
-      limit > 20 ? (limit = 20) : limit
-      offset < 0 ? (offset - 1) : (offset = offset)
+      limit > 20 ? (limit = 20) : limit;
+      offset < 0 ? offset - 1 : (offset = offset);
 
       const actual_page = parseInt(offset);
-      const start = parseInt(offset)
-      const items_for_page = parseInt(limit)
+      const start = parseInt(offset);
+      const items_for_page = parseInt(limit);
       const name_variation = [
         name.toLowerCase(),
         name.toUpperCase(),
         (nameCapitalize = name[0].toUpperCase() + name.slice(1)),
-      ]
+      ];
 
       Products.findAndCountAll({
         where: {
           name: name_variation,
-          type_product: type_product
+          type_product: type_product,
         },
         offset: start,
         limit: items_for_page,
-        order: [
-          ['total_stock', 'DESC']
-        ]
+        order: [["total_stock", "DESC"]],
       })
         .then((result) => {
           const total_items = result.count;
@@ -203,16 +244,15 @@ module.exports = {
           });
         });
     } catch (error) {
-      errorLauncher(error, res)
+      errorLauncher(error, res);
     }
   },
 
   async listProductById(req, res) {
-
     try {
       const { product_id } = req.params;
 
-      await verificaSomenteNumeros(product_id, "productId")
+      await verificaSomenteNumeros(product_id, "productId");
 
       const product = await Products.findByPk(product_id);
 
@@ -221,13 +261,13 @@ module.exports = {
           message: "Produto não encontrado.",
           status: 404,
           cause: "Produto não encontrado na base de dados.",
-          error: "ProductNotFoundError"
+          error: "ProductNotFoundError",
         });
       }
 
       return res.status(200).json(product);
     } catch (error) {
-      errorLauncher(error, res)
+      errorLauncher(error, res);
     }
-  }
+  },
 };

@@ -1,5 +1,10 @@
 const { Sales } = require("../models/sales");
+const Product = require("../models/product");
+const Address = require("../models/address");
+require("../models/userAddress");
+
 const { CustomizableError } = require("../services/customs.errors.services");
+const User = require("../models/user");
 module.exports = {
   async isAllMandatoryFields(sale) {
     const { product_id, amount_buy, users_addresses_id, type_payment } = sale;
@@ -26,8 +31,27 @@ module.exports = {
       );
     }
   },
-  async findAdminSales(value) {
-    const data = Sales.findAll({ where: { seller_id: value }, order: [['created_at', 'ASC']] })
-    return data
-  }
+  async findAdminSales(id) {
+    const data = Sales.findAll({
+      where: {
+        seller_id: id,
+      },
+      include: [
+        {
+          model: Product,
+          as: "product",
+        },
+        {
+          model: User,
+          attributes: { exclude: ["password"] },
+          as: "buyer",
+          include: {
+            model: Address,
+          },
+        },
+      ],
+      order: [["created_at", "ASC"]],
+    });
+    return data;
+  },
 };
