@@ -5,7 +5,7 @@
     "title": "M3P-BACKEND-SQUAD1",
     "description": "Documentation Backend projeto avaliativo M3-Squad-1 : bugBusters ."
   },
-  "host": "m3p-backend-squad1-production.up.railway.app",
+  "host": "localhost:3000",
   "basePath": "/",
   "tags": [
     {
@@ -30,6 +30,7 @@
     }
   ],
   "schemes": [
+    "http", 
     "https"
   ],
   "securityDefinitions": {
