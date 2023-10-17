@@ -178,7 +178,7 @@ module.exports = {
       throw new UserNotFound();
     }
 
-    return data;
+    return data.dataValues;
   },
   async verifyCpfExist(cpf) {
     if (await estaNaBD(User, "cpf", cpf)) {

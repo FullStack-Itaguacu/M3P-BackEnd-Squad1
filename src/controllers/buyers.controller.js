@@ -31,43 +31,46 @@ module.exports = {
 
 
 
-     if(full_name && !created_at ){await searchOffsetLimit(
-      start,
-      items_for_page,
-      actual_page,
-      full_name,
-      created_at = 'ASC',
-      res,
-      User
-    );} 
-    if(created_at && !full_name){await searchOffsetLimit(
-      start,
-      items_for_page,
-      actual_page,
-      full_name = '%',
-      created_at ,
-      res,
-      User)
-    }
-    if(!full_name && !created_at){
-    await searchOffsetLimit(
-      start,
-      items_for_page,
-      actual_page,
-      full_name = '%',
-      created_at = 'ASC',
-      res,
-      User)
-    }
-    if(full_name && created_at){
-      await searchOffsetLimit(
-        start,
-        items_for_page,
-        actual_page,
-        full_name ,
-        created_at ,
-        res,
-        User)
+      if (full_name && !created_at) {
+        await searchOffsetLimit(
+          start,
+          items_for_page,
+          actual_page,
+          full_name,
+          created_at = 'ASC',
+          res,
+          User
+        );
+      }
+      if (created_at && !full_name) {
+        await searchOffsetLimit(
+          start,
+          items_for_page,
+          actual_page,
+          full_name = '%',
+          created_at,
+          res,
+          User)
+      }
+      if (!full_name && !created_at) {
+        await searchOffsetLimit(
+          start,
+          items_for_page,
+          actual_page,
+          full_name = '%',
+          created_at = 'ASC',
+          res,
+          User)
+      }
+      if (full_name && created_at) {
+        await searchOffsetLimit(
+          start,
+          items_for_page,
+          actual_page,
+          full_name,
+          created_at,
+          res,
+          User)
       }
 
     } catch (error) {
@@ -144,18 +147,16 @@ module.exports = {
       const { full_name, email, phone, cpf, type_user } = req.body;
       const data = await verifyUserId(user_id);
 
-      const userToUpdate = await User.findByPk(user_id);
-      if (!userToUpdate || userToUpdate.type_user !== "Buyer") {
+      if (!data || data.type_user !== "Buyer") {
         return res.status(404).json({
           status: 404,
           error: "UserNotFound",
-          message: "Usuário não encontrado ou não é um 'Buyer'.",
+          message: "Usuário não foi encontrado ou não é um 'Buyer'.",
           cause: "O usuário a ser atualizado deve ser do tipo 'Buyer'.",
         });
       }
-      const currentUser = await User.findByPk(user_id);
 
-      if (currentUser.type_user === "Admin" && type_user === "Buyer") {
+      if (data.type_user === "Admin" && type_user === "Buyer") {
         return res.status(422).json({
           error: "BadFormatRequest",
           status: 422,
@@ -174,11 +175,11 @@ module.exports = {
           });
         }
       }
-      if (cpf !== undefined) {
+      if (cpf !== undefined && cpf !== data.cpf) {
         await verifyCpfExist(cpf);
       }
 
-      if (email !== undefined) {
+      if (email !== undefined && email !== data.email) {
         await verifyEmailExist(email);
       }
 
@@ -206,7 +207,18 @@ module.exports = {
         data.type_user = type_user;
       }
 
-      await data.save();
+      await User.update({
+        full_name,
+        email,
+        phone,
+        cpf,
+        type_user
+      },
+        {
+          where: {
+            id: user_id
+          }
+        });
 
       return res.status(204).json({
         status: 204,
