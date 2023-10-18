@@ -17,7 +17,7 @@ const {
 } = require("../services/customs.errors.services");
 const { Op } = require("sequelize");
 module.exports = {
-  async filtroBodyOffsetLimitSearch(offset, limit, name, type_product) {
+  async filtroBodyOffsetLimitSearch(offset, limit) {
     if (isNaN(offset)) {
       throw new OffsetIsNan();
     }
