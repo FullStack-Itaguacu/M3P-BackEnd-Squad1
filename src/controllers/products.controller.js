@@ -10,7 +10,10 @@ const {
 } = require("../services/product.services");
 const {
   InvalidKeysReceivedError,
+  CustomizableError,
 } = require("../services/customs.errors.services");
+const { Op } = require("sequelize");
+
 module.exports = {
   async listProductsOffsetLimit(req, res) {
     try {
@@ -182,9 +185,23 @@ module.exports = {
   async listAllProducts(req, res) {
     try {
       var { offset, limit } = req.params;
-      const { name, type_product } = req.query;
+      var { name, type_product } = req.query;
 
-      await filtroBodyOffsetLimitSearch(offset, limit, name, type_product);
+      const types_alowed =["controlled", "uncontrolled"]
+
+      if(type_product){
+        if(!types_alowed.includes(type_product)){
+          throw new CustomizableError(
+            "InvalidTypeProductError",
+            `Tipo de produto ${type_product} não é permitido esperamos um dos seguintes valores: ${types_alowed}`,
+            "Dados inválidos na requisição",
+            422
+          );
+        }
+      }
+      if(!name) name = "%";
+
+      await filtroBodyOffsetLimitSearch(offset, limit);
 
       limit > 20 ? (limit = 20) : limit;
       offset < 0 ? offset - 1 : (offset = offset);
@@ -192,16 +209,29 @@ module.exports = {
       const actual_page = parseInt(offset);
       const start = parseInt(offset);
       const items_for_page = parseInt(limit);
-      const name_variation = [
-        name.toLowerCase(),
-        name.toUpperCase(),
-        (nameCapitalize = name[0].toUpperCase() + name.slice(1)),
-      ];
+ 
 
       Products.findAndCountAll({
         where: {
-          name: name_variation,
-          type_product: type_product,
+          name: {
+            [Op.or]: [
+              {
+                [Op.like]: `${name}`,
+              },
+              {
+                [Op.like]: `${name.toUpperCase()}`,
+              },
+              {
+                [Op.like]: `%${name}%`,
+              },
+              {
+                [Op.like]: `%${name[0].toUpperCase() + name.slice(1)}%`,
+              },
+            ],
+          },
+          type_product: type_product
+            ? type_product
+            : { [Op.or]: ["controlled", "uncontrolled"] },
         },
         offset: start,
         limit: items_for_page,
