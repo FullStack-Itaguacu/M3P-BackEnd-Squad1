@@ -13,7 +13,11 @@ const { isAllMandatoryFields, findAdminSales } = require("../services/sales.serv
 module.exports = {
   async storeSale(req, res) {
     try {
+     
       const array_of_sales = req.body;
+       if (!Array.isArray(array_of_sales) || array_of_sales.length === 0 || !array_of_sales.some(obj => Object.keys(obj).length > 0)) {
+        throw new CustomizableError("InvalidRequest", "O corpo da requisição deve conter pelo menos um objeto dentro do array.", "Requisição inválida", 422);
+    }
       const buyer_id = req.payload.id;
 
       var sales_saved = [];
@@ -43,7 +47,6 @@ module.exports = {
         if (!product) {
           throw new ProductNotFound();
         }
-        console.log(product.total_stock, amount_buy);
         if (product.total_stock < amount_buy) {
           throw new CustomizableError(
             "AmountBuyNotAcepted",
@@ -102,8 +105,8 @@ module.exports = {
       });
     } catch (error) {
       errorLauncher(error, res);
-    }
-  },
+  }
+},
 
   async listSales(req, res) {
     const user_id = req.payload.id;
