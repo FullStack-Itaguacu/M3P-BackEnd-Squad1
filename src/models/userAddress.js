@@ -7,6 +7,12 @@ const Address = require("./address.js");
 const UserAddress = connection.define(
   "users_addresses",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     user_id: {
       allowNull: false,
       type: DataTypes.INTEGER,

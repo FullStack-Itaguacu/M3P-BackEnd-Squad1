@@ -6,7 +6,12 @@ const UserAddress = require("./userAddress");
 
 const Sales = connection.define(
   "sales",
-  {
+  {id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true,
+  },
     buyer_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
