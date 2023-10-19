@@ -15,6 +15,10 @@ const UserAddress = connection.define(
       allowNull: false,
       type: DataTypes.INTEGER,
     },
+    users_addresses_id :{
+      field: 'id',
+      type: DataTypes.INTEGER,
+    }
   
   },
   {
