@@ -446,24 +446,26 @@
             "name": "offset",
             "in": "path",
             "required": true,
-            "type": "integer"
+            "type": "integer",
+            "description": "Índice de início para a lista de produtos (valor padrão: 0)."
           },
           {
             "name": "limit",
             "in": "path",
             "required": true,
-            "type": "integer"
+            "type": "integer",
+            "description": "Número máximo de produtos a serem retornados por página (valor padrão: 20)."
           },
           {
             "name": "name",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
             "name": "type_product",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
           }
         ],
@@ -473,6 +475,9 @@
           },
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -486,6 +491,7 @@
         }
       }
     },
+    
     "/api/products/{product_id}": {
       "get": {
         "description": "Este endpoint de listar uma especificação do produto selecionado pelo id",
