@@ -878,7 +878,7 @@
         }
       }
     },
-    "/api/dashboard/admin": {
+    "/api/sales/dashboard/admin": {
       "get": {
         "tags": [
           "Sales"
