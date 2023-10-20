@@ -445,14 +445,12 @@
           {
             "name": "offset",
             "in": "path",
-            "required": true,
             "type": "integer",
             "description": "Índice de início para a lista de produtos (valor padrão: 0)."
           },
           {
             "name": "limit",
             "in": "path",
-            "required": true,
             "type": "integer",
             "description": "Número máximo de produtos a serem retornados por página (valor padrão: 20)."
           },
@@ -460,13 +458,15 @@
             "name": "name",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "description": "Busca por letras do nome do produto."
           },
           {
             "name": "type_product",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "description": "Busca por tipo de produto."
           }
         ],
         "responses": {
@@ -546,13 +546,15 @@
             "name": "name",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "description": "Busca por letras do nome do produto."
           },
           {
             "name": "type_product",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "description": "Busca por tipo de produto."
           }
         ],
         "responses": {
@@ -643,26 +645,27 @@
           {
             "name": "offset",
             "in": "path",
-            "required": true,
             "type": "integer",
             "description": "Índice de início para a lista de produtos (valor padrão: 0)."
           },
           {
             "name": "limit",
             "in": "path",
-            "required": true,
             "type": "integer",
             "description": "Número máximo de produtos a serem retornados por página (valor padrão: 20)."
           },
           {
             "name": "full_name",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "Busca por letras do nome do usuário."
+            
           },
           {
             "name": "created_at",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "Busca por data de cadastro do usuário."
           }
         ],
         "responses": {
