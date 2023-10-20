@@ -31,9 +31,21 @@ User.belongsToMany(Address, {
   through: UserAddress,
   foreignKey: "user_id",
 });
+
 Address.belongsToMany(User, {
   through: UserAddress,
   foreignKey: "address_id",
 });
+
+UserAddress.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+});
+
+UserAddress.belongsTo(Address, {
+  foreignKey: "address_id",
+  as: "address",
+});
+
 
 module.exports =  UserAddress ;
