@@ -525,25 +525,25 @@
           {
             "name": "offset",
             "in": "path",
-            "required": true,
+            "required": false,
             "type": "integer"
           },
           {
             "name": "limit",
             "in": "path",
-            "required": true,
+            "required": false,
             "type": "integer"
           },
           {
             "name": "name",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
             "name": "type_product",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
           }
         ],
@@ -902,35 +902,38 @@
   ],
   "definitions": {
     "SalesPost": {
-      "type": "object",
-      "required": [
-        "product_id",
-        "amount_buy",
-        "users_addresses_id",
-        "type_payment"
-      ],
-      "properties": {
-        "product_id": {
-          "type": "integer",
-          "example": "1"
-        },
-        "amount_buy": {
-          "type": "integer",
-          "example": "10"
-        },
-        "users_addresses_id": {
-          "type": "integer",
-          "example": "1"
-        },
-        "type_payment": {
-          "type": "string",
-          "enum": [
-            "credit_card",
-            "debit_card",
-            "payment_slip",
-            "pix",
-            "trasnfer"
-          ]
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "product_id",
+          "amount_buy",
+          "users_addresses_id",
+          "type_payment"
+        ],
+        "properties": {
+          "product_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "amount_buy": {
+            "type": "integer",
+            "example": 10
+          },
+          "users_addresses_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "type_payment": {
+            "type": "string",
+            "enum": [
+              "credit_card",
+              "debit_card",
+              "payment_slip",
+              "pix",
+              "transfer"
+            ]
+          }
         }
       }
     },
