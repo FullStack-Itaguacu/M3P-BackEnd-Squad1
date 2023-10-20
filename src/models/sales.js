@@ -3,6 +3,7 @@ const connection = require("../database/connection");
 const User = require("./user");
 const Product = require("./product");
 const UserAddress = require("./userAddress");
+ 
 
 const Sales = connection.define(
   "sales",

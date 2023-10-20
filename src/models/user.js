@@ -2,6 +2,7 @@ const Sequelize = require("sequelize");
 const connection = require("../database/connection");
 const { validaSenha, validaEmail } = require("../services/validators");
 
+
 const User = connection.define(
   "users",
   {
