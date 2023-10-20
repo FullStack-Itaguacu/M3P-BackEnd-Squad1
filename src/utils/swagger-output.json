@@ -532,13 +532,15 @@
             "name": "offset",
             "in": "path",
             "required": false,
-            "type": "integer"
+            "type": "integer",
+            "description": "Índice de início para a lista de produtos (valor padrão: 0)."
           },
           {
             "name": "limit",
             "in": "path",
             "required": false,
-            "type": "integer"
+            "type": "integer",
+            "description": "Número máximo de produtos a serem retornados por página (valor padrão: 20)."
           },
           {
             "name": "name",
