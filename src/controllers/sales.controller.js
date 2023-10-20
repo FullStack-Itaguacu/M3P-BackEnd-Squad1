@@ -6,15 +6,27 @@ require("../models/userAddress");
 const {
   CustomizableError,
   ProductNotFound,
-  errorLauncher
+  errorLauncher,
 } = require("../services/customs.errors.services");
-const { isAllMandatoryFields, findAdminSales } = require("../services/sales.services");
+const {
+  isAllMandatoryFields,
+  findAdminSales,
+} = require("../services/sales.services");
 
 module.exports = {
   async storeSale(req, res) {
     try {
       const array_of_sales = req.body;
       const buyer_id = req.payload.id;
+      
+      if (array_of_sales && array_of_sales.length === 0) {
+        throw new CustomizableError(
+          "EmptyArray",
+          "Não podemos processar sua compra, recebemos um array vazio",
+          "Foi informado um array de compras vazio",
+          418
+        );
+      }
 
       var sales_saved = [];
       var valor_total_da_compra = 0;
@@ -162,19 +174,18 @@ module.exports = {
   },
   async listSalesAdmin(req, res) {
     try {
-      const { id } = req.payload
+      const { id } = req.payload;
 
-      const data = await findAdminSales(id)
+      const data = await findAdminSales(id);
 
       if (data.length === 0) {
-        return res.status(204).json()
+        return res.status(204).json();
       }
       return res.status(200).json({
-        data
-      })
+        data,
+      });
     } catch (error) {
       errorLauncher(error, res);
     }
-  }
-
+  },
 };
