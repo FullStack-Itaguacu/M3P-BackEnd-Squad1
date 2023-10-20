@@ -239,7 +239,7 @@
                     "password": {
                       "type": "string"
                     },
-                    "type-user": {
+                    "type_user": {
                       "type": "string"
                     }
                   },
