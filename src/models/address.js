@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const connection = require("../database/connection");
 
+
 const Address = connection.define("addresses", {
   id: {
     type: Sequelize.INTEGER,

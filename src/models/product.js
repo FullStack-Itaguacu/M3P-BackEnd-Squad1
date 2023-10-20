@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const connection = require("../database/connection");
 
+
 const Product = connection.define(
   "products",
   {
