@@ -18,9 +18,6 @@ module.exports = {
     try {
      
       const array_of_sales = req.body;
-       if (!Array.isArray(array_of_sales) || array_of_sales.length === 0 || !array_of_sales.some(obj => Object.keys(obj).length > 0)) {
-        throw new CustomizableError("InvalidRequest", "O corpo da requisição deve conter pelo menos um objeto dentro do array.", "Requisição inválida", 422);
-    }
       const buyer_id = req.payload.id;
       
       if (array_of_sales && array_of_sales.length === 0) {
@@ -126,6 +123,27 @@ module.exports = {
     try {
       const sales = await Sales.findAll({
         where: { buyer_id: user_id },
+        include : [
+          {
+            model: Product,
+            as: "product",
+            attributes : {
+              exclude : ["unit_price", "total_stock", "user_id", "createdAt", "updatedAt", "deletedAt"]
+            }
+          },
+          {
+            model: UserAddress,
+            as: "user_address",
+            attributes: ["id"],
+            include: [
+              {
+                model: Address,
+                as: "address",
+                attributes: ["street", "neighborhood", "city", "state", "zip", "number_street", "complement"],
+              },
+            ],
+          },
+        ]
       });
 
       if (sales.length === 0) {
