@@ -20,6 +20,19 @@ module.exports = {
       const array_of_sales = req.body;
       const buyer_id = req.payload.id;
       
+       const amount_buy_negative = array_of_sales.some(
+        (sale) => sale.amount_buy <= 0
+      );
+
+      if (amount_buy_negative) {
+        throw new CustomizableError(
+          "AmountBuyNegative",
+          "Não podemos processar sua compra, a quantidade de produtos não pode ser menor ou igual a zero",
+          "Foi informado um valor de quantidade de produtos menor ou igual a zero",
+          418
+        );
+      }
+      
       if (array_of_sales && array_of_sales.length === 0) {
         throw new CustomizableError(
           "EmptyArray",
