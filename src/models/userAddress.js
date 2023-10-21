@@ -6,6 +6,12 @@ const Address = require("./address.js");
 const UserAddress = connection.define(
   "users_addresses",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     user_id: {
       allowNull: false,
       type: DataTypes.INTEGER,
@@ -14,11 +20,11 @@ const UserAddress = connection.define(
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-    users_addresses_id :{
+    users_addresses_id: {
       field: 'id',
       type: DataTypes.INTEGER,
     }
-  
+
   },
   {
     timestamps: true,
@@ -48,4 +54,4 @@ UserAddress.belongsTo(Address, {
 });
 
 
-module.exports =  UserAddress ;
+module.exports = UserAddress;
