@@ -5,7 +5,7 @@
     "title": "M3P-Express Pharmacy",
     "description": "Documentation Backend Sistema Express Pharmacy, projeto avaliativo M3-Squad-1 : bugBusters ."
   },
-  "basePath": "/api-docs",
+  "basePath": "/",
   
   "tags": [
     {
