@@ -5,7 +5,8 @@
     "title": "M3P-Express Pharmacy",
     "description": "Documentation Backend Sistema Express Pharmacy, projeto avaliativo M3-Squad-1 : bugBusters ."
   },
-  "basePath": "/",
+  "basePath": "/api-docs",
+  
   "tags": [
     {
       "name": "User",
@@ -62,10 +63,10 @@
               "type": "object",
               "properties": {
                 "email": {
-                  "example": "string"
+                  "example": "alexandre@email.com"
                 },
                 "password": {
-                  "example": "string"
+                  "example": "Senha@12345"
                 }
               }
             }
@@ -112,12 +113,13 @@
                       "type": "string"
                     },
                     "email": {
-                      "type": "string"
+                      "type": "example@email.com"
                     },
                     "phone": {
                       "type": "string"
                     },
                     "password": {
+                      "definitions": "Deve conter no mínimo 8 caracteres 1 letra maiúscula, 1 letra minúscula, 1 número e 1 caractere especial",
                       "type": "string"
                     }
                   },
@@ -240,6 +242,7 @@
                       "type": "string"
                     },
                     "type_user": {
+                      "description": "Admin ou Buyer",
                       "type": "string"
                     }
                   },
@@ -501,6 +504,7 @@
         "summary": "Lista um produto.",
         "parameters": [
           {
+            "description": "Id do produto.",
             "name": "product_id",
             "in": "path",
             "required": true,
@@ -921,7 +925,537 @@
     }
   ],
   "definitions": {
+    "UserSignup": {
+      "description": "Cadastro de usuário",
+      "type": "object",
+      "properties": {
+        "user": {
+          "description": "Dados do usuário.  Obrigatório todos os campos.",
+          "type": "object",
+          "properties": {
+            "full_name": {
+              "type": "string",
+              "example": "Alexandre Barbosa"
+            },
+            "cpf": {
+              "type": "string",
+              "example": "12345678912"
+            },
+            "birth_date": {
+              "type": "string",
+              "example": "1990-10-10"
+            },
+            "email": {
+              "type": "string",
+              "example": "alexandre@email.com",
+              "description": "Email deve ser único"
+            },
+            "phone": {
+              "type": "string",
+              "example": "48999229922"
+            },
+            "password": {
+              "definitions": "Deve conter no mínimo 8 caracteres 1 letra maiúscula, 1 letra minúscula, 1 número e 1 caractere especial",
+              "type": "string",
+              "example": "Senha@12345"
+            }
+          },
+          "required": [
+            "full_name",
+            "cpf",
+            "birth_date",
+            "email",
+            "phone",
+            "password"
+          ]
+        },
+        "address": {
+          "description": "Lista de endereços do usuário.  Obrigatório pelo menos um endereço.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "zip": {
+                "type": "string",
+                "example": "88000000"
+              },
+              "street": {
+                "type": "string",
+                "example": "Rua das Flores"
+              },
+              "number_street": {
+                "type": "string",
+                "example": "123"
+              },
+              "neighborhood": {
+                "type": "string",
+                "example": "Centro"
+              },
+              "city": {
+                "type": "string",
+                "example": "Florianópolis"
+              },
+              "state": {
+                "type": "string",
+                "example": "SC"
+              },
+              "complement": {
+                "type": "string",
+                "example": "Casa"
+              },
+              "lat": {
+                "type": "string",
+                "example": "-27.594633"
+              },
+              "long": {
+                "type": "string",
+                "example": "-48.548527"
+              }
+            },
+            "required": [
+              "zip",
+              "street",
+              "number_street",
+              "neighborhood",
+              "city",
+              "state"
+            ]
+          }
+        }
+      },
+      "required": [
+        "user",
+        "address"
+      ]
+    },
+    "UserLogin": {
+      "description": "Login do usuário com email e senha",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "alexandre@email.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "Senha@12345"
+        }
+      }
+    },
+    "UserList": {
+      "description": "Lista os usuários cadastrados no sistema.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "full_name": {
+          "type": "string",
+          "example": "Alexandre Barbosa"
+        },
+        "cpf": {
+          "type": "string",
+          "example": "12345678912"
+        },
+        "birth_date": {
+          "type": "string",
+          "example": "1990-10-10"
+        },
+        "email": {
+          "type": "string",
+          "example": "alexandre@email.com"
+        },
+        "phone": {
+          "type": "string",
+          "example": "48999229922"
+        },
+        "type_user": {
+          "type": "string",
+          "example": "Admin ou Buyer"
+        },
+        "created_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        },
+        "updated_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        }
+      }
+    },
+
+    "UserAdminSignup": {
+      "description": "Cadastro de administrador",
+      "type": "object",
+      "properties": {
+        "user": {
+          "description": "Dados do usuário.  Obrigatório todos os campos.",
+          "type": "object",
+          "properties": {
+            "full_name": {
+              "type": "string",
+              "example": "Alexandre Barbosa"
+            },
+            "cpf": {
+              "type": "string",
+              "example": "12345678912"
+            },
+            "birth_date": {
+              "type": "string",
+              "example": "1990-10-10"
+            },
+            "email": {
+              "type": "string",
+              "example": "alexandre@email.com"
+            },
+            "phone": {
+              "type": "string",
+              "example": "48999229922"
+            },
+            "password": {
+              "definitions": "Deve conter no mínimo 8 caracteres 1 letra maiúscula, 1 letra minúscula, 1 número e 1 caractere especial",
+              "type": "string",
+              "example": "Senha@12345"
+            },
+            "type_user": {
+              "type": "string",
+              "example": "Admin ou Buyer"
+            }
+          },
+          "required": [
+            "full_name",
+            "cpf",
+            "birth_date",
+            "email",
+            "phone",
+            "password",
+            "type_user"
+          ]
+        },
+        "address": {
+          "description": "Lista de endereços do usuário.  Obrigatório pelo menos um endereço.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "zip": {
+                "type": "string",
+                "example": "88000000"
+              },
+              "street": {
+                "type": "string",
+                "example": "Rua das Flores"
+              },
+              "number_street": {
+                "type": "string",
+                "example": "123"
+              },
+              "neighborhood": {
+                "type": "string",
+                "example": "Centro"
+              },
+              "city": {
+                "type": "string",
+                "example": "Florianópolis"
+              },
+              "state": {
+                "type": "string",
+                "example": "SC"
+              },
+              "complement": {
+                "type": "string",
+                "example": "Casa"
+              },
+              "lat": {
+                "type": "string",
+                "example": "-27.594633"
+              },
+              "long": {
+                "type": "string",
+                "example": "-48.548527"
+              }
+            },
+            "required": [
+              "zip",
+              "street",
+              "number_street",
+              "neighborhood",
+              "city",
+              "state"
+            ]
+          }
+        }
+      },
+      "required": [
+        "user",
+        "address"
+      ]
+    },
+    "UserAdminLogin": {
+      "description": "Login do administrador com email e senha",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "alexandre@email.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "Senha@12345"
+        }
+      }
+    },
+    "UserAdminList": {
+      "description": "Lista os administradores cadastrados no sistema.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "full_name": {
+          "type": "string",
+          "example": "Alexandre Barbosa"
+        },
+        "cpf": {
+          "type": "string",
+          "example": "12345678912"
+        },
+        "birth_date": {
+          "type": "string",
+          "example": "1990-10-10"
+        },
+        "email": {
+          "type": "string",
+          "example": "alexandre@email.com"
+        },
+        "phone": {
+          "type": "string",
+          "example": "48999229922"
+        },
+        "type_user": {
+          "type": "string",
+          "example": "Admin ou Buyer"
+        },
+        "created_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        },
+        "updated_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        }
+      }
+    },
+    "ProductsPost": {
+      "description": "Cadastra um produto na aplicação.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Paracetamol"
+        },
+        "lab_name": {
+          "type": "string",
+          "example": "Cimed"
+        },
+        "image_link": {
+          "type": "string",
+          "example": "url string"
+        },
+        "dosage": {
+          "type": "string",
+          "example": "10mg"
+        },
+        "unit_price": {
+          "type": "string",
+          "example": "20"
+        },
+        "type_product": {
+          "type": "string",
+          "example": "controlled or uncontrolled"
+        },
+        "total_stock": {
+          "type": "string",
+          "example": "100"
+        },
+        "description": {
+          "type": "string",
+          "example": "Medicamento para dor de cabeça e febre"
+        }
+      }
+    },
+    "ProductsList": {
+      "description": "Lista os produtos cadastrados no sistema.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "name": {
+          "type": "string",
+          "example": "Paracetamol"
+        },
+        "lab_name": {
+          "type": "string",
+          "example": "Cimed"
+        },
+        "image_link": {
+          "type": "string",
+          "example": "url string"
+        },
+        "dosage": {
+          "type": "string",
+          "example": "10mg"
+        },
+        "unit_price": {
+          "type": "string",
+          "example": "20"
+        },
+        "type_product": {
+          "type": "string",
+          "example": "controlled or uncontrolled"
+        },
+        "total_stock": {
+          "type": "string",
+          "example": "100"
+        },
+        "description": {
+          "type": "string",
+          "example": "Medicamento para dor de cabeça e febre"
+        },
+        "created_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        },
+        "updated_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        }
+      }
+    },
+    "ProductsPatch": {
+      "description": "Atualiza alguns campos do produto na aplicação.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Dorflex"
+        },
+        "image_link": {
+          "type": "string",
+          "example": "url string"
+        },
+        "dosage": {
+          "type": "string",
+          "example": "10mg"
+        },
+        "total_stock": {
+          "type": "string",
+          "example": "20"
+        }
+      }
+    },
+    "BuyersList": {
+      "description": "Lista os compradores cadastrados no sistema.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "full_name": {
+          "type": "string",
+          "example": "Alexandre Barbosa"
+        },
+        "cpf": {
+          "type": "string",
+          "example": "12345678912"
+        },
+        "birth_date": {
+          "type": "string",
+          "example": "1990-10-10"
+        },
+        "email": {
+          "type": "string",
+          "example": "alexandre@email.com"
+        },
+        "phone": {
+          "type": "string",
+          "example": "48999229922"
+        },
+        "type_user": {
+          "type": "string",
+          "example": "Admin ou Buyer"
+        },
+        "created_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        },
+        "updated_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        }
+      }
+    },
+    "BuyersAddressList": {
+      "description": "Lista os endereços cadastrados no sistema.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "zip": {
+          "type": "string",
+          "example": "88000000"
+        },
+        "street": {
+          "type": "string",
+          "example": "Rua das Flores"
+        },
+        "number_street": {
+          "type": "string",
+          "example": "123"
+        },
+        "neighborhood": {
+          "type": "string",
+          "example": "Centro"
+        },
+        "city": {
+          "type": "string",
+          "example": "Florianópolis"
+        },
+        "state": {
+          "type": "string",
+          "example": "SC"
+        },
+        "complement": {
+          "type": "string",
+          "example": "Casa"
+        },
+        "lat": {
+          "type": "string",
+          "example": "-27.594633"
+        },
+        "long": {
+          "type": "string",
+          "example": "-48.548527"
+        },
+        "created_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        },
+        "updated_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        }
+      }
+    },
     "SalesPost": {
+      "description": "Cadastro de venda.",
       "type": "array",
       "items": {
         "type": "object",
@@ -933,6 +1467,7 @@
         ],
         "properties": {
           "product_id": {
+            "description": "Id do produto.",
             "type": "integer",
             "example": 1
           },
@@ -961,6 +1496,7 @@
       }
     },
     "SalesList": {
+      "description": "Lista as compras do usuário.",
       "type": "object",
       "properties": {
         "id": {
@@ -1006,6 +1542,116 @@
       }
     },
     "SalesDashboard": {
+      "description": "Devolve informações de vendas do administrador logado.",
+      "type": "object",
+      "properties": {
+        "totalSales": {
+          "type": "integer",
+          "example": "150",
+          "description": "Quantidade de vendas realizadas"
+        },
+        "totalAmount": {
+          "type": "integer",
+          "example": "35",
+          "description": "Quantidade de produtos vendidos"
+        }
+      }
+    }
+  
+,
+
+
+
+  "definitions": {
+    "SalesPost": {
+      "description": "Cadastro de venda.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "product_id",
+          "amount_buy",
+          "users_addresses_id",
+          "type_payment"
+        ],
+        "properties": {
+          "product_id": {
+            "description": "Id do produto.",
+            "type": "integer",
+            "example": 1
+          },
+          "amount_buy": {
+            "type": "integer",
+            "example": 10,
+            "description": "Quantidade de produtos comprados não pode ser maior que a quantidade de produtos em estoque"
+          },
+          "users_addresses_id": {
+            "type": "integer",
+            "example": 1,
+            "description": "Id do endereço do usuário"
+          },
+          "type_payment": {
+            "type": "string",
+            "enum": [
+              "credit_card",
+              "debit_card",
+              "payment_slip",
+              "pix",
+              "transfer"
+            ],
+            "description": "Tipo de pagamento deve ser credit_card, debit_card, payment_slip, pix ou transfer"
+          }
+        }
+      }
+    },
+    "SalesList": {
+      "description": "Lista as compras do usuário.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "buyer_id": {
+          "type": "integer",
+          "example": "2"
+        },
+        "seller_id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "product_id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "users_addresses_id": {
+          "type": "integer",
+          "example": "1"
+        },
+        "amount_buy": {
+          "type": "integer",
+          "example": "12"
+        },
+        "total": {
+          "type": "float",
+          "example": "22.50"
+        },
+        "type_payment": {
+          "type": "enum",
+          "example": "pix"
+        },
+        "created_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        },
+        "updated_at": {
+          "type": "data",
+          "example": "2023-10-11T15:04:05.262Z"
+        }
+      }
+    },
+    "SalesDashboard": {
+      "description": "Devolve informações de vendas do administrador logado.",
       "type": "object",
       "properties": {
         "totalSales": {
@@ -1021,4 +1667,5 @@
       }
     }
   }
+}
 }
