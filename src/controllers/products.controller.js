@@ -96,14 +96,11 @@ module.exports = {
   async createProduct(req, res) {
     try {
       const validationError = await validateFields(req.body);
-      console.log("chegou aqui1");
       if (validationError) {
-        console.log(validationError);
         return res
           .status(validationError.status)
           .json({ error: validationError });
       }
-      console.log("chegou aqui3");
 
       const {
         name,

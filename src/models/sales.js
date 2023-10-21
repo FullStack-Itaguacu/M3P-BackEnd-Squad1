@@ -73,9 +73,7 @@ const Sales = connection.define(
         isInt: true,
         notNull: true,
         async isLessThanTotalStock(value) {
-          console.log(`value: ${value}`)
           const product = await Product.findByPk(this.product_id);
-          console.log(`product: ${product}`)
           if (product && value > product.total_stock) {
             throw new Error(
               "A quantidade comprada é maior do que o estoque disponível."
