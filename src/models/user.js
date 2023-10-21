@@ -8,7 +8,6 @@ const User = connection.define(
   {
     id: {
       type: Sequelize.INTEGER,
-      allowNull: false,
       autoIncrement: true,
       primaryKey: true,
     },
@@ -38,7 +37,7 @@ const User = connection.define(
         },
       },
     },
-     phone: {
+    phone: {
       type: Sequelize.STRING,
       allowNull: false,
       validate: {
