@@ -725,11 +725,11 @@
         "summary": "Lista um usuário comprador.",
         "parameters": [
           {
+            "description": "Id do usuário comprador.",
             "name": "user_id",
             "in": "path",
             "required": true,
-            "type": "integer",
-            "description": "Id do usuário comprador."
+            "type": "integer"
           }
         ],
         "responses": {
@@ -755,11 +755,11 @@
         "summary": "Atualiza os dados de um usuário comprador.",
         "parameters": [
           {
+            "description": "Id do usuário comprador.",
             "name": "user_id",
             "in": "path",
             "required": true,
-            "type": "integer",
-            "discription": "Id do usuário comprador."
+            "type": "integer"
           },
           {
             "name": "body",
