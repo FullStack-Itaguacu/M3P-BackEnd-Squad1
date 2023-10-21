@@ -83,6 +83,9 @@ module.exports = {
       const user_id = payload.id;
 
       const user = await User.findByPk(user_id, {
+        atributtes: {
+          exclude: ["password"],
+        },
         include: {
           association: "addresses",
         },
