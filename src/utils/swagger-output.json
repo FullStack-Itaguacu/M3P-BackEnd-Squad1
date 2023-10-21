@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "M3P-BACKEND-SQUAD1",
-    "description": "Documentation Backend projeto avaliativo M3-Squad-1 : bugBusters ."
+    "title": "M3P-Express Pharmacy",
+    "description": "Documentation Backend Sistema Express Pharmacy, projeto avaliativo M3-Squad-1 : bugBusters ."
   },
   "basePath": "/",
   "tags": [
@@ -588,11 +588,13 @@
             "name": "product_id",
             "in": "path",
             "required": true,
-            "type": "integer"
+            "type": "integer",
+            "description": "Id do produto."
           },
           {
             "name": "body",
             "in": "body",
+            "description": "Campos a serem atualizados.",
             "schema": {
               "type": "object",
               "properties": {
@@ -640,6 +642,7 @@
         "tags": [
           "Buyers"
         ],
+
         "summary": "Lista usuários compradores cadastrados.",
         "parameters": [
           {
@@ -694,6 +697,8 @@
           "Buyers"
         ],
         "summary": "Lista os endereços do usuário.",
+        "parameters": [
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -719,7 +724,8 @@
             "name": "user_id",
             "in": "path",
             "required": true,
-            "type": "integer"
+            "type": "integer",
+            "description": "Id do usuário comprador."
           }
         ],
         "responses": {
@@ -748,7 +754,8 @@
             "name": "user_id",
             "in": "path",
             "required": true,
-            "type": "integer"
+            "type": "integer",
+            "discription": "Id do usuário comprador."
           },
           {
             "name": "body",
@@ -931,11 +938,13 @@
           },
           "amount_buy": {
             "type": "integer",
-            "example": 10
+            "example": 10,
+            "description": "Quantidade de produtos comprados não pode ser maior que a quantidade de produtos em estoque"
           },
           "users_addresses_id": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "description": "Id do endereço do usuário"
           },
           "type_payment": {
             "type": "string",
@@ -945,7 +954,8 @@
               "payment_slip",
               "pix",
               "transfer"
-            ]
+            ],
+            "description": "Tipo de pagamento deve ser credit_card, debit_card, payment_slip, pix ou transfer"
           }
         }
       }
@@ -1000,11 +1010,13 @@
       "properties": {
         "totalSales": {
           "type": "integer",
-          "example": "150"
+          "example": "150",
+          "description": "Quantidade de vendas realizadas"
         },
         "totalAmount": {
           "type": "integer",
-          "example": "35"
+          "example": "35",
+          "description": "Quantidade de produtos vendidos"
         }
       }
     }
