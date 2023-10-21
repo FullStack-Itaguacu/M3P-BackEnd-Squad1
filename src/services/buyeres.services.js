@@ -108,6 +108,9 @@ module.exports = {
       where: {
         id: user_id,
       },
+      attributes : {
+        exclude : ["password"]
+      }
     });
 
     if (data === null) {
