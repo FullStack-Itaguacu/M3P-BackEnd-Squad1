@@ -6,11 +6,7 @@ const { validaSenha, validaEmail } = require("../services/validators");
 const User = connection.define(
   "users",
   {
-    id: {
-      type: Sequelize.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
+
     full_name: {
       type: Sequelize.STRING,
       allowNull: false,

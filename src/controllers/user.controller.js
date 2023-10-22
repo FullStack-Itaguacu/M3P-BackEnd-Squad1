@@ -39,7 +39,7 @@ module.exports = {
 
       const userCreated = await User.create(user);
       const addressesCreated = await Address.bulkCreate(addresses);
-      userCreated.setAddresses(addressesCreated);
+      userCreated.setAddresses(addressesCreated, { fields: ['user_id', 'address_id'] });
       successMessage(res, userCreated, addressesCreated);
     } catch (error) {
       errorLauncher(error, res);
