@@ -3,12 +3,7 @@ const connection = require("../database/connection");
 
 
 const Address = connection.define("addresses", {
-  id: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    autoIncrement: true,
-    primaryKey: true,
-  },
+
   number_street: {
     type: Sequelize.INTEGER,
     allowNull: false,
@@ -45,7 +40,7 @@ const Address = connection.define("addresses", {
     type: Sequelize.STRING,
     allowNull: true,
   },
-},{
+}, {
   timestamps: true,
   paranoid: true,
   underscored: true,

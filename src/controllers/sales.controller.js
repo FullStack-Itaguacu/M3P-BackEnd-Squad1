@@ -16,11 +16,11 @@ const {
 module.exports = {
   async storeSale(req, res) {
     try {
-     
+
       const array_of_sales = req.body;
       const buyer_id = req.payload.id;
-      
-       const amount_buy_negative = array_of_sales.some(
+
+      const amount_buy_negative = array_of_sales.some(
         (sale) => sale.amount_buy <= 0
       );
 
@@ -32,7 +32,7 @@ module.exports = {
           418
         );
       }
-      
+
       if (array_of_sales && array_of_sales.length === 0) {
         throw new CustomizableError(
           "EmptyArray",
@@ -127,8 +127,8 @@ module.exports = {
       });
     } catch (error) {
       errorLauncher(error, res);
-  }
-},
+    }
+  },
 
   async listSales(req, res) {
     const user_id = req.payload.id;
@@ -136,12 +136,12 @@ module.exports = {
     try {
       const sales = await Sales.findAll({
         where: { buyer_id: user_id },
-        include : [
+        include: [
           {
             model: Product,
             as: "product",
-            attributes : {
-              exclude : ["unit_price", "total_stock", "user_id", "createdAt", "updatedAt", "deletedAt"]
+            attributes: {
+              exclude: ["unit_price", "total_stock", "user_id", "createdAt", "updatedAt", "deletedAt"]
             }
           },
           {
