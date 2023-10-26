@@ -1,4 +1,4 @@
-const { estaNaBD, verificaSomenteNumeros } = require("./validators");
+const { estaNaBD } = require("./validators");
 const User = require("../models/user");
 
 const {

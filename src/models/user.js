@@ -2,11 +2,9 @@ const Sequelize = require("sequelize");
 const connection = require("../database/connection");
 const { validaEmail } = require("../services/validators");
 
-
 const User = connection.define(
   "users",
   {
-
     full_name: {
       type: Sequelize.STRING,
       allowNull: false,
