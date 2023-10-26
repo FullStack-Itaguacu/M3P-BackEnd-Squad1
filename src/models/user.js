@@ -28,7 +28,8 @@ const User = connection.define(
           args: [11, 11],
           msg: "O CPF deve ter exatamente 11 caracteres",
         },
-        isNumeric: {
+        is: {
+          args: /^\d+$/g,
           msg: "O CPF deve conter apenas números sem pontos ou traços ex: 12345678910",
         },
       },
@@ -41,7 +42,8 @@ const User = connection.define(
           args: [10, 15],
           msg: "O telefone deve ter entre 10 e 15 caracteres",
         },
-        isNumeric: {
+        is: {
+          args: /^\d+$/g,
           msg: "O telefone deve conter apenas números sem pontos ou traços ex: 12345678910",
         },
       },

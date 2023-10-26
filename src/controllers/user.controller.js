@@ -38,7 +38,7 @@ module.exports = {
       user.type_user = "Buyer";
 
       const userCreated = await User.create(user);
-      const addressesCreated = await Address.bulkCreate(addresses);
+      const addressesCreated = await Address.bulkCreate(addresses, { validate: true });
       await userCreated.setAddresses(addressesCreated, { fields: ['user_id', 'address_id'] });
       successMessage(res, userCreated, addressesCreated);
     } catch (error) {

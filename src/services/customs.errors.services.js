@@ -330,6 +330,17 @@ class UserNotFound extends CustomError {
     );
   }
 }
+
+class FieldsTypeIncorrect extends CustomError {
+  constructor(campo, tipo) {
+    super(
+      "FieldsTypeIncorrect",
+      `O ${campo} informado deve ser do tipo ${tipo}.`,
+      `O ${campo} recebeu outro tipo de dado que não é ${tipo}`,
+      400
+    );
+  }
+}
 class CustomizableError extends CustomError {
   constructor(name, message, cause, status) {
     super();
@@ -408,4 +419,5 @@ module.exports = {
   CreatedAtBadValueReceived,
   UserNotFound,
   CustomizableError,
+  FieldsTypeIncorrect
 };
