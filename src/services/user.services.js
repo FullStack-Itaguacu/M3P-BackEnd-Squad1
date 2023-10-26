@@ -1,4 +1,4 @@
-const { estaNaBD } = require("./validators");
+const { estaNaBD, verificaSomenteNumeros } = require("./validators");
 const User = require("../models/user");
 
 const {
@@ -13,12 +13,14 @@ const {
   IncorrectFields,
   BuyerNotAllowed,
   UserNotFound,
+  FieldsTypeIncorrect,
+  OnlyNumbers,
 } = require("./customs.errors.services");
 
 module.exports = {
   async filtroBodySignUp(user, addresses) {
     // Validação de endereço
-    if (!addresses) {
+    if (!addresses || addresses.length === 0) {
       throw new NotAddressesReceivedError();
     }
 
@@ -27,23 +29,33 @@ module.exports = {
         const { zip, street, number_street, neighborhood, city, state } =
           address;
         if (
-          zip === undefined ||
-          street === undefined ||
-          number_street === undefined ||
-          neighborhood === undefined ||
-          city === undefined ||
-          state === undefined
+          zip === undefined || zip === "" ||
+          street === undefined || street === "" ||
+          number_street === undefined || number_street === "" ||
+          neighborhood === undefined || neighborhood === "" ||
+          city === undefined || city === "" ||
+          state === undefined || state === ""
         ) {
           const nao_informado = [];
-          if (zip === undefined) nao_informado.push("zip");
-          if (street === undefined) nao_informado.push("street");
-          if (number_street === undefined) nao_informado.push("number_street");
-          if (neighborhood === undefined) nao_informado.push("neighborhood");
-          if (city === undefined) nao_informado.push("city");
-          if (state === undefined) nao_informado.push("state");
+          if (zip === undefined || zip === "") nao_informado.push("zip");
+          if (street === undefined || street === "") nao_informado.push("street");
+          if (number_street === undefined || number_street === "") nao_informado.push("number_street");
+          if (neighborhood === undefined || neighborhood === "") nao_informado.push("neighborhood");
+          if (city === undefined || city === "") nao_informado.push("city");
+          if (state === undefined || state === "") nao_informado.push("state");
 
           throw new NotFieldsAddressReceivedError(nao_informado);
         }
+
+        const regex = /^[\d]+$/
+
+        if (!regex.test(number_street)) {
+          throw new OnlyNumbers("number_street");
+        }
+        if (!regex.test(zip)) {
+          throw new OnlyNumbers("zip");
+        }
+
       });
     }
 
@@ -55,22 +67,30 @@ module.exports = {
     const { full_name, cpf, birth_date, email, phone, password } = user;
 
     if (
-      full_name === undefined ||
-      cpf === undefined ||
-      birth_date === undefined ||
-      email === undefined ||
-      phone === undefined ||
-      password === undefined
+      full_name === undefined || full_name === "" ||
+      cpf === undefined || cpf === "" ||
+      birth_date === undefined || birth_date === "" ||
+      email === undefined || email === "" ||
+      phone === undefined || phone === "" ||
+      password === undefined || password === ""
     ) {
       const nao_informado = [];
-      if (full_name === undefined) nao_informado.push("full_name");
-      if (cpf === undefined) nao_informado.push("cpf");
-      if (birth_date === undefined) nao_informado.push("birth_date");
-      if (email === undefined) nao_informado.push("email");
-      if (phone === undefined) nao_informado.push("phone");
-      if (password === undefined) nao_informado.push("password");
+      if (full_name === undefined || full_name == "") nao_informado.push("full_name");
+      if (cpf === undefined || cpf === "") nao_informado.push("cpf");
+      if (birth_date === undefined || birth_date === "") nao_informado.push("birth_date");
+      if (email === undefined || email === "") nao_informado.push("email");
+      if (phone === undefined || phone === "") nao_informado.push("phone");
+      if (password === undefined || password === "") nao_informado.push("password");
 
       throw new NotFieldsUserReceivedError(nao_informado);
+    }
+
+    if (typeof cpf !== "string") {
+      throw new FieldsTypeIncorrect("cpf", "string");
+    }
+
+    if (typeof phone !== "string") {
+      throw new FieldsTypeIncorrect("phone", "string");
     }
 
     if (await estaNaBD(User, "cpf", cpf)) {
