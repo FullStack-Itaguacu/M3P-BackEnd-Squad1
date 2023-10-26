@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 const connection = require("../database/connection");
-const { validaSenha, validaEmail } = require("../services/validators");
+const { validaEmail } = require("../services/validators");
 
 
 const User = connection.define(
@@ -30,7 +30,7 @@ const User = connection.define(
         },
         is: {
           args: /^\d+$/g,
-          msg: "O CPF deve conter apenas números sem pontos ou traços ex: 12345678910",
+          msg: ", sem pontos ou traços ex: 12345678910",
         },
       },
     },
@@ -44,7 +44,7 @@ const User = connection.define(
         },
         is: {
           args: /^\d+$/g,
-          msg: "O telefone deve conter apenas números sem pontos ou traços ex: 12345678910",
+          msg: ", sem pontos ou traços ex: 12345678910",
         },
       },
     },
