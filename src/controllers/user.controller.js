@@ -17,6 +17,7 @@ const {
   verifyPassword,
   verifyUserId,
   verifyTypeUser,
+  verifyTypeUserSignup,
 } = require("../services/user.services");
 const {
   validaSenha,
@@ -52,7 +53,7 @@ module.exports = {
 
       await filtroBodySignUp(user, addresses);
       await validaSenha(user.password);
-      await verifyTypeUser(user.type_user);
+      await verifyTypeUserSignup(user.type_user);
       user.password = await encriptarSenha(user.password);
 
       const userCreated = await User.create(user);

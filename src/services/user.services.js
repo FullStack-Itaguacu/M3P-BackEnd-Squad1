@@ -204,10 +204,10 @@ module.exports = {
       throw new EmailUserAlredyExistError();
     }
   },
-  async verifyTypeUser(type_user) {
+  async verifyTypeUserSignup(type_user) {
     if (!type_user || type_user === "") {
       const nao_informado = [];
-      nao_informado.push(type_user)
+      nao_informado.push("type_user")
       throw new NotFieldsUserReceivedError(nao_informado);
     }
     if (type_user !== "Admin" && type_user !== "Buyer") {
