@@ -122,8 +122,8 @@ module.exports = {
       });
 
       if (existMedicine) {
-        return res.status(422).json({
-          status: 422,
+        return res.status(409).json({
+          status: 409,
           error: "Erro, Não foi possível criar o produto",
           cause: "O produto já existe.",
         });
