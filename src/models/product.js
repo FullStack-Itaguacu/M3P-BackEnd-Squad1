@@ -11,13 +11,13 @@ const Product = connection.define(
       validate: {
         notNull: {
           msg: {
-            status: "422",
+            status: 500,
             cause: "O campo userId é obrigatório.",
           },
         },
         isNumeric: {
           msg: {
-            status: "422",
+            status: 500,
             cause: "O campo userId deve ser um valor inteiro numérico.",
           },
         },
@@ -41,7 +41,7 @@ const Product = connection.define(
       validate: {
         notNull: {
           msg: {
-            status: "422",
+            status: 422,
             cause: "O campo labName é obrigatório.",
           },
         },
@@ -53,19 +53,19 @@ const Product = connection.define(
       validate: {
         notNull: {
           msg: {
-            status: "422",
+            status: 422,
             cause: "O campo imageLink é obrigatório.",
           },
         },
       },
     },
     dosage: {
-      type: Sequelize.STRING,
+      type: Sequelize.ENUM("mg", "mcg", "g", "ml", "%"),
       allowNull: false,
       validate: {
         notNull: {
           msg: {
-            status: "422",
+            status: 422,
             cause: "O campo dosage é obrigatório.",
           },
         },

@@ -116,14 +116,14 @@ module.exports = {
       const user_id = req.payload.id;
       const existMedicine = await Products.findOne({
         where: {
-          name: name,
-          lab_name: lab_name,
+          user_id,
+          name
         },
       });
 
       if (existMedicine) {
         return res.status(422).json({
-          status: "422",
+          status: 422,
           error: "Erro, Não foi possível criar o produto",
           cause: "O produto já existe.",
         });
@@ -184,10 +184,10 @@ module.exports = {
       var { offset, limit } = req.params;
       var { name, type_product } = req.query;
 
-      const types_alowed =["controlled", "uncontrolled"]
+      const types_alowed = ["controlled", "uncontrolled"]
 
-      if(type_product){
-        if(!types_alowed.includes(type_product)){
+      if (type_product) {
+        if (!types_alowed.includes(type_product)) {
           throw new CustomizableError(
             "InvalidTypeProductError",
             `Tipo de produto ${type_product} não é permitido esperamos um dos seguintes valores: ${types_alowed}`,
@@ -196,7 +196,7 @@ module.exports = {
           );
         }
       }
-      if(!name) name = "%";
+      if (!name) name = "%";
 
       await filtroBodyOffsetLimitSearch(offset, limit);
 
@@ -206,7 +206,7 @@ module.exports = {
       const actual_page = parseInt(offset);
       const start = parseInt(offset);
       const items_for_page = parseInt(limit);
- 
+
 
       Products.findAndCountAll({
         where: {

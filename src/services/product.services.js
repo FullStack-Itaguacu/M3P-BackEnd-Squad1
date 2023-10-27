@@ -1,8 +1,6 @@
 const {
   OffsetIsNan,
   LimitIsNan,
-  NotNameReceivedError,
-  NotTypeProductReceivedError,
   NotAcceptValuesTypeProduct,
   NumberNotPositive,
   TotalStockRequired,
@@ -30,7 +28,7 @@ module.exports = {
     if (limit < 0) {
       throw new NumberNotPositive("limit");
     }
-   
+
   },
   async searchOffsetLimit(
     start,
@@ -168,50 +166,96 @@ module.exports = {
     // Verifica se o objeto é nulo ou indefinido
     if (!fields || Object.keys(fields).length === 0) {
       return {
-        status: "422",
+        status: 422,
         error: "Erro, Não foi possível criar o produto",
         cause: "O corpo da requisição não pode ser vazio.",
       };
     }
 
-    const requiredFields = ["name", "lab_name", "image_link", "dosage"];
+    const requiredFields = ["name", "lab_name", "image_link", "dosage", "type_product"];
     for (const field of requiredFields) {
       // Verifica se o campo obrigatório está faltando
       if (!fields[field]) {
         return {
-          status: "422",
+          status: 422,
           error: "Erro, Não foi possível criar o produto",
           cause: `O campo ${field} é obrigatório.`,
         };
       }
     }
 
-    // Verifica se unit_price é menor ou igual a zero
-    if (typeof fields.unit_price !== "number" || fields.unit_price <= 0) {
+    // Adicione mais validações conforme necessário
+    // Verifica se o campo 'dosage' tem valor igual à "mg", "mcg", "g", "ml", "%"
+    const regexDosage = /^(mg|mcg|g|ml|%)$/;
+    if (!regexDosage.test(fields.dosage)) {
       return {
-        status: "422",
+        status: 400,
         error: "Erro, Não foi possível criar o produto",
-        cause: "O campo unit_price deve ser maior que zero.",
+        cause: "O campo dosage deve ter um dos seguintes valores: 'mg', 'mcg', 'g', 'ml', '%'.",
+      };
+    }
+
+    // Verifica se type_product tem valor inválido
+    if (!["controlled", "uncontrolled"].includes(fields.type_product)) {
+      return {
+        status: 400,
+        error: "Erro, Não foi possível criar o produto",
+        cause:
+          "Somente são aceitos os valores: 'controlled' e 'uncontrolled' no campo type_product.",
+      };
+    }
+
+    // Verifica se unit_price é undefined
+    if (!fields.unit_price && fields.unit_price !== 0) {
+      return {
+        status: 422,
+        error: "Erro, Não foi possível criar o produto",
+        cause: "O campo unit_price é obrigatório.",
+      };
+    }
+
+    // Verifica se unit_price é um número
+    if (isNaN(fields.unit_price)) {
+      return {
+        status: 400,
+        error: "Erro, Não foi possível criar o produto",
+        cause: "O campo unit_price deve ser um número.",
+      };
+    }
+
+    // Verifica se unit_price é um número e menor ou igual a zero
+    if (fields.unit_price === 0 || fields.unit_price == "0" || fields.unit_price <= 0) {
+      return {
+        status: 400,
+        error: "Erro, Não foi possível criar o produto",
+        cause: "O campo unit_price deve ser um número maior que zero.",
+      };
+    }
+
+    // Verifica se total_stock é undefined
+    if (fields.total_stock === "" || fields.total_stock === undefined) {
+      return {
+        status: 422,
+        error: "Erro, Não foi possível criar o produto",
+        cause: "O campo total_stock é obrigatório.",
+      };
+    }
+
+    // Verifica se total_stock é um número
+    if (isNaN(fields.total_stock)) {
+      return {
+        status: 400,
+        error: "Erro, Não foi possível criar o produto",
+        cause: "O campo total_stock deve ser um número.",
       };
     }
 
     // Verifica se total_stock é menor que zero
-    if (typeof fields.total_stock !== "number" || fields.total_stock < 0) {
+    if (fields.total_stock < 0) {
       return {
-        status: "422",
+        status: 400,
         error: "Erro, Não foi possível criar o produto",
-        cause: "O campo total_stock não pode ser menor que zero.",
-      };
-    }
-
-    // Adicione mais validações conforme necessário
-    // Verifica se type_product tem valor inválido
-    if (!["controlled", "uncontrolled"].includes(fields.type_product)) {
-      return {
-        status: "400",
-        error: "Erro, Não foi possível criar o produto",
-        cause:
-          "Somente são aceitos os valores: 'controlled' e 'uncontrolled' no campo type_product.",
+        cause: "O campo total_stock deve ser um número igual ou maior que zero.",
       };
     }
   },
