@@ -15,9 +15,9 @@ const {
   successMessage,
   filtroBodyLoginAdmin,
   verifyPassword,
-  validateUserType,
   verifyUserId,
   verifyTypeUser,
+  verifyTypeUserSignup,
 } = require("../services/user.services");
 const {
   validaSenha,
@@ -53,7 +53,7 @@ module.exports = {
 
       await filtroBodySignUp(user, addresses);
       await validaSenha(user.password);
-      await validateUserType(user.type_user, res);
+      await verifyTypeUserSignup(user.type_user);
       user.password = await encriptarSenha(user.password);
 
       const userCreated = await User.create(user);
@@ -132,7 +132,7 @@ module.exports = {
       if (!user) {
         return res.status(401).json({
           statusCode: 401,
-          message: "Usuário não encontrado",
+          message: "Senha ou E-mail incorreta",
           error: "Bad Request",
         });
       }

@@ -198,7 +198,6 @@ class NotDataToUpdate extends CustomError {
     );
   }
 }
-
 class NotOwnerProduct extends CustomError {
   constructor() {
     super(
@@ -209,7 +208,6 @@ class NotOwnerProduct extends CustomError {
     );
   }
 }
-
 class ProductNotFound extends CustomError {
   constructor() {
     super(
@@ -330,7 +328,6 @@ class UserNotFound extends CustomError {
     );
   }
 }
-
 class FieldsTypeIncorrect extends CustomError {
   constructor(campo, tipo) {
     super(
@@ -348,6 +345,16 @@ class CustomizableError extends CustomError {
     this.cause = cause;
     this.status = status;
     this.name = name;
+  }
+}
+class NotAcceptValuesTypeUser extends CustomError {
+  constructor() {
+    super(
+      "NotAcceptValuesTypeUser",
+      "O campo tipo do usuário recebeu um valor diferente dos possíveis.",
+      "O tipo do usuário somente aceita os valores: Admin e Buyer",
+      400
+    );
   }
 }
 
@@ -419,5 +426,6 @@ module.exports = {
   CreatedAtBadValueReceived,
   UserNotFound,
   CustomizableError,
-  FieldsTypeIncorrect
+  FieldsTypeIncorrect,
+  NotAcceptValuesTypeUser
 };

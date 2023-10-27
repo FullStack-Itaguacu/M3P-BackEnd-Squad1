@@ -6,7 +6,7 @@ module.exports = {
     try {
       const token = req.headers.authorization;
 
-      
+
       if (!token) {
         return res.status(401).json({
           status: 401,
@@ -53,8 +53,9 @@ module.exports = {
           error: "UnauthorizedError",
           cause: "Somente administradores podem acessar este recurso",
         });
-      }else{
-        next();}
+      } else {
+        next();
+      }
 
     } catch (error) {
       return res.status(500).json({
@@ -71,6 +72,7 @@ module.exports = {
       id: user.id,
       email: user.email,
       type_user: user.type_user,
+      full_name: user.full_name,
     };
     const token = sign(payload, process.env.JWT_KEY, {
       expiresIn: "1d",

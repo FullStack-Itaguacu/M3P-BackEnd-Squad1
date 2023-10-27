@@ -1,4 +1,4 @@
-const { estaNaBD, verificaSomenteNumeros } = require("./validators");
+const { estaNaBD } = require("./validators");
 const User = require("../models/user");
 
 const {
@@ -15,6 +15,7 @@ const {
   UserNotFound,
   FieldsTypeIncorrect,
   OnlyNumbers,
+  NotAcceptValuesTypeUser,
 } = require("./customs.errors.services");
 
 module.exports = {
@@ -180,13 +181,6 @@ module.exports = {
       status: 201,
     });
   },
-
-  async validateUserType(type_user, res) {
-    if (type_user !== "Admin" && type_user !== "Buyer") {
-      return res.status(400).json({ message: "Tipo de usuário inválido" });
-    }
-  },
-
   async verifyUserId(user_id) {
     const data = await User.findOne({
       where: {
@@ -210,9 +204,14 @@ module.exports = {
       throw new EmailUserAlredyExistError();
     }
   },
-  async verifyTypeUser(type_user) {
+  async verifyTypeUserSignup(type_user) {
+    if (!type_user || type_user === "") {
+      const nao_informado = [];
+      nao_informado.push("type_user")
+      throw new NotFieldsUserReceivedError(nao_informado);
+    }
     if (type_user !== "Admin" && type_user !== "Buyer") {
-      throw new BuyerNotAllowed();
+      throw new NotAcceptValuesTypeUser();
     }
   },
 };
