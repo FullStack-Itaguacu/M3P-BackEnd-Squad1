@@ -184,17 +184,6 @@ module.exports = {
       }
     }
 
-    // Adicione mais validações conforme necessário
-    // Verifica se o campo 'dosage' tem valor igual à "mg", "mcg", "g", "ml", "%"
-    const regexDosage = /^(mg|mcg|g|ml|%)$/;
-    if (!regexDosage.test(fields.dosage)) {
-      return {
-        status: 400,
-        error: "Erro, Não foi possível criar o produto",
-        cause: "O campo dosage deve ter um dos seguintes valores: 'mg', 'mcg', 'g', 'ml', '%'.",
-      };
-    }
-
     // Verifica se type_product tem valor inválido
     if (!["controlled", "uncontrolled"].includes(fields.type_product)) {
       return {
