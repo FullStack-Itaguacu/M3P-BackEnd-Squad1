@@ -8,7 +8,7 @@ const {
   UserNotFound,
 } = require("../services/customs.errors.services.js");
 module.exports = {
-  async filtroBodyOffsetLimitSearch(offset, limit, full_name, created_at) {
+  async filtroBodyOffsetLimitSearch(offset, limit) {
     if (isNaN(offset)) {
       throw new OffsetIsNan();
     }
@@ -108,8 +108,8 @@ module.exports = {
       where: {
         id: user_id,
       },
-      attributes : {
-        exclude : ["password"]
+      attributes: {
+        exclude: ["password"]
       }
     });
 

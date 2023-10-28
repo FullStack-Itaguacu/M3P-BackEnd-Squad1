@@ -17,61 +17,34 @@ const { verificaNumeroPositivo, verificaSomenteNumeros } = require("../services/
 module.exports = {
   async getBuyersOffsetLimit(req, res) {
     try {
-      var { full_name, created_at } = req.query;
-      var { offset, limit } = req.params;
+      let { full_name, created_at } = req.query;
+      let { offset, limit } = req.params;
 
-      await filtroBodyOffsetLimitSearch(offset, limit, full_name, created_at);
+      await filtroBodyOffsetLimitSearch(offset, limit);
 
       const items_for_page = parseInt(limit);
       const actual_page = parseInt(offset);
       //calculo para saber o inicio da paginação no banco de dados
-      var start = parseInt((actual_page - 1) * items_for_page);
+      let start = parseInt((actual_page - 1) * items_for_page);
       //se o start for menor que 0, será setado em 0 para não quebrar a paginação
       start < 0 ? (start = 0) : (start = start);
 
+      if (!full_name) {
+        full_name = '%'
+      }
 
+      if (!created_at) {
+        created_at = 'ASC'
+      }
 
-      if (full_name && !created_at) {
-        await searchOffsetLimit(
-          start,
-          items_for_page,
-          actual_page,
-          full_name,
-          created_at = 'ASC',
-          res,
-          User
-        );
-      }
-      if (created_at && !full_name) {
-        await searchOffsetLimit(
-          start,
-          items_for_page,
-          actual_page,
-          full_name = '%',
-          created_at,
-          res,
-          User)
-      }
-      if (!full_name && !created_at) {
-        await searchOffsetLimit(
-          start,
-          items_for_page,
-          actual_page,
-          full_name = '%',
-          created_at = 'ASC',
-          res,
-          User)
-      }
-      if (full_name && created_at) {
-        await searchOffsetLimit(
-          start,
-          items_for_page,
-          actual_page,
-          full_name,
-          created_at,
-          res,
-          User)
-      }
+      await searchOffsetLimit(
+        start,
+        items_for_page,
+        actual_page,
+        full_name,
+        created_at,
+        res,
+        User)
 
     } catch (error) {
       errorLauncher(error, res);
