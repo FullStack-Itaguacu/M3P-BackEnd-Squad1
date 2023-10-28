@@ -4,7 +4,6 @@ const {
   NotAcceptValuesTypeProduct,
   NumberNotPositive,
   TotalStockRequired,
-  NotDataToUpdate,
   NotOwnerProduct,
   ProductNotFound,
   EmptyNameReceivedError,
