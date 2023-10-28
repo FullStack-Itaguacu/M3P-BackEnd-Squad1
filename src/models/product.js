@@ -60,7 +60,7 @@ const Product = connection.define(
       },
     },
     dosage: {
-      type: Sequelize.ENUM("mg", "mcg", "g", "ml", "%"),
+      type: Sequelize.STRING,
       allowNull: false,
       validate: {
         notNull: {
