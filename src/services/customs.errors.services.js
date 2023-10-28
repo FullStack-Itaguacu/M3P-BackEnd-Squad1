@@ -183,8 +183,8 @@ class TotalStockRequired extends CustomError {
     super(
       "TotalStockRequired",
       "O total de estoque é obrigatório",
-      "Não informou o campo total_stock no body é ele obrigatório",
-      400
+      "O campo total_stock no body é obrigatório",
+      422
     );
   }
 }
