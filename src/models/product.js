@@ -11,13 +11,13 @@ const Product = connection.define(
       validate: {
         notNull: {
           msg: {
-            status: 500,
+            status: 422,
             cause: "O campo userId é obrigatório.",
           },
         },
         isNumeric: {
           msg: {
-            status: 500,
+            status: 422,
             cause: "O campo userId deve ser um valor inteiro numérico.",
           },
         },
