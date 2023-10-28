@@ -117,7 +117,8 @@ module.exports = {
       const existMedicine = await Products.findOne({
         where: {
           user_id,
-          name
+          name,
+          lab_name
         },
       });
 
