@@ -122,10 +122,7 @@ module.exports = {
     if (product.user_id != user_id) {
       throw new NotOwnerProduct();
     }
-    if (!name && !image_link && !dosage && !total_stock) {
-      throw new NotDataToUpdate();
-    }
-    if (!total_stock) {
+    if (!total_stock && total_stock !== 0) {
       throw new TotalStockRequired();
     }
     if (name && name.length == 0) {
@@ -154,7 +151,7 @@ module.exports = {
     if (dosage) {
       product.dosage = dosage;
     }
-    if (total_stock) {
+    if (total_stock || total_stock === 0) {
       product.total_stock = total_stock;
     }
   },

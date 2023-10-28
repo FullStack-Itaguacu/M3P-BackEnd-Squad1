@@ -1,6 +1,6 @@
 const Products = require("../models/product");
 const { errorLauncher } = require("../services/customs.errors.services.js");
-const { verificaSomenteNumeros } = require("../services/validators");
+const { verificaSomenteNumeros, verificaNumeroPositivo } = require("../services/validators");
 const {
   filtroBodyOffsetLimitSearch,
   searchOffsetLimit,
@@ -157,14 +157,19 @@ module.exports = {
       errorLauncher(error, res);
     }
   },
+
   async updateProductById(req, res) {
     try {
       const { name, image_link, dosage, total_stock } = req.body;
       const { product_id } = req.params;
       const user_id = req.payload.id;
+
+      await verificaNumeroPositivo(product_id, "productId");
+      await verificaSomenteNumeros(product_id, "productId");
       const product = await Products.findByPk(product_id);
+
+      // Verifica o que so vem no body (name, image_link , dosage e total_stock)
       const body_keys = Object.keys(req.body);
-      //verificar que so vem no body name, image_link , dosage e total_stock
       const allowedUpdates = ["name", "image_link", "dosage", "total_stock"];
       const isValidOperation = body_keys.every((update) =>
         allowedUpdates.includes(update)
@@ -189,6 +194,7 @@ module.exports = {
       errorLauncher(error, res);
     }
   },
+
   async listAllProducts(req, res) {
     try {
       var { offset, limit } = req.params;
