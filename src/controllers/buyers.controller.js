@@ -126,7 +126,7 @@ module.exports = {
       if (dataInBD.type_user !== "Buyer") {
         return res.status(422).json({
           status: 422,
-          error: "UserNotFound",
+          error: "TypeUserNotBuyer",
           message: "Usuário não é um 'Buyer'.",
           cause: "O usuário a ser atualizado deve ser do tipo 'Buyer'.",
         });
