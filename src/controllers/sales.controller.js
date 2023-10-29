@@ -11,6 +11,7 @@ const {
 const {
   isAllMandatoryFields,
   findAdminSales,
+  verifyArrayOfSales,
 } = require("../services/sale.services");
 
 module.exports = {
