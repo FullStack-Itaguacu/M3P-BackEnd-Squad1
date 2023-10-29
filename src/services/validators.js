@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { WeakPasswordError, NumberNotPositive, OnlyNumbers } = require("./customs.errors.services")
+const { WeakPasswordError, NumberNotPositive, OnlyNumbers, EmailNotFormated } = require("./customs.errors.services")
 //função para validar senha
 async function validaSenha(senha) {
   const regex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*\W)[a-zA-Z0-9\W]{8,}$/;
@@ -14,9 +14,7 @@ async function validaEmail(email) {
   // este regex e para validar email com domínio .com, .br, .net, etc
   const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   if (!regex.test(email)) {
-    throw new Error(
-      "Email incorreto, verificar se e um e-mail valido, ex: name@example.com"
-    );
+    throw new EmailNotFormated();
   }
   return regex.test(email);
 }

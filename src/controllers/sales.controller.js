@@ -11,8 +11,7 @@ const {
 const {
   isAllMandatoryFields,
   findAdminSales,
-  verifyArrayOfSales,
-} = require("../services/sales.services");
+} = require("../services/sale.services");
 
 module.exports = {
   async storeSale(req, res) {
