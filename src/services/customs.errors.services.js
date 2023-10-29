@@ -373,7 +373,7 @@ class EmailNotFormated extends CustomError {
       "EmailNotFormated",
       "O email informado não está formatado corretamente.",
       "O email informado não esta no formato correto. Ex.: teste@teste.com",
-      400
+      422
     );
   }
 }
@@ -383,7 +383,7 @@ class CpfWrongFormat extends CustomError {
       "CpfWrongFormat",
       "O CPF informado deve possuir 11 números sem ponto ou traços.",
       "O CPF informado não esta no formato correto.",
-      400
+      422
     );
   }
 }
@@ -393,7 +393,7 @@ class PhoneWrongFormat extends CustomError {
       "PhoneWrongFormat",
       "O telefone informado deve possuir entre 10 e 15 números sem ponto ou traços.",
       "O telefone informado não esta no formato correto.",
-      400
+      422
     );
   }
 }

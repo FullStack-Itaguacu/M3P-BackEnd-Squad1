@@ -12,7 +12,7 @@ const {
   searchOffsetLimit,
   verificaUserId,
   filtroBodyUpdateBuyer,
-} = require("../services/buyeres.services.js");
+} = require("../services/buyer.services.js");
 const { verificaNumeroPositivo, verificaSomenteNumeros } = require("../services/validators");
 
 module.exports = {

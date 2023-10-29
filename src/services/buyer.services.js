@@ -126,7 +126,8 @@ module.exports = {
   },
   async filtroBodyUpdateBuyer(newData) {
     const { full_name, email, cpf, phone, type_user } = newData;
-    const regexNumber = /^\d+$/g;
+    const regexNumberCPF = /^\d+$/g;
+    const regexNumberPhone = /^\d+$/g;
 
     if (full_name !== undefined && full_name.trim() === "") {
       throw new EmptyStringNotAllowed("full_name")
@@ -140,7 +141,7 @@ module.exports = {
       throw new CpfWrongFormat()
     }
 
-    if (!regexNumber.test(cpf)) {
+    if (!regexNumberCPF.test(cpf)) {
       throw new CpfWrongFormat()
     }
 
@@ -157,8 +158,7 @@ module.exports = {
       throw new PhoneWrongFormat()
     }
 
-    if (regexNumber.test(phone)) {
-      console.log(!regexNumber.test(phone))
+    if (!regexNumberPhone.test(phone)) {
       throw new PhoneWrongFormat()
     }
 
