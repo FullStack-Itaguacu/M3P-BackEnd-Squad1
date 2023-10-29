@@ -124,10 +124,10 @@ module.exports = {
       const dataInBD = await verifyUserId(user_id);
 
       if (dataInBD.type_user !== "Buyer") {
-        return res.status(404).json({
-          status: 404,
+        return res.status(422).json({
+          status: 422,
           error: "UserNotFound",
-          message: "Usuário não foi encontrado ou não é um 'Buyer'.",
+          message: "Usuário não é um 'Buyer'.",
           cause: "O usuário a ser atualizado deve ser do tipo 'Buyer'.",
         });
       }
@@ -143,7 +143,7 @@ module.exports = {
       }
       if (newData.type_user !== undefined) {
         if (newData.type_user !== "Admin" && newData.type_user !== "Buyer") {
-          return res.status(422).json({
+          return res.status(400).json({
             error: "BadFormatRequest",
             status: 400,
             message: "O campo type_user deve ser Buyer ou Admin",
