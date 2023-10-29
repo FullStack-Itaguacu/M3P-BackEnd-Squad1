@@ -357,6 +357,46 @@ class NotAcceptValuesTypeUser extends CustomError {
     );
   }
 }
+class EmptyStringNotAllowed extends CustomError {
+  constructor(field) {
+    super(
+      "EmptyStringNotAllowed",
+      `O campo ${field} foi passado com valor vazio.`,
+      `O campo ${field} não pode ser uma string vazia.`,
+      400
+    );
+  }
+}
+class EmailNotFormated extends CustomError {
+  constructor() {
+    super(
+      "EmailNotFormated",
+      "Email incorreto, verificar se e um e-mail valido, ex: name@example.com",
+      "O email informado não está formatado corretamente.",
+      422
+    );
+  }
+}
+class CpfWrongFormat extends CustomError {
+  constructor() {
+    super(
+      "CpfWrongFormat",
+      "O CPF informado deve possuir 11 números sem ponto ou traços.",
+      "O CPF informado não esta no formato correto.",
+      422
+    );
+  }
+}
+class PhoneWrongFormat extends CustomError {
+  constructor() {
+    super(
+      "PhoneWrongFormat",
+      "O telefone informado deve possuir entre 10 e 15 números sem ponto ou traços.",
+      "O telefone informado não esta no formato correto.",
+      422
+    );
+  }
+}
 
 async function errorLauncher(error, res) {
   if (!error.cause) {
@@ -370,6 +410,7 @@ async function errorLauncher(error, res) {
   //Se o erro for de validação do sequelize ele retorna um erro 400 por se tratar de uma requisição mal formatada
 
   if (error.name.slice(0, 9) === "Sequelize") {
+    console.log(error.name)
     return res.status(400).json({
       message: `Desculpa por favor, não tratamos 100% este erro pois tava uma correria!, porem não foi possível validar sua requirição para realizar alguma tarefa na base de dados , ela em inglês ta dizendo o seguente : ${error.message}, faz sentido para você ? revise por favor e tente novamente..`,
       cause:
@@ -427,5 +468,9 @@ module.exports = {
   UserNotFound,
   CustomizableError,
   FieldsTypeIncorrect,
-  NotAcceptValuesTypeUser
+  NotAcceptValuesTypeUser,
+  EmptyStringNotAllowed,
+  EmailNotFormated,
+  CpfWrongFormat,
+  PhoneWrongFormat
 };
