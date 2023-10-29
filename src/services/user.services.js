@@ -102,15 +102,6 @@ module.exports = {
     }
   },
   async errorLauncher(error, res) {
-    if (!error.cause) {
-      /*
-        implementar logica para salvar
-        o erro e notificar o dev 
-        na versão 2.0
-        */
-      //console.log(error);
-    }
-    //Se o erro for de validação do sequelize ele retorna um erro 400 por se tratar de uma requisição mal formatada
     if (error.name === "SequelizeValidationError") {
       return res.status(400).json({
         message: error.message,
