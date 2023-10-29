@@ -371,8 +371,8 @@ class EmailNotFormated extends CustomError {
   constructor() {
     super(
       "EmailNotFormated",
+      "Email incorreto, verificar se e um e-mail valido, ex: name@example.com",
       "O email informado não está formatado corretamente.",
-      "O email informado não esta no formato correto. Ex.: teste@teste.com",
       422
     );
   }
