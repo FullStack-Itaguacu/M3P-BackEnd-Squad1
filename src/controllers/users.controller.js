@@ -8,10 +8,9 @@ const Address = require("../models/address");
 require("../models/userAddress");
 const { Sales } = require("../models/sales");
 const { sign } = require("jsonwebtoken");
-
+const { errorLauncher } = require("../services/customs.errors.services");
 const {
   filtroBodySignUp,
-  errorLauncher,
   successMessage,
   filtroBodyLoginAdmin,
   verifyPassword,

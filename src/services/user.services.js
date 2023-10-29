@@ -101,37 +101,6 @@ module.exports = {
       throw new EmailUserAlredyExistError();
     }
   },
-  async errorLauncher(error, res) {
-    if (!error.cause) {
-      /*
-        implementar logica para salvar
-        o erro e notificar o dev 
-        na versão 2.0
-        */
-      //console.log(error);
-    }
-    //Se o erro for de validação do sequelize ele retorna um erro 400 por se tratar de uma requisição mal formatada
-    if (error.name === "SequelizeValidationError") {
-      return res.status(400).json({
-        message: error.message,
-        cause:
-          "Requisição mal formatada, verifique os campos obrigatórios e tente novamente",
-        status: 400,
-        error: "BadFormatRequest",
-      });
-    }
-    // Caso o erro não foi tratado no filtroBodySignUp nunca tera error.status, retornamos um erro 500 com mensagem generica
-    return res.status(error.status || 500).json({
-      message:
-        error.message ||
-        "Ocorreu um erro, pode contatar nosso team de desenvolvimento no email bug_busters_team@dominio.com e enviar esta response nos ficaremos muito gratos em ajudar a resolver o problema, ou verificar a seguente informação para tentar resolver por si mesmo",
-      status: error.status || 500,
-      cause:
-        error.cause ||
-        "Desta vez quem falhou foi o dev :(, mas não se preocupe, ele já foi notificado e está trabalhando para resolver o problema o mais rápido possível",
-      error: error.name,
-    });
-  },
   async filtroBodyLoginAdmin(email, password) {
     if (!email) {
       throw new FieldEmailNotReceived();

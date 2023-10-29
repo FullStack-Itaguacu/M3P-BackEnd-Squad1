@@ -16,55 +16,20 @@ const {
 module.exports = {
   async storeSale(req, res) {
     try {
-
       const array_of_sales = req.body;
-      const buyer_id = req.payload.id;
+      const { id, full_name } = req.payload;
 
-      const amount_buy_negative = array_of_sales.some(
-        (sale) => sale.amount_buy <= 0
-      );
+      await verifyArrayOfSales(array_of_sales);
 
-      if (amount_buy_negative) {
-        throw new CustomizableError(
-          "AmountBuyNegative",
-          "Não podemos processar sua compra, a quantidade de produtos não pode ser menor ou igual a zero",
-          "Foi informado um valor de quantidade de produtos menor ou igual a zero",
-          418
-        );
-      }
-
-      if (array_of_sales && array_of_sales.length === 0) {
-        throw new CustomizableError(
-          "EmptyArray",
-          "Não podemos processar sua compra, recebemos um array vazio",
-          "Foi informado um array de compras vazio",
-          418
-        );
-      }
-
-      var sales_saved = [];
-      var valor_total_da_compra = 0;
-      var address = null;
+      let sales_saved = [];
+      let valor_total_da_compra = 0;
+      let address = null;
 
       for (const sale of array_of_sales) {
-        const { product_id, amount_buy, users_addresses_id, type_payment } =
+        const { product_id, amount_buy, users_addresses_id } =
           sale;
         await isAllMandatoryFields(sale);
-        const acepted_type_payment = [
-          "credit_card",
-          "debit_card",
-          "payment_slip",
-          "pix",
-          "transfer",
-        ];
-        if (!acepted_type_payment.includes(type_payment)) {
-          throw new CustomizableError(
-            "TypePaymentNotAcepted",
-            `Informou um tipo de pagamento não aceito, tente com ${acepted_type_payment}.`,
-            "Metodo de pagamento não compativel",
-            400
-          );
-        }
+
         const product = await Product.findByPk(product_id);
         if (!product) {
           throw new ProductNotFound();
@@ -72,8 +37,8 @@ module.exports = {
         if (product.total_stock < amount_buy) {
           throw new CustomizableError(
             "AmountBuyNotAcepted",
-            "A quantidade de produtos disponiveis é menor do que a quantidade que você deseja comprar.",
-            `Stock de ${product.name} insuficiente para finalizar a compra`,
+            "A quantidade de produtos disponíveis é menor do que a quantidade que você deseja comprar.",
+            `Estoque de ${product.name} insuficiente para finalizar a compra`,
             409
           );
         }
@@ -81,7 +46,7 @@ module.exports = {
         if (!user_address) {
           throw new CustomizableError(
             "UserAddressNotFound",
-            `O endereço informado não tem relaçao com o id de usuario ${buyer_id}.`,
+            `O endereço informado não tem relação com o usuario ${full_name}.`,
             "Endereço não encontrado em nossa base de dados",
             404
           );
@@ -98,7 +63,7 @@ module.exports = {
         const seller_id = product.user_id;
 
         const success_sale = await Sales.create({
-          buyer_id,
+          buyer_id: id,
           seller_id,
           product_id,
           users_addresses_id,
@@ -123,7 +88,7 @@ module.exports = {
         status: 201,
         valor_total_da_compra,
         pedido: sales_saved,
-        usser_adress: address,
+        user_address: address,
       });
     } catch (error) {
       errorLauncher(error, res);
@@ -165,8 +130,7 @@ module.exports = {
 
       res.status(200).json(sales);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Erro interno do servidor" });
+      errorLauncher(error, res);
     }
   },
 
@@ -202,7 +166,6 @@ module.exports = {
         cause: "Somente administradores podem acessar este recurso",
       });
     } catch (error) {
-      console.error(error);
       errorLauncher(error, res);
     }
   },
