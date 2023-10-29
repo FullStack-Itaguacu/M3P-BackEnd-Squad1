@@ -6,9 +6,14 @@ const {
   NumberNotPositive,
   CreatedAtBadValueReceived,
   UserNotFound,
+  EmptyStringNotAllowed,
+  EmailNotFormated,
+  CpfWrongFormat,
+  PhoneWrongFormat,
 } = require("../services/customs.errors.services.js");
+const { validaEmail } = require("./validators.js");
 module.exports = {
-  async filtroBodyOffsetLimitSearch(offset, limit, full_name, created_at) {
+  async filtroBodyOffsetLimitSearch(offset, limit) {
     if (isNaN(offset)) {
       throw new OffsetIsNan();
     }
@@ -108,8 +113,8 @@ module.exports = {
       where: {
         id: user_id,
       },
-      attributes : {
-        exclude : ["password"]
+      attributes: {
+        exclude: ["password"]
       }
     });
 
@@ -119,4 +124,46 @@ module.exports = {
 
     return data;
   },
+  async filtroBodyUpdateBuyer(newData) {
+    const { full_name, email, cpf, phone, type_user } = newData;
+    const regexNumberCPF = /^\d+$/g;
+    const regexNumberPhone = /^\d+$/g;
+
+    if (full_name !== undefined && full_name.trim() === "") {
+      throw new EmptyStringNotAllowed("full_name")
+    }
+
+    if (cpf !== undefined && cpf.trim() === "") {
+      throw new EmptyStringNotAllowed("cpf")
+    }
+
+    if (cpf.length !== 11) {
+      throw new CpfWrongFormat()
+    }
+
+    if (!regexNumberCPF.test(cpf)) {
+      throw new CpfWrongFormat()
+    }
+
+    if (email !== undefined && email.trim() === "") {
+      throw new EmptyStringNotAllowed("email")
+    }
+    await validaEmail(email)
+
+    if (phone !== undefined && phone.trim() === "") {
+      throw new EmptyStringNotAllowed("phone")
+    }
+
+    if (phone.length < 10 || phone.length > 15) {
+      throw new PhoneWrongFormat()
+    }
+
+    if (!regexNumberPhone.test(phone)) {
+      throw new PhoneWrongFormat()
+    }
+
+    if (type_user !== undefined && type_user.trim() === "") {
+      throw new EmptyStringNotAllowed("type_user")
+    }
+  }
 };

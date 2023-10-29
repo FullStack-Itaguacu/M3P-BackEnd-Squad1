@@ -183,8 +183,8 @@ class TotalStockRequired extends CustomError {
     super(
       "TotalStockRequired",
       "O total de estoque é obrigatório",
-      "Não informou o campo total_stock no body é ele obrigatório",
-      400
+      "O campo total_stock no body é obrigatório",
+      422
     );
   }
 }
@@ -198,7 +198,6 @@ class NotDataToUpdate extends CustomError {
     );
   }
 }
-
 class NotOwnerProduct extends CustomError {
   constructor() {
     super(
@@ -209,7 +208,6 @@ class NotOwnerProduct extends CustomError {
     );
   }
 }
-
 class ProductNotFound extends CustomError {
   constructor() {
     super(
@@ -330,6 +328,16 @@ class UserNotFound extends CustomError {
     );
   }
 }
+class FieldsTypeIncorrect extends CustomError {
+  constructor(campo, tipo) {
+    super(
+      "FieldsTypeIncorrect",
+      `O ${campo} informado deve ser do tipo ${tipo}.`,
+      `O ${campo} recebeu outro tipo de dado que não é ${tipo}`,
+      400
+    );
+  }
+}
 class CustomizableError extends CustomError {
   constructor(name, message, cause, status) {
     super();
@@ -337,6 +345,56 @@ class CustomizableError extends CustomError {
     this.cause = cause;
     this.status = status;
     this.name = name;
+  }
+}
+class NotAcceptValuesTypeUser extends CustomError {
+  constructor() {
+    super(
+      "NotAcceptValuesTypeUser",
+      "O campo tipo do usuário recebeu um valor diferente dos possíveis.",
+      "O tipo do usuário somente aceita os valores: Admin e Buyer",
+      400
+    );
+  }
+}
+class EmptyStringNotAllowed extends CustomError {
+  constructor(field) {
+    super(
+      "EmptyStringNotAllowed",
+      `O campo ${field} foi passado com valor vazio.`,
+      `O campo ${field} não pode ser uma string vazia.`,
+      400
+    );
+  }
+}
+class EmailNotFormated extends CustomError {
+  constructor() {
+    super(
+      "EmailNotFormated",
+      "Email incorreto, verificar se e um e-mail valido, ex: name@example.com",
+      "O email informado não está formatado corretamente.",
+      422
+    );
+  }
+}
+class CpfWrongFormat extends CustomError {
+  constructor() {
+    super(
+      "CpfWrongFormat",
+      "O CPF informado deve possuir 11 números sem ponto ou traços.",
+      "O CPF informado não esta no formato correto.",
+      422
+    );
+  }
+}
+class PhoneWrongFormat extends CustomError {
+  constructor() {
+    super(
+      "PhoneWrongFormat",
+      "O telefone informado deve possuir entre 10 e 15 números sem ponto ou traços.",
+      "O telefone informado não esta no formato correto.",
+      422
+    );
   }
 }
 
@@ -352,6 +410,7 @@ async function errorLauncher(error, res) {
   //Se o erro for de validação do sequelize ele retorna um erro 400 por se tratar de uma requisição mal formatada
 
   if (error.name.slice(0, 9) === "Sequelize") {
+    console.log(error.name)
     return res.status(400).json({
       message: `Desculpa por favor, não tratamos 100% este erro pois tava uma correria!, porem não foi possível validar sua requirição para realizar alguma tarefa na base de dados , ela em inglês ta dizendo o seguente : ${error.message}, faz sentido para você ? revise por favor e tente novamente..`,
       cause:
@@ -408,4 +467,10 @@ module.exports = {
   CreatedAtBadValueReceived,
   UserNotFound,
   CustomizableError,
+  FieldsTypeIncorrect,
+  NotAcceptValuesTypeUser,
+  EmptyStringNotAllowed,
+  EmailNotFormated,
+  CpfWrongFormat,
+  PhoneWrongFormat
 };

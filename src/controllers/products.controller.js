@@ -1,6 +1,6 @@
 const Products = require("../models/product");
 const { errorLauncher } = require("../services/customs.errors.services.js");
-const { verificaSomenteNumeros } = require("../services/validators");
+const { verificaSomenteNumeros, verificaNumeroPositivo } = require("../services/validators");
 const {
   filtroBodyOffsetLimitSearch,
   searchOffsetLimit,
@@ -18,15 +18,15 @@ module.exports = {
   async listProductsOffsetLimit(req, res) {
     try {
       const user_id = req.payload.id;
-      var { name, type_product } = req.query;
-      var { offset, limit } = req.params;
+      let { name, type_product } = req.query;
+      let { offset, limit } = req.params;
 
-      await filtroBodyOffsetLimitSearch(offset, limit, name, type_product);
+      await filtroBodyOffsetLimitSearch(offset, limit);
       /* limitando a quantidade de itens por página a 20,
        * caso o usuário tente passar um valor maior que 20
        * valor será setado em 20 para nao quebrar a paginação .
        */
-      limit > 20 ? (limit = 30) : (limit = limit);
+      limit > 20 ? (limit = 20) : (limit = limit);
       /**
        * se offset for menor que 1, será setado em 1
        * para não quebrar a paginação.
@@ -36,7 +36,7 @@ module.exports = {
       const items_for_page = parseInt(limit);
       const actual_page = parseInt(offset);
       //calculo para saber o inicio da paginação no banco de dados
-      var start = parseInt((actual_page - 1) * items_for_page);
+      let start = parseInt((actual_page - 1) * items_for_page);
       //se o start for menor que 0, será setado em 0 para não quebrar a paginação
       start < 0 ? (start = 0) : (start = start);
       if (name && type_product) {
@@ -116,18 +116,28 @@ module.exports = {
       const user_id = req.payload.id;
       const existMedicine = await Products.findOne({
         where: {
-          name: name,
-          lab_name: lab_name,
+          user_id,
+          name,
+          lab_name
         },
       });
 
       if (existMedicine) {
-        return res.status(422).json({
-          status: "422",
-          error: "Erro, Não foi possível criar o produto",
+        return res.status(409).json({
+          status: 409,
+          error: "Erro, não foi possível criar o produto",
           cause: "O produto já existe.",
         });
       }
+
+      if (description.length > 255) {
+        return res.status(400).json({
+          status: 400,
+          error: "Erro, não foi possível criar o produto",
+          cause: "O campo descroption não pode ter mais que 255 caracteres.",
+        });
+      }
+
       const newProduct = await Products.create({
         user_id,
         name,
@@ -147,14 +157,19 @@ module.exports = {
       errorLauncher(error, res);
     }
   },
+
   async updateProductById(req, res) {
     try {
       const { name, image_link, dosage, total_stock } = req.body;
       const { product_id } = req.params;
       const user_id = req.payload.id;
+
+      await verificaNumeroPositivo(product_id, "productId");
+      await verificaSomenteNumeros(product_id, "productId");
       const product = await Products.findByPk(product_id);
+
+      // Verifica o que so vem no body (name, image_link , dosage e total_stock)
       const body_keys = Object.keys(req.body);
-      //verificar que so vem no body name, image_link , dosage e total_stock
       const allowedUpdates = ["name", "image_link", "dosage", "total_stock"];
       const isValidOperation = body_keys.every((update) =>
         allowedUpdates.includes(update)
@@ -179,34 +194,36 @@ module.exports = {
       errorLauncher(error, res);
     }
   },
+
   async listAllProducts(req, res) {
     try {
       var { offset, limit } = req.params;
       var { name, type_product } = req.query;
 
-      const types_alowed =["controlled", "uncontrolled"]
+      const types_alowed = ["controlled", "uncontrolled"]
 
-      if(type_product){
-        if(!types_alowed.includes(type_product)){
+      if (type_product) {
+        if (!types_alowed.includes(type_product)) {
           throw new CustomizableError(
             "InvalidTypeProductError",
             `Tipo de produto ${type_product} não é permitido esperamos um dos seguintes valores: ${types_alowed}`,
             "Dados inválidos na requisição",
-            422
+            400
           );
         }
       }
-      if(!name) name = "%";
+
+      if (!name) name = "%";
 
       await filtroBodyOffsetLimitSearch(offset, limit);
 
       limit > 20 ? (limit = 20) : limit;
-      offset < 0 ? offset - 1 : (offset = offset);
+      offset < 1 ? (offset = 1) : (offset = offset);
 
       const actual_page = parseInt(offset);
-      const start = parseInt(offset);
       const items_for_page = parseInt(limit);
- 
+      let start = parseInt((actual_page - 1) * items_for_page);
+
 
       Products.findAndCountAll({
         where: {
