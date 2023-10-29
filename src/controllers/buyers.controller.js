@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const { errorLauncher } = require("../services/customs.errors.services.js");
+const { errorLauncher } = require("../services/user.services.js");
 const Address = require("../models/address");
 require("../models/userAddress");
 const {
@@ -11,6 +11,7 @@ const {
   filtroBodyOffsetLimitSearch,
   searchOffsetLimit,
   verificaUserId,
+  filtroBodyUpdateBuyer,
 } = require("../services/buyeres.services.js");
 const { verificaNumeroPositivo, verificaSomenteNumeros } = require("../services/validators");
 
@@ -101,7 +102,6 @@ module.exports = {
     try {
       const allowedFields = ["full_name", "email", "cpf", "phone", "type_user"];
       const receivedFields = Object.keys(req.body);
-
       const isValidOperation = receivedFields.every((field) =>
         allowedFields.includes(field)
       );
@@ -120,10 +120,10 @@ module.exports = {
       await verificaNumeroPositivo(user_id, "user_id");
       await verificaSomenteNumeros(user_id, "user_id");
 
-      const { full_name, email, phone, cpf, type_user } = req.body;
-      const data = await verifyUserId(user_id);
+      const newData = req.body;
+      const dataInBD = await verifyUserId(user_id);
 
-      if (!data || data.type_user !== "Buyer") {
+      if (dataInBD.type_user !== "Buyer") {
         return res.status(404).json({
           status: 404,
           error: "UserNotFound",
@@ -132,7 +132,7 @@ module.exports = {
         });
       }
 
-      if (data.type_user === "Admin" && type_user === "Buyer") {
+      if (dataInBD.type_user === "Admin" && type_user === "Buyer") {
         return res.status(422).json({
           error: "BadFormatRequest",
           status: 422,
@@ -141,54 +141,32 @@ module.exports = {
           cause: "Requisição mal formatada",
         });
       }
-      if (type_user !== undefined) {
-        if (type_user !== "Admin" && type_user !== "Buyer") {
+      if (newData.type_user !== undefined) {
+        if (newData.type_user !== "Admin" && newData.type_user !== "Buyer") {
           return res.status(422).json({
             error: "BadFormatRequest",
-            status: 422,
+            status: 400,
             message: "O campo type_user deve ser Buyer ou Admin",
             cause: "Requisição mal formatada,",
           });
         }
       }
-      if (cpf !== undefined && cpf !== data.cpf) {
-        await verifyCpfExist(cpf);
+      if (newData.cpf !== undefined && newData.cpf !== dataInBD.cpf) {
+        await verifyCpfExist(newData.cpf);
       }
 
-      if (email !== undefined && email !== data.email) {
-        await verifyEmailExist(email);
+      if (newData.email !== undefined && newData.email !== dataInBD.email) {
+        await verifyEmailExist(newData.email);
       }
 
-      if (full_name !== undefined && full_name.trim() === "") {
-        return res.status(422).json({
-          status: 422,
-          error: "BadFormatRequest",
-          message: "O campo full_name não pode ser uma string vazia.",
-          cause: "Requisição mal formatada",
-        });
-      }
-      if (full_name !== undefined) {
-        data.full_name = full_name;
-      }
-      if (email !== undefined) {
-        data.email = email;
-      }
-      if (phone !== undefined) {
-        data.phone = phone;
-      }
-      if (cpf !== undefined) {
-        data.cpf = cpf;
-      }
-      if (type_user) {
-        data.type_user = type_user;
-      }
+      await filtroBodyUpdateBuyer(newData);
 
       await User.update({
-        full_name,
-        email,
-        phone,
-        cpf,
-        type_user
+        full_name: newData.full_name,
+        email: newData.email,
+        phone: newData.phone,
+        cpf: newData.cpf,
+        type_user: newData.type_user
       },
         {
           where: {
@@ -196,11 +174,7 @@ module.exports = {
           }
         });
 
-      return res.status(204).json({
-        status: 204,
-        message: "Dados atualizados com sucesso",
-        data,
-      });
+      return res.status(204).json({});
     } catch (error) {
       errorLauncher(error, res);
     }
